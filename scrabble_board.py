@@ -3,6 +3,7 @@
 scrabble_board.py -- contain class that models scrabble board and game
 '''
 import collections
+import random
 
 import config
 import re
@@ -98,9 +99,24 @@ class Game(object):
     def __init__(self, num_players):
         self.num_players = num_players
         self.tile_bag = self.initialize_tile_bag()
+        self.player_rack_list = self.initialize_player_racks()
         self.board = Board()
-        print self.board
-        import pdb; pdb.set_trace()  # breakpoint f238390f //
+        import pdb; pdb.set_trace()  # breakpoint 4714e1b9 //
+
+    def draw_random_tile(self):
+        random_index = random.randrange(0, len(self.tile_bag))
+        return self.tile_bag.pop(random_index)
+
+    def initialize_player_racks(self):
+        player_rack_list = []
+        for _ in range(self.num_players):
+            this_rack = []
+            for _ in range(7):
+                this_rack.append(self.draw_random_tile())
+
+            player_rack_list.append(this_rack)
+
+        return player_rack_list
 
     @staticmethod
     def initialize_tile_bag():
@@ -116,3 +132,4 @@ class Game(object):
 
 
 b = Game(4)
+print b.board

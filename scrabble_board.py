@@ -101,10 +101,27 @@ class Game(object):
         self.tile_bag = self.initialize_tile_bag()
         self.player_rack_list = self.initialize_player_racks()
         self.board = Board()
-        self.player_to_move = 0
+        self.move_number = 0
 
-    def next_player_move(self, rack_tile_index, board_location):
-        self.move_tile(self.player_to_move, rack_tile_index, board_location)
+    def next_player_move(self, letter_location_list):
+        for letter, board_location in letter_location_list:
+            player_to_move = self.move_number % self.num_players
+            player_rack = self.player_rack_list[player_to_move]
+            rack_tile_index = None
+
+            for i in range(len(player_rack)):
+                if player_rack[i].letter == letter:
+                    rack_tile_index = i
+
+            if rack_tile_index is None:
+                print 'Letter {} does not appear in player {}\'s rack'.format(
+                    letter,
+                    player_to_move
+                )
+            else:
+                self.move_tile(player_to_move, rack_tile_index, board_location)
+
+        self.move_number += 1
 
     def move_tile(self, player_id, rack_tile_index, board_location):
         ''' Takes format of rack_tile_index, board_location '''
@@ -139,5 +156,6 @@ class Game(object):
         return tile_bag
 
 
-b = Game(4)
-print b.board
+g = Game(4)
+print g.board
+print g.player_rack_list

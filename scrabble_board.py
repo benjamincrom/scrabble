@@ -2,11 +2,11 @@
 '''
 scrabble_board.py -- contain class that models scrabble board and game
 '''
-import collections
 import random
+import re
 
 import config
-import re
+
 
 class Square(object):
     def __init__(self, column, row, tile, letter_multiplier, word_multiplier):
@@ -101,7 +101,15 @@ class Game(object):
         self.tile_bag = self.initialize_tile_bag()
         self.player_rack_list = self.initialize_player_racks()
         self.board = Board()
-        import pdb; pdb.set_trace()  # breakpoint 4714e1b9 //
+        self.player_to_move = 0
+
+    def next_player_move(self, rack_tile_index, board_location):
+        self.move_tile(self.player_to_move, rack_tile_index, board_location)
+
+    def move_tile(self, player_id, rack_tile_index, board_location):
+        ''' Takes format of rack_tile_index, board_location '''
+        tile = self.player_rack_list[player_id].pop(rack_tile_index)
+        self.board[board_location] = tile
 
     def draw_random_tile(self):
         random_index = random.randrange(0, len(self.tile_bag))

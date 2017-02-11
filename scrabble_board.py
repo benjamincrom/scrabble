@@ -2,16 +2,25 @@
 '''
 scrabble_board.py -- contain class that models scrabble board and game
 '''
+import collections
 import random
 import re
 
 import config
 
+def is_sublist(list_1, list_2):
+    counter_1 = collections.Counter(list_1)
+    counter_2 = collections.Counter(list_2)
+    for value, cardinality in counter_1.items():
+        if cardinality > counter_2[value]:
+            return False
+
+    return True
+
 
 class Square(object):
-    def __init__(self, column, row, tile, letter_multiplier, word_multiplier):
-        self.column = column
-        self.row = row
+    def __init__(self, location, tile, letter_multiplier, word_multiplier):
+        self.location = location
         self.tile = tile
         self.letter_multiplier = letter_multiplier
         self.word_multiplier = word_multiplier
@@ -46,10 +55,13 @@ class Board(object):
 
     def __repr__(self):
         serial_str = ''.join(
-            (str(square)
-             for location_tuple, square in sorted(self.square_dict.items()))
+            (
+                str(square)  # Flip order of location tuple in order to sort
+                for location_tuple, square in sorted(self.square_dict.items(),
+                                                     key=lambda x: (x[1], x[0]))
+            )
         )
-
+        # Split string into 15-character lines using regex
         return_value = re.sub("(.{15})", "\\1\n", serial_str, 0, re.DOTALL)
         return return_value
 
@@ -85,8 +97,7 @@ class Board(object):
                                                                        row)
 
                 initial_square_dict[(column, row)] = Square(
-                    column=column,
-                    row=row,
+                    location=(column, row),
                     tile=None,
                     word_multiplier=word_multiplier,
                     letter_multiplier=letter_multiplier
@@ -103,29 +114,51 @@ class Game(object):
         self.board = Board()
         self.move_number = 0
 
+    def move_is_legal(self, letter_location_list, player_rack):
+        player_rack_letter_list = [tile.letter for tile in player_rack]
+        move_letter_list = [letter for letter, _ in letter_location_list]
+        move_location_list = [location for _, location in letter_location_list]
+
+        return_value = True
+        for location in move_location_list:
+            if self.board[location].tile:
+                return_value = False
+        
+        if not is_sublist(move_letter_list, player_rack_letter_list):
+            return_value = False
+
+        return return_value
+
     def next_player_move(self, letter_location_list):
-        for letter, board_location in letter_location_list:
-            player_to_move = self.move_number % self.num_players
-            player_rack = self.player_rack_list[player_to_move]
-            rack_tile_index = None
+        player_to_move = self.move_number % self.num_players
+        player_rack = self.player_rack_list[player_to_move]
 
-            for i in range(len(player_rack)):
-                if player_rack[i].letter == letter:
-                    rack_tile_index = i
+        if self.move_is_legal(letter_location_list, player_rack):
+            for move_letter, board_location in letter_location_list:
+                tile_index = self.get_rack_tile_index(player_rack, move_letter)
+                self.place_tile(player_rack, tile_index, board_location)
 
-            if rack_tile_index is None:
-                print 'Letter {} does not appear in player {}\'s rack'.format(
-                    letter,
-                    player_to_move
-                )
-            else:
-                self.move_tile(player_to_move, rack_tile_index, board_location)
+            while len(player_rack) < 7:
+                player_rack.append(self.draw_random_tile())
 
-        self.move_number += 1
+            self.move_number += 1
+            success = True
+        else:
+            success = False
 
-    def move_tile(self, player_id, rack_tile_index, board_location):
+        return success
+
+    @staticmethod
+    def get_rack_tile_index(player_rack, move_letter):
+        for i, rack_tile in enumerate(player_rack):
+            if rack_tile.letter == move_letter:
+                return i
+
+        return None
+
+    def place_tile(self, player_rack, rack_tile_index, board_location):
         ''' Takes format of rack_tile_index, board_location '''
-        tile = self.player_rack_list[player_id].pop(rack_tile_index)
+        tile = player_rack.pop(rack_tile_index)
         self.board[board_location] = tile
 
     def draw_random_tile(self):
@@ -135,10 +168,7 @@ class Game(object):
     def initialize_player_racks(self):
         player_rack_list = []
         for _ in range(self.num_players):
-            this_rack = []
-            for _ in range(7):
-                this_rack.append(self.draw_random_tile())
-
+            this_rack = [self.draw_random_tile() for _ in range(7)]
             player_rack_list.append(this_rack)
 
         return player_rack_list

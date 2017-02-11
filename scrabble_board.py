@@ -54,16 +54,22 @@ class Board(object):
         self.square_dict[key] = val
 
     def __repr__(self):
-        serial_str = ''.join(
-            (
-                str(square)  # Flip order of location tuple in order to sort
-                for location_tuple, square in sorted(self.square_dict.items(),
-                                                     key=lambda x: (x[1], x[0]))
-            )
-        )
-        # Split string into 15-character lines using regex
-        return_value = re.sub("(.{15})", "\\1\n", serial_str, 0, re.DOTALL)
-        return return_value
+        square_letter_gen = (str(square[1])
+                             for square in sorted(self.square_dict.items()))
+
+        board_array = [
+            ['_' for _ in range(15)]
+             for _ in range(15)
+        ]
+
+        for i in range(15):
+            for j in range(15):
+                board_array[j][i] = next(square_letter_gen)
+
+        return_line_list = [''.join(row) for row in board_array]
+        return_str = '\n'.join(return_line_list)
+
+        return return_str
 
     @staticmethod
     def get_location_word_mutliplier(column, row):

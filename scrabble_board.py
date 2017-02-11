@@ -4,7 +4,6 @@ scrabble_board.py -- contain class that models scrabble board and game
 '''
 import collections
 import random
-import re
 
 import config
 
@@ -129,7 +128,7 @@ class Game(object):
         for location in move_location_list:
             if self.board[location].tile:
                 return_value = False
-        
+
         if not is_sublist(move_letter_list, player_rack_letter_list):
             return_value = False
 

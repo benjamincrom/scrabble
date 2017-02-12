@@ -24,6 +24,7 @@ class ScrabbleGame(object):
         self.tile_bag = self.initialize_tile_bag()
         self.player_rack_list = self.initialize_player_racks()
         self.board = scrabble_board.ScrabbleBoard()
+        self.player_move_score_list_list = [[] for _ in range(num_players)]
         self.move_number = 0
 
     def __repr__(self):
@@ -38,6 +39,9 @@ class ScrabbleGame(object):
                     (self.move_number % self.num_players) + 1,
                     len(self.tile_bag)
                 )
+
+    def score_move(self, letter_location_list):
+        import pdb; pdb.set_trace()  # breakpoint ac417d94 //
 
     def move_is_legal(self, letter_location_list, player_rack):
         player_rack_letter_list = [tile.letter for tile in player_rack]
@@ -66,6 +70,8 @@ class ScrabbleGame(object):
             while len(player_rack) < 7:
                 player_rack.append(self.draw_random_tile())
 
+            move_score = self.score_move(letter_location_list)
+            self.player_move_score_list_list[player_to_move].append(move_score)
             self.move_number += 1
             success = True
         else:

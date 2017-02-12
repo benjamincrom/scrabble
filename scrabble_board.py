@@ -57,7 +57,7 @@ class Board(object):
                              for square in sorted(self.square_dict.items()))
 
         board_array = [
-            ['_' for _ in range(15)]
+            [None for _ in range(15)]
             for _ in range(15)
         ]
 
@@ -120,7 +120,7 @@ class Game(object):
         self.move_number = 0
 
     def __repr__(self):
-        return '{}\n{}\nMoves played: {}\n{} tiles remain'.format(
+        return '{}\n{}\nMoves played: {}\n{} tiles remain in bag'.format(
             str(self.board),
             self.player_rack_list,
             self.move_number,

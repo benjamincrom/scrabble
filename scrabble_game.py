@@ -41,19 +41,52 @@ class ScrabbleGame(object):
                 )
 
     def score_move(self, letter_location_list):
-        import pdb; pdb.set_trace()  # breakpoint ac417d94 //
+        return 0
+
+    def location_touches_tile(self, location):
+        column, row = location
+        adjacent_location_list = [
+            (chr(ord(column) + 1), row),
+            (chr(ord(column) - 1), row),
+            (column, (row + 1)),
+            (column, (row - 1))
+        ]
+
+        return_value = False
+        for adjacent_location in adjacent_location_list:
+            if self.board[adjacent_location].tile:
+                return_value = True
+
+        return return_value
+
+    def move_touches_tile(self, location_list):
+        return_value = True
+        if self.move_number == 0:
+            if ('h', 7) not in location_list:
+                return_value = False
+        else:
+            for this_location in location_list:
+                if not self.location_touches_tile(this_location):
+                    return_value = False
+
+        return return_value
+
 
     def move_is_legal(self, letter_location_list, player_rack):
         player_rack_letter_list = [tile.letter for tile in player_rack]
-        move_letter_list = [letter for letter, _ in letter_location_list]
-        move_location_list = [location for _, location in letter_location_list]
+        letter_list = [letter for letter, _ in letter_location_list]
+        location_list = [location for _, location in letter_location_list]
 
         return_value = True
-        for location in move_location_list:
+
+        for location in location_list:
             if self.board[location].tile:
                 return_value = False
 
-        if not is_sublist(move_letter_list, player_rack_letter_list):
+        if not self.move_touches_tile(location_list):
+            return_value = False
+
+        if not is_sublist(letter_list, player_rack_letter_list):
             return_value = False
 
         return return_value

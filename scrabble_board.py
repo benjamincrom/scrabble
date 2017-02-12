@@ -119,6 +119,14 @@ class Game(object):
         self.board = Board()
         self.move_number = 0
 
+    def __repr__(self):
+        return '{}\n{}\nMoves played: {}\n{} tiles remain'.format(
+            str(self.board),
+            self.player_rack_list,
+            self.move_number,
+            len(self.tile_bag)
+        )
+
     def move_is_legal(self, letter_location_list, player_rack):
         player_rack_letter_list = [tile.letter for tile in player_rack]
         move_letter_list = [letter for letter, _ in letter_location_list]

@@ -28,12 +28,14 @@ class ScrabbleGame(object):
 
     def __repr__(self):
         return ('{}\n'
+                '{}\n'
                 'Moves played: {}\n'
                 'Player to move: {}\n'
                 '{} tiles remain in bag').format(
                     str(self.board),
                     self.player_rack_list,
                     self.move_number,
+                    (self.move_number % self.num_players) + 1,
                     len(self.tile_bag)
                 )
 

@@ -27,7 +27,8 @@ class ScrabbleGame(object):
         self.move_number = 0
 
     def __repr__(self):
-        return ('{}\n{}\nMoves played: {}\n'
+        return ('{}\n'
+                'Moves played: {}\n'
                 'Player to move: {}\n'
                 '{} tiles remain in bag').format(
                     str(self.board),

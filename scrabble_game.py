@@ -30,7 +30,7 @@ class ScrabbleGame(object):
         return ('{}\n'
                 '{}\n'
                 'Moves played: {}\n'
-                'Player to move: {}\n'
+                'Player {}\'s move\n'
                 '{} tiles remain in bag').format(
                     str(self.board),
                     self.player_rack_list,

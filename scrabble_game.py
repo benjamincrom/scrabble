@@ -40,6 +40,7 @@ class ScrabbleGame(object):
         move_location_list = [location for _, location in letter_location_list]
 
         return_value = True
+        import pdb; pdb.set_trace()  # breakpoint dd20c693 //
         for location in move_location_list:
             if self.board[location].tile:
                 return_value = False
@@ -79,7 +80,7 @@ class ScrabbleGame(object):
     def place_tile(self, player_rack, rack_tile_index, board_location):
         ''' Takes format of rack_tile_index, board_location '''
         tile = player_rack.pop(rack_tile_index)
-        self.board[board_location] = tile
+        self.board[board_location].tile = tile
 
     def draw_random_tile(self):
         random_index = random.randrange(0, len(self.tile_bag))

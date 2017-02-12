@@ -43,18 +43,28 @@ class ScrabbleGame(object):
     def score_move(self, letter_location_list):
         return 0
 
-    def location_touches_tile(self, location):
+    def location_touches_tile(self, location, new_tile_list):
         column, row = location
-        adjacent_location_list = [
+
+        adjacent_location_set = set([
             (chr(ord(column) + 1), row),
             (chr(ord(column) - 1), row),
             (column, (row + 1)),
             (column, (row - 1))
-        ]
+        ])
+
+        # Board boundary check
+        remove_location_set = set(
+            [(column, row) for column, row in adjacent_location_set
+             if row > 15 or row < 1 or ord(column) > 111 or ord(column) < 97]
+        )
+
+        search_location_set = adjacent_location_set - remove_location_set
 
         return_value = False
-        for adjacent_location in adjacent_location_list:
-            if self.board[adjacent_location].tile:
+        for adjacent_location in search_location_set:
+            adjacent_tile = self.board[adjacent_location].tile
+            if adjacent_tile or (adjacent_location in new_tile_list):
                 return_value = True
 
         return return_value
@@ -62,15 +72,17 @@ class ScrabbleGame(object):
     def move_touches_tile(self, location_list):
         return_value = True
         if self.move_number == 0:
-            if ('h', 7) not in location_list:
+            if ('h', 8) not in location_list:
                 return_value = False
         else:
+            new_tile_list = []
             for this_location in location_list:
-                if not self.location_touches_tile(this_location):
+                if not self.location_touches_tile(this_location, new_tile_list):
                     return_value = False
+                else:
+                    new_tile_list.append(this_location)
 
         return return_value
-
 
     def move_is_legal(self, letter_location_list, player_rack):
         player_rack_letter_list = [tile.letter for tile in player_rack]

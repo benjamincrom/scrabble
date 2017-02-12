@@ -65,6 +65,9 @@ class Board(object):
             for j in range(15):
                 board_array[j][i] = next(square_letter_gen)
 
+        if board_array[7][7] == '_':
+            board_array[7][7] = '★'
+
         return_line_list = [''.join(row) for row in board_array]
         return_str = '\n'.join(return_line_list)
 
@@ -200,5 +203,3 @@ class Game(object):
 
 
 g = Game(4)
-print g.board
-print g.player_rack_list

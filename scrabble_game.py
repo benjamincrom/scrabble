@@ -23,7 +23,7 @@ class ScrabbleGame(object):
         self.num_players = num_players
         self.tile_bag = self.initialize_tile_bag()
         self.player_rack_list = self.initialize_player_racks()
-        self.board = scrabble_board.Board()
+        self.board = scrabble_board.ScrabbleBoard()
         self.move_number = 0
 
     def __repr__(self):

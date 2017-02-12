@@ -18,7 +18,7 @@ def is_sublist(list_1, list_2):
     return True
 
 
-class Game(object):
+class ScrabbleGame(object):
     def __init__(self, num_players):
         self.num_players = num_players
         self.tile_bag = self.initialize_tile_bag()

@@ -5,6 +5,15 @@ scrabble_board.py -- contain classes that model scrabble board
 import config
 
 
+class Tile(object):
+    def __init__(self, letter, point_value):
+        self.letter = letter
+        self.point_value = point_value
+
+    def __repr__(self):
+        return self.letter
+
+
 class Square(object):
     def __init__(self, location, tile, letter_multiplier, word_multiplier):
         self.location = location
@@ -21,16 +30,7 @@ class Square(object):
         return return_value
 
 
-class Tile(object):
-    def __init__(self, letter, point_value):
-        self.letter = letter
-        self.point_value = point_value
-
-    def __repr__(self):
-        return self.letter
-
-
-class Board(object):
+class ScrabbleBoard(object):
     def __init__(self):
         self.square_dict = self.initialize_square_dict()
 

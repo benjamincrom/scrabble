@@ -27,12 +27,14 @@ class ScrabbleGame(object):
         self.move_number = 0
 
     def __repr__(self):
-        return '{}\n{}\nMoves played: {}\n{} tiles remain in bag'.format(
-            str(self.board),
-            self.player_rack_list,
-            self.move_number,
-            len(self.tile_bag)
-        )
+        return ('{}\n{}\nMoves played: {}\n'
+                'Player to move: {}\n'
+                '{} tiles remain in bag').format(
+                    str(self.board),
+                    self.player_rack_list,
+                    self.move_number,
+                    len(self.tile_bag)
+                )
 
     def move_is_legal(self, letter_location_list, player_rack):
         player_rack_letter_list = [tile.letter for tile in player_rack]
@@ -40,7 +42,6 @@ class ScrabbleGame(object):
         move_location_list = [location for _, location in letter_location_list]
 
         return_value = True
-        import pdb; pdb.set_trace()  # breakpoint dd20c693 //
         for location in move_location_list:
             if self.board[location].tile:
                 return_value = False

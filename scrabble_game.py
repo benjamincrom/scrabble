@@ -33,25 +33,27 @@ class ScrabbleGame(object):
         self.move_number = 0
 
     def __repr__(self):
-        return ('{board}\n'
-                '{player_rack_list}\n'
-                'Moves played: {move_number}\n'
-                'Player {player_to_move}\'s move\n'
-                '{tiles_remaining} tiles remain in bag\n'
-                'Player 1: {player_1_score}\n'
-                'Player 2: {player_2_score}\n'
-                'Player 3: {player_3_score}\n'
-                'Player 4: {player_4_score}\n').format(
-                    board=str(self.board),
-                    player_rack_list=self.player_rack_list,
-                    move_number=self.move_number,
-                    player_to_move=(self.move_number % self.num_players) + 1,
-                    tiles_remaining=len(self.tile_bag),
-                    player_1_score=sum(self.player_move_score_list_list[0]),
-                    player_2_score=sum(self.player_move_score_list_list[1]),
-                    player_3_score=sum(self.player_move_score_list_list[2]),
-                    player_4_score=sum(self.player_move_score_list_list[3])
-                )
+        return (
+            '{board}\n'
+            '{player_rack_list}\n'
+            'Moves played: {move_number}\n'
+            'Player {player_to_move}\'s move\n'
+            '{tiles_remaining} tiles remain in bag\n'
+            'Player 1: {player_1_score}\n'
+            'Player 2: {player_2_score}\n'
+            'Player 3: {player_3_score}\n'
+            'Player 4: {player_4_score}\n'
+        ).format(
+            board=str(self.board),
+            player_rack_list=self.player_rack_list,
+            move_number=self.move_number,
+            player_to_move=(self.move_number % self.num_players) + 1,
+            tiles_remaining=len(self.tile_bag),
+            player_1_score=sum(self.player_move_score_list_list[0]),
+            player_2_score=sum(self.player_move_score_list_list[1]),
+            player_3_score=sum(self.player_move_score_list_list[2]),
+            player_4_score=sum(self.player_move_score_list_list[3])
+        )
 
     def get_horizontal_word_location_set(self, location):
         horizontal_word_location_set = set([location])
@@ -231,6 +233,7 @@ class ScrabbleGame(object):
             is_vertical_move = False
         else:
             return False, is_vertical_move
+
         # All tiles must be connected
         if is_vertical_move:
             this_column = letter_location_set[0][1][0]
@@ -246,6 +249,7 @@ class ScrabbleGame(object):
                 this_tile = self.board[(this_column, this_row)].tile
                 if not (this_tile or (this_column, this_row) in location_set):
                     return False, is_vertical_move
+
         # Move does not cover any other tiles
         for location in location_set:
             if self.board[location].tile:

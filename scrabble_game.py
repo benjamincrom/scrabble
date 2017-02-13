@@ -14,7 +14,6 @@ def increment_letter(character):
     return chr(ord(character) + 1)
 
 def is_sublist(list_1, list_2):
-    import pdb; pdb.set_trace()
     counter_1 = collections.Counter(list_1)
     counter_2 = collections.Counter(list_2)
     for value, cardinality in counter_1.items():
@@ -239,7 +238,6 @@ class ScrabbleGame(object):
             return False
 
         # All tiles places are in one row or one column
-        is_vertical_move = None
         column_list = [location[0] for location in location_set]
         row_list = [location[1] for location in location_set]
 
@@ -248,7 +246,7 @@ class ScrabbleGame(object):
         elif len(set(row_list)) == 1:
             is_vertical_move = False
         else:
-            return False, is_vertical_move
+            return False
 
         # All tiles must be connected
         if is_vertical_move:
@@ -256,7 +254,7 @@ class ScrabbleGame(object):
             for this_row in range(min(row_list), max(row_list) + 1):
                 this_tile = self.board[(this_column, this_row)].tile
                 if not (this_tile or (this_column, this_row) in location_set):
-                    return False, is_vertical_move
+                    return False
         else:
             this_row = letter_location_set[0][1][1]
             for this_column_num in range(ord(min(column_list)),
@@ -264,20 +262,20 @@ class ScrabbleGame(object):
                 this_column = chr(this_column_num)
                 this_tile = self.board[(this_column, this_row)].tile
                 if not (this_tile or (this_column, this_row) in location_set):
-                    return False, is_vertical_move
+                    return False
 
         # Move does not cover any other tiles
         for location in location_set:
             if self.board[location].tile:
-                return False, is_vertical_move
+                return False
         # Move touches existing tile
         if not self.move_touches_tile(location_set):
-            return False, is_vertical_move
+            return False
         # Player is playing tiles that exist in player's rack
         if not is_sublist(letter_list, player_rack_letter_list):
-            return False, is_vertical_move
+            return False
 
-        return True, is_vertical_move
+        return True
 
     def next_player_move(self, letter_location_set):
         player_to_move = self.move_number % self.num_players

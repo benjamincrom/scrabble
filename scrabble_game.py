@@ -76,6 +76,11 @@ class ScrabbleGame(object):
             else:
                 current_tile = None
 
+        if len(horizontal_word_location_set) > 1:
+            return frozenset(horizontal_word_location_set)
+        else:
+            return None
+
     def get_vertical_word_location_set(self, location):
         vertical_word_location_set = set([location])
 
@@ -103,6 +108,11 @@ class ScrabbleGame(object):
             else:
                 current_tile = None
 
+        if len(vertical_word_location_set) > 1:
+            return frozenset(vertical_word_location_set)
+        else:
+            return None
+
     def score_move(self, letter_location_set):
         move_location_set = set(
             (location for _, location in letter_location_set)
@@ -111,15 +121,15 @@ class ScrabbleGame(object):
         word_location_set_set = set([])
         for location in move_location_set:
             if self.board[location].tile:
-                word_location_set_set.add(
-                    self.get_vertical_word_location_set(location)
-                )
+                location_set = self.get_vertical_word_location_set(location)
+                if location_set:
+                    word_location_set_set.add(location_set)
 
-                word_location_set_set.add(
-                    self.get_horizontal_word_location_set(location)
-                )
+                location_set = self.get_horizontal_word_location_set(location)
+                if location_set:
+                    word_location_set_set.add(location_set)
 
-        import pdb; pdb.set_trace()  # breakpoint 49d8ae7a //
+        import pdb; pdb.set_trace()  # breakpoint 6af0723b //
         return_location_set = set(
             (location for word_location_set in word_location_set_set
                       for location in word_location_set)

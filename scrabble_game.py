@@ -37,12 +37,20 @@ class ScrabbleGame(object):
                 '{}\n'
                 'Moves played: {}\n'
                 'Player {}\'s move\n'
-                '{} tiles remain in bag').format(
+                '{} tiles remain in bag\n'
+                'Player 1: {}\n'
+                'Player 2: {}\n'
+                'Player 3: {}\n'
+                'Player 4: {}\n').format(
                     str(self.board),
                     self.player_rack_list,
                     self.move_number,
                     (self.move_number % self.num_players) + 1,
-                    len(self.tile_bag)
+                    len(self.tile_bag),
+                    sum(self.player_move_score_list_list[0]),
+                    sum(self.player_move_score_list_list[1]),
+                    sum(self.player_move_score_list_list[2]),
+                    sum(self.player_move_score_list_list[3])
                 )
 
     def get_horizontal_word_location_set(self, location):

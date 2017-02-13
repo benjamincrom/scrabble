@@ -224,7 +224,7 @@ class ScrabbleGame(object):
                     return False, is_vertical_move
         else:
             this_row = letter_location_set[0][1][1]
-            for this_column_num in range(ord(min(column_list)), 
+            for this_column_num in range(ord(min(column_list)),
                                          ord(max(column_list)) + 1):
                 this_column = chr(this_column_num)
                 this_tile = self.board[(this_column, this_row)].tile

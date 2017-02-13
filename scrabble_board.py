@@ -50,12 +50,15 @@ class ScrabbleBoard(object):
         ]
 
         board_array[0] = [
-            ' ', ' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1',
-            '2', '3', '4', '5'
+            ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+            'l', 'm', 'n', 'o'
         ]
 
         for i in range(2, 17):
-            board_array[i][0] = chr(ord('a') - 2 + i)
+            board_array[i][0] = str(i - 1)
+            if i - 1 > 9:
+                board_array[i][1] = ''
+
             for j in range(2, 17):
                 board_array[j][i] = next(square_letter_gen)
 

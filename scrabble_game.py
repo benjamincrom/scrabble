@@ -216,6 +216,9 @@ class ScrabbleGame(object):
         player_rack_letter_list = [tile.letter for tile in player_rack]
         letter_list = [letter for letter, _ in letter_location_set]
         location_set = set((location for _, location in letter_location_set))
+        # Cannot stack tiles
+        if len(letter_list) != len(location_set):
+            return False
 
         # All tiles places are in one row or one column
         is_vertical_move = None

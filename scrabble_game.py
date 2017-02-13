@@ -204,17 +204,44 @@ class ScrabbleGame(object):
         letter_list = [letter for letter, _ in letter_location_set]
         location_set = set((location for _, location in letter_location_set))
 
+        # All tiles places are in one row or one column
+        is_vertical_move = None
+        column_list = [location[0] for location in location_set]
+        row_list = [location[1] for location in location_set]
+
+        if len(set(column_list)) == 1:
+            is_vertical_move = True
+        elif len(set(row_list)) == 1:
+            is_vertical_move = False
+        else:
+            return False, is_vertical_move
+        # All tiles must be connected
+        if is_vertical_move:
+            this_column = letter_location_set[0][1][0]
+            for this_row in range(min(row_list), max(row_list) + 1):
+                this_tile = self.board[(this_column, this_row)].tile
+                if not (this_tile or (this_column, this_row) in location_set):
+                    return False, is_vertical_move
+        else:
+            this_row = letter_location_set[0][1][1]
+            for this_column_num in range(ord(min(column_list)), 
+                                         ord(max(column_list)) + 1):
+                this_column = chr(this_column_num)
+                this_tile = self.board[(this_column, this_row)].tile
+                if not (this_tile or (this_column, this_row) in location_set):
+                    return False, is_vertical_move
+        # Move does not cover any other tiles
         for location in location_set:
             if self.board[location].tile:
-                return False
-
+                return False, is_vertical_move
+        # Move touches existing tile
         if not self.move_touches_tile(location_set):
-            return False
-
+            return False, is_vertical_move
+        # Player is playing tiles that exist in player's rack
         if not is_sublist(letter_list, player_rack_letter_list):
-            return False
+            return False, is_vertical_move
 
-        return True
+        return True, is_vertical_move
 
     def next_player_move(self, letter_location_set):
         player_to_move = self.move_number % self.num_players

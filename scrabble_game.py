@@ -285,6 +285,7 @@ class ScrabbleGame(object):
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
                 print('Player {} Wins!'.format(player_to_move + 1))
+                success = None
         else:
             success = False
 

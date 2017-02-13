@@ -55,7 +55,7 @@ class ScrabbleBoard(object):
         ]
 
         for i in range(2, 17):
-            board_array[i][0] = chr(ord('a')-2 + i)
+            board_array[i][0] = chr(ord('a') - 2 + i)
             for j in range(2, 17):
                 board_array[j][i] = next(square_letter_gen)
 

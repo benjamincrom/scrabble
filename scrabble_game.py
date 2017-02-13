@@ -141,13 +141,26 @@ class ScrabbleGame(object):
                 if location_set:
                     word_location_set_set.add(location_set)
 
-        score = sum(
-            (self.board[location].tile.point_value
-             for word_location_set in word_location_set_set
-             for location in word_location_set)
-        )
+        total_score = 0
+        for word_location_set in word_location_set_set:
+            word_score = 0
+            word_multiplier = 1
+            for location in word_location_set:
+                square = self.board[location]
+                word_multiplier *= square.word_multiplier
+                word_score += square.tile.point_value * square.letter_multiplier
+                square.letter_multiplier = 1
+                square.word_multiplier = 1
 
-        return score
+            word_score *= word_multiplier
+
+        total_score += word_score
+
+        # Bingo
+        if len(letter_location_set) == 7:
+            total_score += 50
+
+        return total_score
 
     @staticmethod
     def get_adjacent_location_set(location):

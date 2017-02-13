@@ -45,16 +45,24 @@ class ScrabbleBoard(object):
                              for square in sorted(self.square_dict.items()))
 
         board_array = [
-            [None for _ in range(15)]
-            for _ in range(15)
+            [' ' for _ in range(17)]
+            for _ in range(17)
         ]
 
-        for i in range(15):
-            for j in range(15):
+        board_array[0] = [
+            ' ', ' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '1',
+            '2', '3', '4', '5'
+        ]
+
+        for i in range(2, 17):
+            board_array[i][0] = chr(ord('a')-2 + i)
+
+        for i in range(2, 17):
+            for j in range(2, 17):
                 board_array[j][i] = next(square_letter_gen)
 
-        if board_array[7][7] == '_':
-            board_array[7][7] = '★'
+        if board_array[9][9] == '_':
+            board_array[9][9] = '★'
 
         return_line_list = [''.join(row) for row in board_array]
         return_str = '\n'.join(return_line_list)

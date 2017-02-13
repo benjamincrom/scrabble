@@ -282,6 +282,9 @@ class ScrabbleGame(object):
             self.player_move_score_list_list[player_to_move].append(move_score)
             self.move_number += 1
             success = True
+
+            if len(player_rack) == 0 and len(self.tile_bag) == 0:
+                print('Player {} Wins!'.format(player_to_move + 1))
         else:
             success = False
 

@@ -144,6 +144,7 @@ class ScrabbleGame(object):
                     word_location_set_set.add(location_set)
 
         total_score = 0
+        word_score = 0
         for word_location_set in word_location_set_set:
             word_score = 0
             word_multiplier = 1

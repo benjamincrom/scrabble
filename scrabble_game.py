@@ -292,7 +292,7 @@ class ScrabbleGame(object):
 
         return success
 
-    def exchange(self, letter_list):
+    def next_player_exchange(self, letter_list):
         if len(self.tile_bag) < 7 or len(letter_list) > 7:
             return False
 
@@ -307,6 +307,12 @@ class ScrabbleGame(object):
 
         for _ in range(len(letter_list)):
             player_rack.append(self.draw_random_tile())
+
+        for tile in exchange_tile_list:
+            if tile not in player_rack:
+                return False
+            else:
+                player_rack.remove(tile)
 
         self.tile_bag.extend(exchange_tile_list)
         self.move_number += 1

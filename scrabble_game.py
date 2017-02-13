@@ -224,6 +224,15 @@ class ScrabbleGame(object):
         player_rack_letter_list = [tile.letter for tile in player_rack]
         letter_list = [letter for letter, _ in letter_location_set]
         location_set = set((location for _, location in letter_location_set))
+
+        # Bounds check
+        for column, row in location_set:
+            if (ord(column) < ord('a') or
+                    ord(column) > ord('o') or
+                    row < 1 or
+                    row > 15):
+                return False
+
         # Cannot stack tiles
         if len(letter_list) != len(location_set):
             return False

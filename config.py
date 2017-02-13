@@ -1,3 +1,5 @@
+START_SQUARE = ('h', 8)
+
 DOUBLE_WORD_SCORE_LOCATION_LIST = [
     ('b', 2),
     ('b', 14),

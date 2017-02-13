@@ -7,6 +7,11 @@ import random
 import config
 import scrabble_board
 
+def decrement_letter(character):
+    return chr(ord(character) - 1)
+
+def increment_letter(character):
+    return chr(ord(character) + 1)
 
 def is_sublist(list_1, list_2):
     counter_1 = collections.Counter(list_1)
@@ -40,82 +45,169 @@ class ScrabbleGame(object):
                     len(self.tile_bag)
                 )
 
-    def score_move(self, letter_location_list):
-        return 0
+    def get_horizontal_word_location_set(self, location):
+        horizontal_word_location_set = set([location])
 
-    def location_touches_tile(self, location, new_tile_list):
-        column, row = location
+        current_location = location  # Look left
+        current_tile = self.board[current_location].tile
 
-        adjacent_location_set = set([
-            (chr(ord(column) + 1), row),
-            (chr(ord(column) - 1), row),
-            (column, (row + 1)),
-            (column, (row - 1))
-        ])
+        while current_tile:
+            horizontal_word_location_set.add(current_location)
 
-        # Board boundary check
-        remove_location_set = set(
-            [(column, row) for column, row in adjacent_location_set
-             if row > 15 or row < 1 or ord(column) > 111 or ord(column) < 97]
+            if ord(current_location[0]) > ord('a'):
+                current_location = (decrement_letter(current_location[0]),
+                                    current_location[1])
+
+                current_tile = self.board[current_location].tile
+            else:
+                current_tile = None
+
+        current_location = location  # Look right
+        current_tile = self.board[current_location].tile
+
+        while current_tile:
+            horizontal_word_location_set.add(current_location)
+
+            if ord(current_location[0]) < ord('o'):
+                current_location = (increment_letter(current_location[0]),
+                                    current_location[1])
+
+                current_tile = self.board[current_location].tile
+            else:
+                current_tile = None
+
+    def get_vertical_word_location_set(self, location):
+        vertical_word_location_set = set([location])
+
+        current_location = location  # Look up
+        current_tile = self.board[current_location].tile
+
+        while current_tile:
+            vertical_word_location_set.add(current_location)
+
+            if current_location[1] > 1:
+                current_location = (current_location[0], current_location[1] - 1)
+                current_tile = self.board[current_location].tile
+            else:
+                current_tile = None
+
+        current_location = location  # Look down
+        current_tile = self.board[current_location].tile
+
+        while current_tile:
+            vertical_word_location_set.add(current_location)
+
+            if current_location[1] < 15:
+                current_location = (current_location[0], current_location[1] + 1)
+                current_tile = self.board[current_location].tile
+            else:
+                current_tile = None
+
+    def score_move(self, letter_location_set):
+        move_location_set = set(
+            (location for _, location in letter_location_set)
         )
 
-        search_location_set = adjacent_location_set - remove_location_set
-
-        return_value = False
-        for adjacent_location in search_location_set:
-            adjacent_tile = self.board[adjacent_location].tile
-            if adjacent_tile or (adjacent_location in new_tile_list):
-                return_value = True
-
-        return return_value
-
-    def move_touches_tile(self, location_list):
-        return_value = True
-        if self.move_number == 0:
-            if ('h', 8) not in location_list:
-                return_value = False
-        else:
-            new_tile_list = []
-            for this_location in location_list:
-                if not self.location_touches_tile(this_location, new_tile_list):
-                    return_value = False
-                else:
-                    new_tile_list.append(this_location)
-
-        return return_value
-
-    def move_is_legal(self, letter_location_list, player_rack):
-        player_rack_letter_list = [tile.letter for tile in player_rack]
-        letter_list = [letter for letter, _ in letter_location_list]
-        location_list = [location for _, location in letter_location_list]
-
-        return_value = True
-
-        for location in location_list:
+        word_location_set_set = set([])
+        for location in move_location_set:
             if self.board[location].tile:
-                return_value = False
+                word_location_set_set.add(
+                    self.get_vertical_word_location_set(location)
+                )
 
-        if not self.move_touches_tile(location_list):
-            return_value = False
+                word_location_set_set.add(
+                    self.get_horizontal_word_location_set(location)
+                )
+
+        import pdb; pdb.set_trace()  # breakpoint 49d8ae7a //
+        return_location_set = set(
+            (location for word_location_set in word_location_set_set
+                      for location in word_location_set)
+        )
+
+        import pdb; pdb.set_trace()  # breakpoint dead5df0 //
+        return 0
+
+    @staticmethod
+    def get_adjacent_location_set(location):
+        column, row = location
+
+        adjacent_location_set = set(
+            [
+                (chr(ord(column) + 1), row),
+                (chr(ord(column) - 1), row),
+                (column, (row + 1)),
+                (column, (row - 1))
+            ]
+        )
+        # Board boundary check
+        remove_location_set = set(
+            (
+                (column, row) for column, row in adjacent_location_set
+                if (row > 15 or
+                    row < 1 or
+                    ord(column) > ord('o') or
+                    ord(column) < ord('a'))
+            )
+        )
+
+        return adjacent_location_set - remove_location_set
+
+    def location_touches_tile(self, location, new_tile_location_set):
+        adjacent_location_set = self.get_adjacent_location_set(location)
+
+        for adjacent_location in adjacent_location_set:
+            adjacent_tile = self.board[adjacent_location].tile
+            if adjacent_tile or (adjacent_location in new_tile_location_set):
+                return True
+
+        return False
+
+    def move_touches_tile(self, location_set):
+        if self.move_number == 0:
+            if config.START_SQUARE not in location_set:
+                return False
+        else:
+            new_tile_location_set = set([])
+            for this_location in location_set:
+                if not self.location_touches_tile(this_location,
+                                                  new_tile_location_set):
+                    return False
+                else:
+                    new_tile_location_set.add(this_location)
+
+        return True
+
+    def move_is_legal(self, letter_location_set, player_rack):
+        player_rack_letter_list = [tile.letter for tile in player_rack]
+        letter_list = [letter for letter, _ in letter_location_set]
+        location_set = set((location for _, location in letter_location_set))
+
+        for location in location_set:
+            if self.board[location].tile:
+                return False
+
+        if not self.move_touches_tile(location_set):
+            return False
 
         if not is_sublist(letter_list, player_rack_letter_list):
-            return_value = False
+            return False
 
-        return return_value
+        return True
 
-    def next_player_move(self, letter_location_list):
+    def next_player_move(self, letter_location_set):
         player_to_move = self.move_number % self.num_players
         player_rack = self.player_rack_list[player_to_move]
 
-        if self.move_is_legal(letter_location_list, player_rack):
-            for move_letter, board_location in letter_location_list:
+        if self.move_is_legal(letter_location_set, player_rack):
+            for move_letter, board_location in letter_location_set:
                 tile_index = self.get_rack_tile_index(player_rack, move_letter)
                 self.place_tile(player_rack, tile_index, board_location)
 
             while len(player_rack) < 7:
                 player_rack.append(self.draw_random_tile())
 
-            move_score = self.score_move(letter_location_list)
+            move_score = self.score_move(letter_location_set)
             self.player_move_score_list_list[player_to_move].append(move_score)
             self.move_number += 1
             success = True

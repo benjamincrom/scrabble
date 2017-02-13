@@ -129,14 +129,13 @@ class ScrabbleGame(object):
                 if location_set:
                     word_location_set_set.add(location_set)
 
-        import pdb; pdb.set_trace()  # breakpoint 6af0723b //
-        return_location_set = set(
-            (location for word_location_set in word_location_set_set
-                      for location in word_location_set)
+        score = sum(
+            (self.board[location].tile.point_value
+             for word_location_set in word_location_set_set
+             for location in word_location_set)
         )
 
-        import pdb; pdb.set_trace()  # breakpoint dead5df0 //
-        return 0
+        return score
 
     @staticmethod
     def get_adjacent_location_set(location):

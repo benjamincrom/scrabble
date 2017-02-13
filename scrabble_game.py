@@ -14,6 +14,7 @@ def increment_letter(character):
     return chr(ord(character) + 1)
 
 def is_sublist(list_1, list_2):
+    import pdb; pdb.set_trace()
     counter_1 = collections.Counter(list_1)
     counter_2 = collections.Counter(list_2)
     for value, cardinality in counter_1.items():
@@ -299,7 +300,7 @@ class ScrabbleGame(object):
             success = True
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                print('Player {} Wins!'.format(player_to_move + 1))
+                print('Game Over!')
                 success = None
         else:
             success = False

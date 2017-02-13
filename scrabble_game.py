@@ -275,6 +275,8 @@ class ScrabbleGame(object):
             while len(player_rack) < 7:
                 if self.tile_bag:
                     player_rack.append(self.draw_random_tile())
+                else:
+                    break
 
             move_score = self.score_move(letter_location_set)
             self.player_move_score_list_list[player_to_move].append(move_score)

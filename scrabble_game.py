@@ -99,7 +99,9 @@ class ScrabbleGame(object):
             vertical_word_location_set.add(current_location)
 
             if current_location[1] > 1:
-                current_location = (current_location[0], current_location[1] - 1)
+                current_location = (current_location[0],
+                                    current_location[1] - 1)
+
                 current_tile = self.board[current_location].tile
             else:
                 current_tile = None
@@ -111,7 +113,9 @@ class ScrabbleGame(object):
             vertical_word_location_set.add(current_location)
 
             if current_location[1] < 15:
-                current_location = (current_location[0], current_location[1] + 1)
+                current_location = (current_location[0],
+                                    current_location[1] + 1)
+
                 current_tile = self.board[current_location].tile
             else:
                 current_tile = None

@@ -188,10 +188,10 @@ class ScrabbleGame(object):
 
         adjacent_location_set = set(
             [
-                (chr(ord(column) + 1), row),
-                (chr(ord(column) - 1), row),
-                (column, (row + 1)),
-                (column, (row - 1))
+                (increment_letter(column), row),
+                (decrement_letter(column), row),
+                (column, row + 1),
+                (column, row - 1)
             ]
         )
         # Board boundary check

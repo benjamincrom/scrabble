@@ -93,94 +93,69 @@ class ScrabbleGame(object):
             )
         )
 
-    def get_horizontal_word_location_set(self, location):
-        horizontal_word_location_set = set([location])
+    def get_word_location_set(self, location, get_vertical_words=False):
+        word_location_set = set([location])
 
-        current_location = location  # Look left
+        current_location = location  # Center
         current_tile = self.board[current_location].tile
 
-        while current_tile:
-            horizontal_word_location_set.add(current_location)
+        while current_tile:  # Look negative
+            word_location_set.add(current_location)
 
-            if ord(current_location[0]) > ord('a'):
+            if get_vertical_words:
+                current_location = (current_location[0],
+                                    current_location[1] - 1)
+            else:
                 current_location = (decrement_letter(current_location[0]),
                                     current_location[1])
 
-                current_tile = self.board[current_location].tile
-            else:
-                current_tile = None
+                if (ord(current_location[0]) >= ord('a') and  # boounds check
+                        current_location[1] >= 1):
+                    current_tile = self.board[current_location].tile
+                else:
+                    current_tile = None
 
-        current_location = location  # Look right
+        current_location = location  # Center
         current_tile = self.board[current_location].tile
 
-        while current_tile:
-            horizontal_word_location_set.add(current_location)
+        while current_tile:  # Look positive
+            word_location_set.add(current_location)
 
-            if ord(current_location[0]) < ord('o'):
+            if get_vertical_words:
+                current_location = (current_location[0],
+                                    current_location[1] + 1)
+            else:
                 current_location = (increment_letter(current_location[0]),
                                     current_location[1])
 
-                current_tile = self.board[current_location].tile
-            else:
-                current_tile = None
+                if (ord(current_location[0]) <= ord('o') and  # bounds check
+                        current_location[1] <= 15):
+                    current_tile = self.board[current_location].tile
+                else:
+                    current_tile = None
 
-        if len(horizontal_word_location_set) > 1:
-            return frozenset(horizontal_word_location_set)
+        if len(word_location_set) > 1:
+            return frozenset(word_location_set)
         else:
             return None
 
-    def get_vertical_word_location_set(self, location):
-        vertical_word_location_set = set([location])
-
-        current_location = location  # Look up
-        current_tile = self.board[current_location].tile
-
-        while current_tile:
-            vertical_word_location_set.add(current_location)
-
-            if current_location[1] > 1:
-                current_location = (current_location[0],
-                                    current_location[1] - 1)
-
-                current_tile = self.board[current_location].tile
-            else:
-                current_tile = None
-
-        current_location = location  # Look down
-        current_tile = self.board[current_location].tile
-
-        while current_tile:
-            vertical_word_location_set.add(current_location)
-
-            if current_location[1] < 15:
-                current_location = (current_location[0],
-                                    current_location[1] + 1)
-
-                current_tile = self.board[current_location].tile
-            else:
-                current_tile = None
-
-        if len(vertical_word_location_set) > 1:
-            return frozenset(vertical_word_location_set)
-        else:
-            return None
-
-    def score_move(self, letter_location_set):
-        move_location_set = set(
-            (location for _, location in letter_location_set)
-        )
-
+    def get_word_location_set_set(self, move_location_set):
         word_location_set_set = set([])
         for location in move_location_set:
             if self.board[location].tile:
-                location_set = self.get_vertical_word_location_set(location)
-                if location_set:
-                    word_location_set_set.add(location_set)
+                for this_bool in [True, False]:
+                    location_set = self.get_word_location_set(
+                        location,
+                        get_vertical_words=this_bool
+                    )
 
-                location_set = self.get_horizontal_word_location_set(location)
-                if location_set:
-                    word_location_set_set.add(location_set)
+                    if location_set:
+                        word_location_set_set.add(location_set)
 
+        return word_location_set_set
+
+    def get_word_location_set_set_total_score(self, word_location_set_set,
+                                              num_move_locations):
         total_score = 0
         word_score = 0
         for word_location_set in word_location_set_set:
@@ -198,8 +173,24 @@ class ScrabbleGame(object):
         total_score += word_score
 
         # Bingo
-        if len(letter_location_set) == 7:
+        if num_move_locations == 7:
             total_score += 50
+
+        return total_score
+
+    def score_move(self, letter_location_set):
+        move_location_set = set(
+            (location for _, location in letter_location_set)
+        )
+
+        word_location_set_set = self.get_word_location_set_set(
+            move_location_set
+        )
+
+        total_score = self.get_word_location_set_set_total_score(
+            word_location_set_set,
+            len(move_location_set)
+        )
 
         return total_score
 

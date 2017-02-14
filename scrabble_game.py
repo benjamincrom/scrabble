@@ -2,6 +2,7 @@
 scrabble_game.py -- contains classes that model scrabble moves
 '''
 import collections
+import operator
 import random
 
 import config
@@ -37,7 +38,7 @@ class ScrabbleGame(object):
         for i in range(self.num_players):
             player_str_list.append(
                 'Player {player_number}: {score}'.format(
-                    player_number=i + 1,
+                    player_number=(i + 1),
                     score=sum(self.player_move_score_list_list[i])
                 )
             )
@@ -58,6 +59,38 @@ class ScrabbleGame(object):
             player_to_move=(self.move_number % self.num_players) + 1,
             tiles_remaining=len(self.tile_bag),
             player_str=player_str,
+        )
+
+    def conclude_game(self, empty_rack_player_id=None):
+        all_rack_points = 0
+
+        for i, player_rack in enumerate(self.player_rack_list):
+            if empty_rack_player_id and empty_rack_player_id == i:
+                continue
+
+            rack_point_total = sum((tile.point_value for tile in player_rack))
+            self.player_move_score_list_list[i].append(-1 * rack_point_total)
+            all_rack_points += rack_point_total
+
+        if empty_rack_player_id:
+            self.player_move_score_list_list[empty_rack_player_id].append(
+                all_rack_points
+            )
+
+        player_score_total_list = [
+            sum(player_move_score_list)
+            for player_move_score_list in self.player_move_score_list_list
+        ]
+
+        winning_player_id, winning_player_score = max(
+            enumerate(player_score_total_list), key=operator.itemgetter(1)
+        )
+
+        print(
+            'Game Over! Player {} wins with a score of {}'.format(
+                winning_player_id + 1,
+                winning_player_score
+            )
         )
 
     def get_horizontal_word_location_set(self, location):
@@ -298,8 +331,7 @@ class ScrabbleGame(object):
             success = True
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                print('Game Over!')
-                success = None
+                self.conclude_game(player_to_move)
         else:
             success = False
 

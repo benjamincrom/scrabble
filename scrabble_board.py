@@ -4,8 +4,13 @@ scrabble_board.py -- contain classes that model scrabble board
 '''
 import config
 
+def character_range(character_1, character_2):
+    """Generates the characters from `c1` to `c2`, inclusive."""
+    for this_character_ord in range(ord(character_1), ord(character_2)):
+        yield chr(this_character_ord)
 
-class Tile(object):
+
+class ScrabbleTile(object):
     def __init__(self, letter, point_value):
         self.letter = letter
         self.point_value = point_value
@@ -14,7 +19,7 @@ class Tile(object):
         return self.letter
 
 
-class Square(object):
+class BoardSquare(object):
     def __init__(self, location, tile, letter_multiplier, word_multiplier):
         self.location = location
         self.tile = tile
@@ -25,35 +30,36 @@ class Square(object):
         if self.tile:
             return_value = str(self.tile)
         else:
-            return_value = '_'
+            return_value = config.BLANK_SQUARE_CHARACTER
 
         return return_value
 
 
 class ScrabbleBoard(object):
     def __init__(self):
-        self.square_dict = self.initialize_square_dict()
+        self.board_square_dict = self.initialize_board_square_dict()
 
     def __getitem__(self, key):
-        return self.square_dict.get(key)
+        return self.board_square_dict.get(key)
 
     def __setitem__(self, key, val):
-        self.square_dict[key] = val
+        self.board_square_dict[key] = val
 
     def __repr__(self):
-        square_letter_gen = (str(square[1])
-                             for square in sorted(self.square_dict.items()))
+        square_letter_gen = (
+            str(square[1]) for square in sorted(self.board_square_dict.items())
+        )
 
         board_array = [
             [' ' for _ in range(17)]
             for _ in range(17)
         ]
 
-        board_array[0] = [
-            ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-            'l', 'm', 'n', 'o'
-        ]
+        # Column labels
+        board_array[0] = [' ', ' ']
+        board_array[0].extend(character_range('a', 'p'))
 
+        # Shrink empty spaces to make room for two-digit row numbers
         for i in range(2, 17):
             board_array[i][0] = str(i - 1)
             if i - 1 > 9:
@@ -62,8 +68,8 @@ class ScrabbleBoard(object):
             for j in range(2, 17):
                 board_array[j][i] = next(square_letter_gen)
 
-        if board_array[9][9] == '_':
-            board_array[9][9] = '★'
+        if board_array[9][9] == config.BLANK_SQUARE_CHARACTER:
+            board_array[9][9] = config.START_SQUARE_CHARACTER
 
         return_line_list = [''.join(row) for row in board_array]
         return_str = '\n'.join(return_line_list)
@@ -93,19 +99,19 @@ class ScrabbleBoard(object):
         return letter_multiplier
 
     @classmethod
-    def initialize_square_dict(cls):
-        initial_square_dict = {}
+    def initialize_board_square_dict(cls):
+        initial_board_square_dict = {}
         for column in 'abcdefghijlkmno':
             for row in range(1, 16):
                 word_multiplier = cls.get_location_word_mutliplier(column, row)
                 letter_multiplier = cls.get_location_letter_multiplier(column,
                                                                        row)
 
-                initial_square_dict[(column, row)] = Square(
+                initial_board_square_dict[(column, row)] = BoardSquare(
                     location=(column, row),
                     tile=None,
                     word_multiplier=word_multiplier,
                     letter_multiplier=letter_multiplier
                 )
 
-        return initial_square_dict
+        return initial_board_square_dict

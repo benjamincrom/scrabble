@@ -363,7 +363,7 @@ class ScrabbleGame(object):
         for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items():
             for _ in range(magnitude):
                 tile_bag.append(
-                    scrabble_board.Tile(
+                    scrabble_board.ScrabbleTile(
                         letter=letter,
                         point_value=config.LETTER_POINT_VALUES_DICT[letter]
                     )

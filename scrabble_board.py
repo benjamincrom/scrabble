@@ -5,7 +5,6 @@ scrabble_board.py -- contain classes that model scrabble board
 import config
 
 def character_range(character_1, character_2):
-    """Generates the characters from `c1` to `c2`, inclusive."""
     for this_character_ord in range(ord(character_1), ord(character_2)):
         yield chr(this_character_ord)
 
@@ -50,22 +49,17 @@ class ScrabbleBoard(object):
             str(square[1]) for square in sorted(self.board_square_dict.items())
         )
 
-        board_array = [
-            [' ' for _ in range(17)]
-            for _ in range(17)
-        ]
+        board_array_first_row = [' ', ' '] + list(character_range('a', 'p'))
+        board_array = [board_array_first_row]  # Column labels
+        board_array.extend(
+            ([' ' for _ in range(17)] for _ in range(16))
+        )
 
-        # Column labels
-        board_array[0] = [' ', ' ']
-        board_array[0].extend(character_range('a', 'p'))
-
-        # Row labels
         for i in range(2, 17):
-            board_array[i][0] = str(i - 1)
-            # Shrink empty spaces to make room for two-digit row numbers
+            board_array[i][0] = str(i - 1)  # Row labels
             if i - 1 > 9:
-                board_array[i][1] = ''
-
+                board_array[i][1] = ''  # Shrink empty spaces to make room for
+                                        # two-digit row numbers
             for j in range(2, 17):
                 board_array[j][i] = next(square_letter_gen)
 
@@ -78,7 +72,9 @@ class ScrabbleBoard(object):
         return return_str
 
     @staticmethod
-    def get_location_word_mutliplier(column, row):
+    def get_location_word_mutliplier(location):
+        column, row = location
+
         if (column, row) in config.DOUBLE_WORD_SCORE_LOCATION_LIST:
             word_multiplier = 2
         elif (column, row) in config.TRIPLE_WORD_SCORE_LOCATION_LIST:
@@ -89,7 +85,9 @@ class ScrabbleBoard(object):
         return word_multiplier
 
     @staticmethod
-    def get_location_letter_multiplier(column, row):
+    def get_location_letter_multiplier(location):
+        column, row = location
+
         if (column, row) in config.DOUBLE_LETTER_SCORE_LOCATION_LIST:
             letter_multiplier = 2
         elif (column, row) in config.TRIPLE_LETTER_SCORE_LOCATION_LIST:
@@ -102,14 +100,14 @@ class ScrabbleBoard(object):
     @classmethod
     def initialize_board_square_dict(cls):
         initial_board_square_dict = {}
-        for column in 'abcdefghijlkmno':
+        for column in character_range('a', 'p'):
             for row in range(1, 16):
-                word_multiplier = cls.get_location_word_mutliplier(column, row)
-                letter_multiplier = cls.get_location_letter_multiplier(column,
-                                                                       row)
+                location = (column, row)
+                word_multiplier = cls.get_location_word_mutliplier(location)
+                letter_multiplier = cls.get_location_letter_multiplier(location)
 
                 initial_board_square_dict[(column, row)] = BoardSquare(
-                    location=(column, row),
+                    location=location,
                     tile=None,
                     word_multiplier=word_multiplier,
                     letter_multiplier=letter_multiplier

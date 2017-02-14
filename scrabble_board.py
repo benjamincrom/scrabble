@@ -59,9 +59,10 @@ class ScrabbleBoard(object):
         board_array[0] = [' ', ' ']
         board_array[0].extend(character_range('a', 'p'))
 
-        # Shrink empty spaces to make room for two-digit row numbers
+        # Row labels
         for i in range(2, 17):
             board_array[i][0] = str(i - 1)
+            # Shrink empty spaces to make room for two-digit row numbers
             if i - 1 > 9:
                 board_array[i][1] = ''
 

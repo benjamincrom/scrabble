@@ -35,6 +35,7 @@ class ScrabbleGame(object):
 
     def __repr__(self):
         player_str_list = []
+
         for i in range(self.num_players):
             player_str_list.append(
                 'Player {player_number}: {score}'.format(
@@ -65,9 +66,6 @@ class ScrabbleGame(object):
         all_rack_points = 0
 
         for i, player_rack in enumerate(self.player_rack_list):
-            if empty_rack_player_id and empty_rack_player_id == i:
-                continue
-
             rack_point_total = sum((tile.point_value for tile in player_rack))
             self.player_move_score_list_list[i].append(-1 * rack_point_total)
             all_rack_points += rack_point_total
@@ -93,42 +91,38 @@ class ScrabbleGame(object):
             )
         )
 
-    def get_word_location_set(self, location, get_vertical_words=False):
-        word_location_set = set([location])
+    @staticmethod
+    def get_next_location_function(use_positive_seek, use_vertical_words):
+        if use_vertical_words and use_positive_seek:
+            return lambda (x, y): (x, y + 1)
+        elif use_vertical_words and not use_positive_seek:
+            return lambda (x, y): (x, y - 1)
+        elif not use_vertical_words and use_positive_seek:
+            return lambda (x, y): (increment_letter(x), y)
+        elif not use_vertical_words and not use_positive_seek:
+            return lambda (x, y): (decrement_letter(x), y)
+        else:
+            raise ValueError('Incorrect input.')
 
-        current_location = location  # Center
-        current_tile = self.board[current_location].tile
+    def get_word_location_set(self, location, use_vertical_words):
+        word_location_set = set([])
 
-        while current_tile:  # Look negative
-            word_location_set.add(current_location)
+        for use_positive_seek in [True, False]:
+            current_location = location
+            current_tile = self.board[current_location].tile
 
-            if get_vertical_words:
-                current_location = (current_location[0],
-                                    current_location[1] - 1)
-            else:
-                current_location = (decrement_letter(current_location[0]),
-                                    current_location[1])
+            next_location_function = self.get_next_location_function(
+                use_positive_seek,
+                use_vertical_words
+            )
 
-                if (ord(current_location[0]) >= ord('a') and  # boounds check
-                        current_location[1] >= 1):
-                    current_tile = self.board[current_location].tile
-                else:
-                    current_tile = None
+            while current_tile:
+                word_location_set.add(current_location)
+                current_location = next_location_function(current_location)
 
-        current_location = location  # Center
-        current_tile = self.board[current_location].tile
-
-        while current_tile:  # Look positive
-            word_location_set.add(current_location)
-
-            if get_vertical_words:
-                current_location = (current_location[0],
-                                    current_location[1] + 1)
-            else:
-                current_location = (increment_letter(current_location[0]),
-                                    current_location[1])
-
-                if (ord(current_location[0]) <= ord('o') and  # bounds check
+                if (ord(current_location[0]) >= ord('a') and  # bounds check
+                        ord(current_location[0]) <= ord('o') and
+                        current_location[1] >= 1 and
                         current_location[1] <= 15):
                     current_tile = self.board[current_location].tile
                 else:
@@ -139,28 +133,28 @@ class ScrabbleGame(object):
         else:
             return None
 
-    def get_word_location_set_set(self, move_location_set):
-        word_location_set_set = set([])
-        for location in move_location_set:
-            if self.board[location].tile:
-                for this_bool in [True, False]:
-                    location_set = self.get_word_location_set(
+    def get_word_set(self, move_location_set):
+        word_set = set([])
+
+        for use_vertical_words in [True, False]:
+            for location in move_location_set:
+                word_set.add(
+                    self.get_word_location_set(
                         location,
-                        get_vertical_words=this_bool
+                        use_vertical_words=use_vertical_words
                     )
+                )
 
-                    if location_set:
-                        word_location_set_set.add(location_set)
+        return word_set
 
-        return word_location_set_set
-
-    def get_word_location_set_set_total_score(self, word_location_set_set,
-                                              num_move_locations):
+    def get_word_set_total_score(self, word_set, num_move_locations):
         total_score = 0
         word_score = 0
-        for word_location_set in word_location_set_set:
+
+        for word_location_set in word_set:
             word_score = 0
             word_multiplier = 1
+
             for location in word_location_set:
                 square = self.board[location]
                 word_multiplier *= square.word_multiplier
@@ -172,9 +166,8 @@ class ScrabbleGame(object):
 
         total_score += word_score
 
-        # Bingo
         if num_move_locations == 7:
-            total_score += 50
+            total_score += 50  # Bingo
 
         return total_score
 
@@ -183,14 +176,9 @@ class ScrabbleGame(object):
             (location for _, location in letter_location_set)
         )
 
-        word_location_set_set = self.get_word_location_set_set(
-            move_location_set
-        )
-
-        total_score = self.get_word_location_set_set_total_score(
-            word_location_set_set,
-            len(move_location_set)
-        )
+        word_set = self.get_word_set(move_location_set)
+        total_score = self.get_word_set_total_score(word_set,
+                                                    len(move_location_set))
 
         return total_score
 

@@ -61,12 +61,17 @@ class ScrabbleGame(object):
             player_scores_str=player_scores_str
         )
 
-    def place_word(self, word, start_location, is_vertical_move):
+    def get_current_player_data(self):
+        player_to_move = self.move_number % self.num_players
+        player_rack = self.player_rack_list[player_to_move]
+
+        return player_to_move, player_rack
+
+    def mock_place_word(self, word, start_location, is_vertical_move):
         self.tile_bag = self.initialize_tile_bag()  # Refill tile bag
         letter_location_set = set([])
 
-        player_to_move = self.move_number % self.num_players
-        player_rack = self.player_rack_list[player_to_move]
+        _, player_rack = self.get_current_player_data()
 
         next_location_function = self.get_next_location_function(
             use_positive_seek=True,
@@ -79,6 +84,7 @@ class ScrabbleGame(object):
                 if character == tile.letter:
                     player_rack.append(tile)
                     letter_location_set.add((character, current_location))
+                    self.board[current_location].tile = None
                     current_location = next_location_function(current_location)
                     break
 
@@ -158,8 +164,8 @@ class ScrabbleGame(object):
     def get_word_set(self, move_location_set):
         word_set = set([])
 
-        for use_vertical_words in [True, False]:
-            for location in move_location_set:
+        for use_vertical_words in [True, False]:  # Search for vertical words
+            for location in move_location_set:    # created, then horizontal
                 word_set.add(
                     self.get_word_location_set(
                         location,
@@ -198,8 +204,11 @@ class ScrabbleGame(object):
         )
 
         word_set = self.get_word_set(move_location_set)
-        total_score = self.get_word_set_total_score(word_set,
-                                                    len(move_location_set))
+
+        total_score = self.get_word_set_total_score(
+            word_set,
+            len(move_location_set)
+        )
 
         return total_score
 
@@ -322,8 +331,7 @@ class ScrabbleGame(object):
         return success
 
     def next_player_move(self, letter_location_set):
-        player_to_move = self.move_number % self.num_players
-        player_rack = self.player_rack_list[player_to_move]
+        player_to_move, player_rack = self.get_current_player_data()
 
         if self.move_is_legal(letter_location_set, player_rack):
             for move_letter, board_location in letter_location_set:
@@ -338,12 +346,14 @@ class ScrabbleGame(object):
                     break
 
             move_score = self.score_move(letter_location_set)
-            self.player_score_list_list[player_to_move].append(move_score)
-            self.move_number += 1
-            success = True
+            player_score_list = self.player_score_list_list[player_to_move]
+            player_score_list.append(move_score)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
                 self.conclude_game(player_to_move)
+
+            self.move_number += 1
+            success = True
         else:
             success = False
 
@@ -353,8 +363,7 @@ class ScrabbleGame(object):
         if len(self.tile_bag) < 7 or len(letter_list) > 7:
             return False
 
-        player_to_move = self.move_number % self.num_players
-        player_rack = self.player_rack_list[player_to_move]
+        _, player_rack = self.get_current_player_data()
 
         exchange_tile_list = []
         for letter in letter_list:

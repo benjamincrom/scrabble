@@ -64,6 +64,10 @@ class ScrabbleGame(object):
 
     def mock_place_word(self, word, start_location, is_vertical_move):
         self.tile_bag = self.initialize_tile_bag()  # Refill tile bag
+        letter_location_set = set([])
+
+        player_to_move = self.move_number % self.num_players
+        player_rack = self.player_rack_list[player_to_move]
 
         next_location_function = self.get_next_location_function(
             use_positive_seek=True,
@@ -74,10 +78,12 @@ class ScrabbleGame(object):
         for character in word:
             for tile in self.tile_bag:
                 if character == tile.letter:
-                    self.place_tile(tile, current_location)
+                    player_rack.append(tile)
+                    letter_location_set.add((character, current_location))
                     current_location = next_location_function(current_location)
+                    break
 
-        return True
+        return self.next_player_move(letter_location_set)
 
     def conclude_game(self, empty_rack_player_id=None):
         all_rack_points = 0
@@ -180,8 +186,7 @@ class ScrabbleGame(object):
                 square.word_multiplier = 1
 
             word_score *= word_multiplier
-
-        total_score += word_score
+            total_score += word_score
 
         if num_move_locations == 7:
             total_score += 50  # Bingo

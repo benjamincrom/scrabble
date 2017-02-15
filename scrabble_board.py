@@ -52,19 +52,19 @@ class ScrabbleBoard(object):
         board_array_first_row = [' ', ' '] + list(character_range('a', 'p'))
         board_array = [board_array_first_row]  # Column labels
         board_array.extend(
-            ([' ' for _ in range(17)] for _ in range(16))
+            ([' ' for _ in range(17)] for _ in range(15))
         )
 
-        for i in range(2, 17):
-            board_array[i][0] = str(i - 1)  # Row labels
-            if i - 1 > 9:
+        for i in range(1, 16):
+            board_array[i][0] = str(i)  # Row labels
+            if i > 9:
                 board_array[i][1] = ''  # Shrink empty spaces to make room for
                                         # two-digit row numbers
             for j in range(2, 17):
-                board_array[j][i] = next(square_letter_gen)
+                board_array[j-1][i+1] = next(square_letter_gen) # swap x and y
 
-        if board_array[9][9] == config.BLANK_SQUARE_CHARACTER:
-            board_array[9][9] = config.START_SQUARE_CHARACTER
+        if board_array[8][9] == config.BLANK_SQUARE_CHARACTER:
+            board_array[8][9] = config.START_SQUARE_CHARACTER
 
         return_line_list = [''.join(row) for row in board_array]
         return_str = '\n'.join(return_line_list)

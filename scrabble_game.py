@@ -62,6 +62,23 @@ class ScrabbleGame(object):
             player_str=player_str,
         )
 
+    def mock_place_word(self, word, start_location, is_vertical_move):
+        self.tile_bag = self.initialize_tile_bag()  # Refill tile bag
+
+        next_location_function = self.get_next_location_function(
+            use_positive_seek=True,
+            use_vertical_words=is_vertical_move
+        )
+
+        current_location = start_location
+        for character in word:
+            for tile in self.tile_bag:
+                if character == tile.letter:
+                    self.place_tile(tile, current_location)
+                    current_location = next_location_function(current_location)
+
+        return True
+
     def conclude_game(self, empty_rack_player_id=None):
         all_rack_points = 0
 
@@ -94,13 +111,13 @@ class ScrabbleGame(object):
     @staticmethod
     def get_next_location_function(use_positive_seek, use_vertical_words):
         if use_vertical_words and use_positive_seek:
-            return lambda (x, y): (x, y + 1)
+            return lambda x: (x[0], x[1] + 1)
         elif use_vertical_words and not use_positive_seek:
-            return lambda (x, y): (x, y - 1)
+            return lambda x: (x[0], x[1] - 1)
         elif not use_vertical_words and use_positive_seek:
-            return lambda (x, y): (increment_letter(x), y)
+            return lambda x: (increment_letter(x[0]), x[1])
         elif not use_vertical_words and not use_positive_seek:
-            return lambda (x, y): (decrement_letter(x), y)
+            return lambda x: (decrement_letter(x[0]), x[1])
         else:
             raise ValueError('Incorrect input.')
 
@@ -131,7 +148,7 @@ class ScrabbleGame(object):
         if len(word_location_set) > 1:
             return frozenset(word_location_set)
         else:
-            return None
+            return frozenset([])
 
     def get_word_set(self, move_location_set):
         word_set = set([])
@@ -261,13 +278,13 @@ class ScrabbleGame(object):
 
          # All tiles must be connected
         if is_vertical_move:
-            this_column = location_set[0][1][0]
+            this_column = list(location_set)[0][0]
             for this_row in range(min(row_list), max(row_list) + 1):
                 this_tile = self.board[(this_column, this_row)].tile
                 if not (this_tile or (this_column, this_row) in location_set):
                     return False
         else:
-            this_row = location_set[0][1][1]
+            this_row = list(location_set)[0][1]
             for this_column_num in range(ord(min(column_list)),
                                          ord(max(column_list)) + 1):
                 this_column = chr(this_column_num)
@@ -289,16 +306,16 @@ class ScrabbleGame(object):
         letter_list = [letter for letter, _ in letter_location_set]
         location_set = set((location for _, location in letter_location_set))
 
-        success_condition_list = [
-            self.move_is_not_out_of_bounds(location_set),
-            self.move_does_not_stack_tiles(letter_list, location_set),
-            self.move_does_not_misalign_tiles(location_set),
-            self.move_does_not_cover_tiles(location_set),
-            self.move_touches_tile(location_set),
-            is_sublist(letter_list, player_rack_letter_list)
-        ]
+        success = (
+            self.move_is_not_out_of_bounds(location_set) and
+            is_sublist(letter_list, player_rack_letter_list) and
+            self.move_does_not_stack_tiles(letter_list, location_set) and
+            self.move_does_not_misalign_tiles(location_set) and
+            self.move_does_not_cover_tiles(location_set) and
+            self.move_touches_tile(location_set)
+        )
 
-        return all(success_condition_list)
+        return success
 
     def next_player_move(self, letter_location_set):
         player_to_move = self.move_number % self.num_players

@@ -30,21 +30,20 @@ class ScrabbleGame(object):
         self.tile_bag = self.initialize_tile_bag()
         self.player_rack_list = self.initialize_player_racks()
         self.board = scrabble_board.ScrabbleBoard()
-        self.player_move_score_list_list = [[] for _ in range(num_players)]
+        self.player_score_list_list = [[] for _ in range(num_players)]
         self.move_number = 0
 
     def __repr__(self):
-        player_str_list = []
-
-        for i in range(self.num_players):
-            player_str_list.append(
+        player_score_str_list = []
+        for i, player_score_list in enumerate(self.player_score_list_list):
+            player_score_str_list.append(
                 'Player {player_number}: {score}'.format(
                     player_number=(i + 1),
-                    score=sum(self.player_move_score_list_list[i])
+                    score=sum(player_score_list)
                 )
             )
 
-        player_str = '\n'.join(player_str_list)
+        player_scores_str = '\n'.join(player_score_str_list)
 
         return (
             '{board}\n'
@@ -52,14 +51,14 @@ class ScrabbleGame(object):
             'Moves played: {move_number}\n'
             'Player {player_to_move}\'s move\n'
             '{tiles_remaining} tiles remain in bag\n'
-            '{player_str}'
+            '{player_scores_str}'
         ).format(
             board=str(self.board),
             player_rack_list=self.player_rack_list,
             move_number=self.move_number,
             player_to_move=(self.move_number % self.num_players) + 1,
             tiles_remaining=len(self.tile_bag),
-            player_str=player_str,
+            player_scores_str=player_scores_str
         )
 
     def mock_place_word(self, word, start_location, is_vertical_move):
@@ -85,22 +84,22 @@ class ScrabbleGame(object):
 
         return self.next_player_move(letter_location_set)
 
-    def conclude_game(self, empty_rack_player_id=None):
+    def conclude_game(self, empty_rack_id=None):
         all_rack_points = 0
 
         for i, player_rack in enumerate(self.player_rack_list):
             rack_point_total = sum((tile.point_value for tile in player_rack))
-            self.player_move_score_list_list[i].append(-1 * rack_point_total)
+            this_player_score_list = self.player_score_list_list[i]
+            this_player_score_list.append(-1 * rack_point_total)
             all_rack_points += rack_point_total
 
-        if empty_rack_player_id:
-            self.player_move_score_list_list[empty_rack_player_id].append(
-                all_rack_points
-            )
+        if empty_rack_id:  # Empty rack player gets all other racks' points
+            empty_player_score_list = self.player_score_list_list[empty_rack_id]
+            empty_player_score_list.append(all_rack_points)
 
         player_score_total_list = [
-            sum(player_move_score_list)
-            for player_move_score_list in self.player_move_score_list_list
+            sum(player_score_list)
+            for player_score_list in self.player_score_list_list
         ]
 
         winning_player_id, winning_player_score = max(
@@ -130,8 +129,8 @@ class ScrabbleGame(object):
     def get_word_location_set(self, location, use_vertical_words):
         word_location_set = set([])
 
-        for use_positive_seek in [True, False]:
-            current_location = location
+        for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
+            current_location = location          # either up/down or left/right
             current_tile = self.board[current_location].tile
 
             next_location_function = self.get_next_location_function(
@@ -151,8 +150,8 @@ class ScrabbleGame(object):
                 else:
                     current_tile = None
 
-        if len(word_location_set) > 1:
-            return frozenset(word_location_set)
+        if len(word_location_set) > 1:           # Must be at least 2 letters to
+            return frozenset(word_location_set)  # count as a word
         else:
             return frozenset([])
 
@@ -339,7 +338,7 @@ class ScrabbleGame(object):
                     break
 
             move_score = self.score_move(letter_location_set)
-            self.player_move_score_list_list[player_to_move].append(move_score)
+            self.player_score_list_list[player_to_move].append(move_score)
             self.move_number += 1
             success = True
 

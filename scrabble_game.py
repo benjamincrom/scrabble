@@ -67,7 +67,8 @@ class ScrabbleGame(object):
 
         return player_to_move, player_rack
 
-    def mock_place_word(self, word, start_location, is_vertical_move):
+    def _mock_place_word(self, word, start_location, is_vertical_move):
+        """For testing"""
         self.tile_bag = self.initialize_tile_bag()  # Refill tile bag
         letter_location_set = set([])
 

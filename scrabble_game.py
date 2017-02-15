@@ -247,8 +247,8 @@ class ScrabbleGame(object):
 
     def move_touches_tile(self, location_set):
         if self.move_number == 0:
-            if config.START_SQUARE not in location_set:
-                return False
+            if config.START_SQUARE in location_set:
+                return True
         else:
             for this_location in location_set:
                 if self.location_touches_tile(this_location):

@@ -157,6 +157,7 @@ class ScrabbleGame(object):
             return frozenset([])
 
     def get_word_set(self, move_location_set):
+        import pdb; pdb.set_trace()  # breakpoint 995af16b //
         word_set = set([])
 
         for use_vertical_words in [True, False]:
@@ -168,6 +169,7 @@ class ScrabbleGame(object):
                     )
                 )
 
+        import pdb; pdb.set_trace()  # breakpoint dfaf2d9c //
         return word_set
 
     def get_word_set_total_score(self, word_set, num_move_locations):

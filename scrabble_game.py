@@ -237,12 +237,10 @@ class ScrabbleGame(object):
 
         return adjacent_location_set - remove_location_set
 
-    def location_touches_tile(self, location, new_tile_location_set):
+    def location_touches_tile(self, location):
         adjacent_location_set = self.get_adjacent_location_set(location)
-
         for adjacent_location in adjacent_location_set:
-            adjacent_tile = self.board[adjacent_location].tile
-            if adjacent_tile or (adjacent_location in new_tile_location_set):
+            if self.board[adjacent_location].tile:
                 return True
 
         return False
@@ -252,15 +250,11 @@ class ScrabbleGame(object):
             if config.START_SQUARE not in location_set:
                 return False
         else:
-            new_tile_location_set = set([])
             for this_location in location_set:
-                if not self.location_touches_tile(this_location,
-                                                  new_tile_location_set):
-                    return False
-                else:
-                    new_tile_location_set.add(this_location)
+                if self.location_touches_tile(this_location):
+                    return True
 
-        return True
+        return False
 
     @staticmethod
     def move_is_not_out_of_bounds(location_set):

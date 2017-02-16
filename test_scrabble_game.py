@@ -8,8 +8,7 @@ def test_decrement_letter():
 def test_increment_letter():
     assert scrabble_game.increment_letter('a') == 'b'
 
-def test_is_sublist():
-    scrabble_game.input = lambda x: 'N'
+def test_game_board():
     game = scrabble_game.ScrabbleGame(4)
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
@@ -27,6 +26,10 @@ def test_is_sublist():
                                '13_______________\n'
                                '14_______________\n'
                                '15_______________')
+
+def test_is_sublist():
+    scrabble_game.input = lambda x: 'N'
+    game = scrabble_game.ScrabbleGame(4)
 
     assert game.move_is_sublist([1, 2, 3], [1, 2, 3, 4])
     assert not game.move_is_sublist([1, 2, 3, 5], [1, 2])

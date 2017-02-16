@@ -1,20 +1,20 @@
 import scrabble_game
-'''
+
 def test_decrement_letter():
-    assert (scrabble_game.decrement_letter('d') == 'c')
+    assert scrabble_game.decrement_letter('d') == 'c'
 
 def test_increment_letter():
-    assert (scrabble_game.increment_letter('a') == 'b')
+    assert scrabble_game.increment_letter('a') == 'b'
 
 def test_is_sublist():
-    assert(scrabble_game.is_sublist([1, 2, 3], [1, 2, 3, 4]))
-    assert(not scrabble_game.is_sublist([1, 2, 3, 5], [1, 2]))
+    assert scrabble_game.is_sublist([1, 2, 3], [1, 2, 3, 4])
+    assert not scrabble_game.is_sublist([1, 2, 3, 5], [1, 2])
 
 
 def test_board_moves_score():
     game = scrabble_game.ScrabbleGame(4)
     game.place_word('SCRAB', ('h', 8), False, True)
-    game.place_word('ODING', ('i', 9), True, True)
+    game.place_word('(C)ODING', ('i', 9), True, True)
     game.place_word('PILE', ('g', 5), True, True)
 
     assert game.player_score_list_list == [[12], [13], [17], []]
@@ -41,7 +41,7 @@ def test_board_moves_score():
 def test_bingo():
     game = scrabble_game.ScrabbleGame(2)
     game.place_word('BAKER', ('h', 8), False, True)
-    game.place_word('AKELAKE', ('l', 9), True, True)
+    game.place_word('(R)AKELAKE', ('l', 9), True, True)
 
     assert game.player_score_list_list == [[12], [84]]
     assert game.move_number == 2
@@ -89,10 +89,10 @@ def test_itersect_words_regular():
                                '14_______________\n'
                                '15_______________')
 
-def test_intersetct_corner():
+def test_intersect_corner():
     game = scrabble_game.ScrabbleGame(3)
     game.place_word('BAKER', ('h', 8), False, True)
-    game.place_word('FAKE', ('l', 4), True, True)
+    game.place_word('FAKE(R)', ('l', 4), True, True)
 
     assert game.player_score_list_list == [[12], [24], []]
     assert game.move_number == 2
@@ -139,7 +139,7 @@ def test_intersect_words_double_points():
                                '13_______________\n'
                                '14_______________\n'
                                '15_______________')
-'''
+
 def test_intersect_parallel():
     game = scrabble_game.ScrabbleGame(3)
     game.place_word('BAKERS', ('h', 8), False, True)
@@ -165,13 +165,23 @@ def test_intersect_parallel():
                                '14_______________\n'
                                '15_______________')
 
+def test_play_too_many_tiles():
+    game = scrabble_game.ScrabbleGame(3)
+    assert(
+        game.place_word('BAKERSTO', ('h', 8), False, True) is False
+    )
+
+def test_out_of_bounds():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKERS', ('h', 8), False, True)
+    game.place_word('(S)ERIOUS', ('m', 9), True, True)
+    assert game.place_word('(S)TYLISH', ('n', 14), True, True) is False
+
+def test_letters_not_in_rack():
+    game = scrabble_game.ScrabbleGame(3)
+    assert game.place_word('ZZZZZZ', ('h', 8), False, False) is False
+
 '''
-def test_play_too_many_tiles
-
-def test_out_of_bounds
-
-def test_letters_not_in_rack
-
 def test_move_stacks_tiles
 
 def test_tiles_disconnected
@@ -179,6 +189,4 @@ def test_tiles_disconnected
 def test_tiles_out_of_alignment
 
 def test_conclude_game
-
-
 '''

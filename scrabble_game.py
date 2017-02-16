@@ -14,16 +14,6 @@ def decrement_letter(character):
 def increment_letter(character):
     return chr(ord(character) + 1)
 
-def is_sublist(list_1, list_2):
-    counter_1 = collections.Counter(list_1)
-    counter_2 = collections.Counter(list_2)
-    for value, cardinality in counter_1.items():
-        if cardinality > counter_2[value]:
-            return False
-
-    return True
-
-
 class ScrabbleGame(object):
     def __init__(self, num_players):
         self.num_players = num_players
@@ -62,6 +52,17 @@ class ScrabbleGame(object):
         )
 
     @staticmethod
+    def move_is_sublist(letter_list_1, letter_list_2):
+        letter_counter_1 = collections.Counter(letter_list_1)
+        letter_counter_2 = collections.Counter(letter_list_2)
+        for letter, cardinality in letter_counter_1.items():
+            if cardinality > letter_counter_2[letter]:
+                print('Not have enough {} tiles in rack.'.format(letter))
+                return False
+
+        return True
+
+    @staticmethod
     def get_rack_tile_index(player_rack, move_letter):
         for i, rack_tile in enumerate(player_rack):
             if rack_tile.letter == move_letter:
@@ -75,7 +76,19 @@ class ScrabbleGame(object):
 
     @staticmethod
     def move_does_not_stack_tiles(letter_list, location_set):
-        return len(letter_list) == len(location_set)
+        if len(letter_list) == len(location_set):
+            return True
+        else:
+            print('Move stacks tiles.')
+            return False
+
+    @staticmethod
+    def move_is_seven_tiles_or_less(location_set):
+        if len(location_set) > 7:
+            print('Move places greater than seven tiles.')
+            return False
+        else:
+            return True
 
     @staticmethod
     def location_out_of_bounds(location):
@@ -137,6 +150,7 @@ class ScrabbleGame(object):
     def move_is_not_out_of_bounds(cls, location_set):
         for location in location_set:
             if cls.location_out_of_bounds(location):
+                print('Move location {} is out of bounds'.format(location))
                 return False
 
         return True
@@ -309,6 +323,7 @@ class ScrabbleGame(object):
                 if self.location_touches_tile(this_location):
                     return True
 
+        print('Move does not touch any existing tiles.')
         return False
 
     def move_does_not_misalign_tiles(self, location_set):
@@ -321,6 +336,7 @@ class ScrabbleGame(object):
         elif len(set(row_list)) == 1:
             is_vertical_move = False
         else:
+            print('Move does not place all tiles in one row or column.')
             return False
 
          # All tiles must be connected
@@ -329,6 +345,10 @@ class ScrabbleGame(object):
             for this_row in range(min(row_list), max(row_list) + 1):
                 this_tile = self.board[(this_column, this_row)].tile
                 if not (this_tile or (this_column, this_row) in location_set):
+                    print(
+                        'Not all tiles in vertical move are connected: '
+                        'location {} is empty'.format((this_column, this_row))
+                    )
                     return False
         else:
             this_row = list(location_set)[0][1]
@@ -337,6 +357,10 @@ class ScrabbleGame(object):
                 this_column = chr(this_column_num)
                 this_tile = self.board[(this_column, this_row)].tile
                 if not (this_tile or (this_column, this_row) in location_set):
+                    print(
+                        'Not all tiles in horizontal move are connected: '
+                        'location {} is empty'.format((this_column, this_row))
+                    )
                     return False
 
         return True
@@ -344,6 +368,11 @@ class ScrabbleGame(object):
     def move_does_not_cover_tiles(self, location_set):
         for location in location_set:
             if self.board[location].tile:
+                print(
+                    'Move covers existing tiles at location {}'.format(
+                        location
+                    )
+                )
                 return False
 
         return True
@@ -354,9 +383,9 @@ class ScrabbleGame(object):
         location_set = set((location for _, location in letter_location_set))
 
         success = (
-            len(letter_location_set) <= 7 and
+            self.move_is_seven_tiles_or_less(location_set) and
             self.move_is_not_out_of_bounds(location_set) and
-            is_sublist(letter_list, player_rack_letter_list) and
+            self.move_is_sublist(letter_list, player_rack_letter_list) and
             self.move_does_not_stack_tiles(letter_list, location_set) and
             self.move_does_not_misalign_tiles(location_set) and
             self.move_does_not_cover_tiles(location_set) and

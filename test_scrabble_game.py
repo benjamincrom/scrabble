@@ -7,14 +7,14 @@ def test_increment_letter():
     assert scrabble_game.increment_letter('a') == 'b'
 
 def test_is_sublist():
-    assert scrabble_game.is_sublist([1, 2, 3], [1, 2, 3, 4])
-    assert not scrabble_game.is_sublist([1, 2, 3, 5], [1, 2])
-
+    game = scrabble_game.ScrabbleGame(4)
+    assert game.move_is_sublist([1, 2, 3], [1, 2, 3, 4])
+    assert not game.move_is_sublist([1, 2, 3, 5], [1, 2])
 
 def test_board_moves_score():
     game = scrabble_game.ScrabbleGame(4)
     game.place_word('SCRAB', ('h', 8), False, True)
-    game.place_word('(C)ODING', ('i', 9), True, True)
+    game.place_word('(C)ODING', ('i', 8), True, True)
     game.place_word('PILE', ('g', 5), True, True)
 
     assert game.player_score_list_list == [[12], [13], [17], []]
@@ -41,7 +41,7 @@ def test_board_moves_score():
 def test_bingo():
     game = scrabble_game.ScrabbleGame(2)
     game.place_word('BAKER', ('h', 8), False, True)
-    game.place_word('(R)AKELAKE', ('l', 9), True, True)
+    game.place_word('(R)AKELAKE', ('l', 8), True, True)
 
     assert game.player_score_list_list == [[12], [84]]
     assert game.move_number == 2
@@ -181,12 +181,16 @@ def test_letters_not_in_rack():
     game = scrabble_game.ScrabbleGame(3)
     assert game.place_word('ZZZZZZ', ('h', 8), False, False) is False
 
+def test_move_touches_no_tiles():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKERS', ('h', 8), False, True)
+    assert game.place_word('BAKERS', ('h', 10), False, True) is False
+
+def test_move_covers_tiles():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKERS', ('h', 8), False, True)
+    assert game.place_word('LAKERS', ('h', 6), True, True) is False
+
 '''
-def test_move_stacks_tiles
-
-def test_tiles_disconnected
-
-def test_tiles_out_of_alignment
-
 def test_conclude_game
 '''

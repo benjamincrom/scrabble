@@ -41,9 +41,6 @@ class ScrabbleBoard(object):
     def __getitem__(self, key):
         return self.board_square_dict.get(key)
 
-    def __setitem__(self, key, val):
-        self.board_square_dict[key] = val
-
     def __repr__(self):
         square_letter_gen = (
             str(square[1]) for square in sorted(self.board_square_dict.items())

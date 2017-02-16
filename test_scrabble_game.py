@@ -11,6 +11,23 @@ def test_increment_letter():
 def test_is_sublist():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(4)
+    assert str(game.board) == ('  abcdefghijklmno\n'
+                               '1 _______________\n'
+                               '2 _______________\n'
+                               '3 _______________\n'
+                               '4 _______________\n'
+                               '5 _______________\n'
+                               '6 _______________\n'
+                               '7 _______________\n'
+                               '8 _______★_______\n'
+                               '9 _______________\n'
+                               '10_______________\n'
+                               '11_______________\n'
+                               '12_______________\n'
+                               '13_______________\n'
+                               '14_______________\n'
+                               '15_______________')
+
     assert game.move_is_sublist([1, 2, 3], [1, 2, 3, 4])
     assert not game.move_is_sublist([1, 2, 3, 5], [1, 2])
 

@@ -39,34 +39,56 @@ def test_board_moves_score():
 
 
 def test_bingo():
-    game = scrabble_game.ScrabbleGame(4)
+    game = scrabble_game.ScrabbleGame(2)
     game.place_word('BAKER', ('h', 8), False, True)
     game.place_word('AKELAKE', ('l', 9), True, True)
 
-    import pdb; pdb.set_trace()  # breakpoint 8e011190 //
-    assert game.player_score_list_list == [[12], [13], [17], []]
-    assert game.move_number == 3
-    assert len(game.tile_bag) == 72
+    assert game.player_score_list_list == [[12], [84]]
+    assert game.move_number == 2
+    assert len(game.tile_bag) == 86
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
                                '3 _______________\n'
                                '4 _______________\n'
-                               '5 ______P________\n'
-                               '6 ______I________\n'
-                               '7 ______L________\n'
-                               '8 ______ESCRAB___\n'
-                               '9 ________O______\n'
-                               '10________D______\n'
-                               '11________I______\n'
-                               '12________N______\n'
-                               '13________G______\n'
+                               '5 _______________\n'
+                               '6 _______________\n'
+                               '7 _______________\n'
+                               '8 _______BAKER___\n'
+                               '9 ___________A___\n'
+                               '10___________K___\n'
+                               '11___________E___\n'
+                               '12___________L___\n'
+                               '13___________A___\n'
+                               '14___________K___\n'
+                               '15___________E___')
+
+
+def test_itersect_words_regular():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKER', ('h', 8), False, True)
+    game.place_word('CA(K)E', ('j', 6), True, True)
+
+    assert game.player_score_list_list == [[12], [16], []]
+    assert game.move_number == 2
+    assert len(game.tile_bag) == 79
+    assert str(game.board) == ('  abcdefghijklmno\n'
+                               '1 _______________\n'
+                               '2 _______________\n'
+                               '3 _______________\n'
+                               '4 _______________\n'
+                               '5 _______________\n'
+                               '6 _________C_____\n'
+                               '7 _________A_____\n'
+                               '8 _______BAKER___\n'
+                               '9 _________E_____\n'
+                               '10_______________\n'
+                               '11_______________\n'
+                               '12_______________\n'
+                               '13_______________\n'
                                '14_______________\n'
                                '15_______________')
-
 '''
-def test_itersect_words_regular
-
 def test_intersetct_corner
 
 def test_intersect_words_double_points

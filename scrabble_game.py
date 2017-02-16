@@ -167,9 +167,10 @@ class ScrabbleGame(object):
         word_iterator = iter(word)
         for character in word_iterator:
             if character == '(':
+                character = next(word_iterator, None)
                 while character != ')':
-                    character = next(word_iterator, None)
                     current_location = next_location_func(current_location)
+                    character = next(word_iterator, None)
             else:
                 if is_mock:
                     self.cheat_add_rack_tile(character, player_rack)

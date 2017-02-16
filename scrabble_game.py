@@ -2,6 +2,7 @@
 scrabble_game.py -- contains classes that model scrabble moves
 '''
 import collections
+import itertools
 import operator
 import random
 
@@ -61,33 +62,121 @@ class ScrabbleGame(object):
             player_scores_str=player_scores_str
         )
 
+    @staticmethod
+    def get_rack_tile_index(player_rack, move_letter):
+        for i, rack_tile in enumerate(player_rack):
+            if rack_tile.letter == move_letter:
+                return i
+
+        return None
+
+    @staticmethod
+    def pop_player_rack_tile(player_rack, rack_tile_index):
+        return player_rack.pop(rack_tile_index)
+
+    @staticmethod
+    def move_does_not_stack_tiles(letter_list, location_set):
+        return len(letter_list) == len(location_set)
+
+    @staticmethod
+    def location_out_of_bounds(location):
+        column, row = location
+        return (ord(column) < ord('a') or
+                ord(column) > ord('o') or
+                row < 1 or
+                row > 15)
+
+    @staticmethod
+    def initialize_tile_bag():
+        tile_bag = []
+        for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items():
+            for _ in range(magnitude):
+                tile_bag.append(
+                    scrabble_board.ScrabbleTile(
+                        letter=letter,
+                        point_value=config.LETTER_POINT_VALUES_DICT[letter]
+                    )
+                )
+
+        return tile_bag
+
+    @staticmethod
+    def get_next_location_function(use_positive_seek, use_vertical_words):
+        if use_vertical_words and use_positive_seek:
+            return lambda x: (x[0], x[1] + 1)
+        elif use_vertical_words and not use_positive_seek:
+            return lambda x: (x[0], x[1] - 1)
+        elif not use_vertical_words and use_positive_seek:
+            return lambda x: (increment_letter(x[0]), x[1])
+        elif not use_vertical_words and not use_positive_seek:
+            return lambda x: (decrement_letter(x[0]), x[1])
+        else:
+            raise ValueError('Incorrect input.')
+
+    @classmethod
+    def get_adjacent_location_set(cls, location):
+        column, row = location
+
+        adjacent_location_set = set(
+            [
+                (increment_letter(column), row),
+                (decrement_letter(column), row),
+                (column, row + 1),
+                (column, row - 1)
+            ]
+        )
+
+        # Board boundary check
+        remove_location_set = set(
+            (location for location in adjacent_location_set
+             if cls.location_out_of_bounds(location))
+        )
+
+        return adjacent_location_set - remove_location_set
+
+    @classmethod
+    def move_is_not_out_of_bounds(cls, location_set):
+        for location in location_set:
+            if cls.location_out_of_bounds(location):
+                return False
+
+        return True
+
     def get_current_player_data(self):
         player_to_move = self.move_number % self.num_players
         player_rack = self.player_rack_list[player_to_move]
 
         return player_to_move, player_rack
 
-    def _mock_place_word(self, word, start_location, is_vertical_move):
+    def cheat_add_rack_tile(self, character, player_rack):
+        mock_tile_bag = self.initialize_tile_bag()
+        for tile in mock_tile_bag:
+            if character == tile.letter:
+                player_rack.append(tile)
+                break
+
+    def place_word(self, word, start_location, is_vertical_move, is_mock=False):
         """For testing"""
-        self.tile_bag = self.initialize_tile_bag()  # Refill tile bag
         letter_location_set = set([])
-
         _, player_rack = self.get_current_player_data()
-
-        next_location_function = self.get_next_location_function(
+        next_location_func = self.get_next_location_function(
             use_positive_seek=True,
             use_vertical_words=is_vertical_move
         )
 
         current_location = start_location
-        for character in word:
-            for tile in self.tile_bag:
-                if character == tile.letter:
-                    player_rack.append(tile)
-                    letter_location_set.add((character, current_location))
-                    self.board[current_location].tile = None
-                    current_location = next_location_function(current_location)
-                    break
+        word_iterator = iter(word)
+        for character in word_iterator:
+            if character == '(':
+                while character != ')':
+                    character = next(word_iterator, None)
+                    current_location = next_location_func(current_location)
+            else:
+                if is_mock:
+                    self.cheat_add_rack_tile(character, player_rack)
+
+                letter_location_set.add((character, current_location))
+                current_location = next_location_func(current_location)
 
         return self.next_player_move(letter_location_set)
 
@@ -120,19 +209,6 @@ class ScrabbleGame(object):
             )
         )
 
-    @staticmethod
-    def get_next_location_function(use_positive_seek, use_vertical_words):
-        if use_vertical_words and use_positive_seek:
-            return lambda x: (x[0], x[1] + 1)
-        elif use_vertical_words and not use_positive_seek:
-            return lambda x: (x[0], x[1] - 1)
-        elif not use_vertical_words and use_positive_seek:
-            return lambda x: (increment_letter(x[0]), x[1])
-        elif not use_vertical_words and not use_positive_seek:
-            return lambda x: (decrement_letter(x[0]), x[1])
-        else:
-            raise ValueError('Incorrect input.')
-
     def get_word_location_set(self, location, use_vertical_words):
         word_location_set = set([])
 
@@ -140,22 +216,19 @@ class ScrabbleGame(object):
             current_location = location          # either up/down or left/right
             current_tile = self.board[current_location].tile
 
-            next_location_function = self.get_next_location_function(
+            next_location_func = self.get_next_location_function(
                 use_positive_seek,
                 use_vertical_words
             )
 
             while current_tile:
                 word_location_set.add(current_location)
-                current_location = next_location_function(current_location)
+                current_location = next_location_func(current_location)
 
-                if (ord(current_location[0]) >= ord('a') and  # bounds check
-                        ord(current_location[0]) <= ord('o') and
-                        current_location[1] >= 1 and
-                        current_location[1] <= 15):
-                    current_tile = self.board[current_location].tile
-                else:
+                if self.location_out_of_bounds(current_location):
                     current_tile = None
+                else:
+                    current_tile = self.board[current_location].tile
 
         if len(word_location_set) > 1:           # Must be at least 2 letters to
             return frozenset(word_location_set)  # count as a word
@@ -213,31 +286,6 @@ class ScrabbleGame(object):
 
         return total_score
 
-    @staticmethod
-    def get_adjacent_location_set(location):
-        column, row = location
-
-        adjacent_location_set = set(
-            [
-                (increment_letter(column), row),
-                (decrement_letter(column), row),
-                (column, row + 1),
-                (column, row - 1)
-            ]
-        )
-        # Board boundary check
-        remove_location_set = set(
-            (
-                (column, row) for column, row in adjacent_location_set
-                if (row > 15 or
-                    row < 1 or
-                    ord(column) > ord('o') or
-                    ord(column) < ord('a'))
-            )
-        )
-
-        return adjacent_location_set - remove_location_set
-
     def location_touches_tile(self, location):
         adjacent_location_set = self.get_adjacent_location_set(location)
         for adjacent_location in adjacent_location_set:
@@ -256,21 +304,6 @@ class ScrabbleGame(object):
                     return True
 
         return False
-
-    @staticmethod
-    def move_is_not_out_of_bounds(location_set):
-        for column, row in location_set:
-            if (ord(column) < ord('a') or
-                    ord(column) > ord('o') or
-                    row < 1 or
-                    row > 15):
-                return False
-
-        return True
-
-    @staticmethod
-    def move_does_not_stack_tiles(letter_list, location_set):
-        return len(letter_list) == len(location_set)
 
     def move_does_not_misalign_tiles(self, location_set):
         # All tiles places are in one row or one column
@@ -380,25 +413,16 @@ class ScrabbleGame(object):
 
         return True
 
-    @staticmethod
-    def get_rack_tile_index(player_rack, move_letter):
-        for i, rack_tile in enumerate(player_rack):
-            if rack_tile.letter == move_letter:
-                return i
-
-        return None
-
-    @staticmethod
-    def pop_player_rack_tile(player_rack, rack_tile_index):
-        return player_rack.pop(rack_tile_index)
-
     def place_tile(self, tile_obj, board_location):
         ''' Takes format of rack_tile_index, board_location '''
         self.board[board_location].tile = tile_obj
 
     def draw_random_tile(self):
         random_index = random.randrange(0, len(self.tile_bag))
-        return self.tile_bag.pop(random_index)
+        if self.tile_bag:
+            return self.tile_bag.pop(random_index)
+        else:
+            return None
 
     def initialize_player_racks(self):
         player_rack_list = []
@@ -407,17 +431,3 @@ class ScrabbleGame(object):
             player_rack_list.append(this_rack)
 
         return player_rack_list
-
-    @staticmethod
-    def initialize_tile_bag():
-        tile_bag = []
-        for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items():
-            for _ in range(magnitude):
-                tile_bag.append(
-                    scrabble_board.ScrabbleTile(
-                        letter=letter,
-                        point_value=config.LETTER_POINT_VALUES_DICT[letter]
-                    )
-                )
-
-        return tile_bag

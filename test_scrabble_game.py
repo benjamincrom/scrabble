@@ -391,13 +391,7 @@ def test_conclude_game():
     for c in 'AIUWZEE':
         game.cheat_add_rack_tile(c, game.player_rack_list[2])
 
-    game.next_player_move([('A', ('h', 9)),
-                           ('B', ('h', 10)),
-                           ('C', ('h', 11)),
-                           ('D', ('h', 12)),
-                           ('E', ('h', 13)),
-                           ('F', ('h', 14)),
-                           ('G', ('h', 15))])
+    game.place_word('ABCDEFG', ('h', 9), True)
 
     assert game.player_score_list_list == [[13, -12], [113, 0, 31], [-19]]
     assert game.move_number == 2

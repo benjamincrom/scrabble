@@ -122,8 +122,6 @@ class ScrabbleGame(object):
             return lambda x: (increment_letter(x[0]), x[1])
         elif not use_vertical_words and not use_positive_seek:
             return lambda x: (decrement_letter(x[0]), x[1])
-        else:
-            raise ValueError('Incorrect input.')
 
     @classmethod
     def get_adjacent_location_set(cls, location):
@@ -169,7 +167,6 @@ class ScrabbleGame(object):
                 break
 
     def place_word(self, word, start_location, is_vertical_move, is_mock=False):
-        """For testing"""
         letter_location_set = set([])
         _, player_rack = self.get_current_player_data()
         next_location_func = self.get_next_location_function(
@@ -428,26 +425,26 @@ class ScrabbleGame(object):
             return False
 
         _, player_rack = self.get_current_player_data()
+        player_letter_list = [tile.letter for tile in player_rack]
 
-        exchange_tile_list = []
-        for letter in letter_list:
-            for tile in player_rack:
-                if tile.letter == letter:
-                    exchange_tile_list.append(tile)
+        if self.move_is_sublist(letter_list, player_letter_list):
+            exchange_tile_list = []
+            for letter in letter_list:
+                for tile in player_rack:
+                    if tile.letter == letter:
+                        exchange_tile_list.append(tile)
+                        player_rack.remove(tile)
 
-        for _ in range(len(letter_list)):
-            player_rack.append(self.draw_random_tile())
+            for _ in range(len(letter_list)):
+                if self.tile_bag:
+                    player_rack.append(self.draw_random_tile())
 
-        for tile in exchange_tile_list:
-            if tile not in player_rack:
-                return False
-            else:
-                player_rack.remove(tile)
+            self.tile_bag.extend(exchange_tile_list)
+            self.move_number += 1
 
-        self.tile_bag.extend(exchange_tile_list)
-        self.move_number += 1
-
-        return True
+            return True
+        else:
+            return False
 
     def place_tile(self, tile_obj, board_location):
         ''' Takes format of rack_tile_index, board_location '''
@@ -455,10 +452,7 @@ class ScrabbleGame(object):
 
     def draw_random_tile(self):
         random_index = random.randrange(0, len(self.tile_bag))
-        if self.tile_bag:
-            return self.tile_bag.pop(random_index)
-        else:
-            return None
+        return self.tile_bag.pop(random_index)
 
     def initialize_player_racks(self):
         player_rack_list = []

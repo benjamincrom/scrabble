@@ -37,6 +37,13 @@ def test_board_moves_score():
                                '14_______________\n'
                                '15_______________')
 
+    assert ('Moves played: 3\n'
+            'Player 4\'s move\n'
+            '72 tiles remain in bag\n'
+            'Player 1: 12\n'
+            'Player 2: 13\n'
+            'Player 3: 17\n'
+            'Player 4: 0') in str(game)
 
 def test_bingo():
     game = scrabble_game.ScrabbleGame(2)
@@ -171,11 +178,69 @@ def test_play_too_many_tiles():
         game.place_word('BAKERSTO', ('h', 8), False, True) is False
     )
 
+def test_get_rack_tile_bad():
+    game = scrabble_game.ScrabbleGame(3)
+    assert game.get_rack_tile_index(game.player_rack_list[0], '&') is None
+
+def test_player_exchange_bad_choices():
+    game = scrabble_game.ScrabbleGame(3)
+    assert game.next_player_exchange(['Z', 'Z', 'Z', 'Z']) is False
+
+def test_player_exchange_not_enough_tiles():
+    game = scrabble_game.ScrabbleGame(3)
+    game.tile_bag = game.tile_bag[:4]
+    player_letter_list = [tile.letter for tile in game.player_rack_list[0]]
+    assert game.next_player_exchange(player_letter_list) is False
+
+    new_player_letter_list = [tile.letter for tile in game.player_rack_list[0]]
+    assert player_letter_list == new_player_letter_list
+
+def test_player_exchange():
+    game = scrabble_game.ScrabbleGame(3)
+    player_letter_list = [str(tile) for tile in game.player_rack_list[0]]
+    game.next_player_exchange(player_letter_list)
+    new_player_letter_list = [tile.letter for tile in game.player_rack_list[0]]
+    assert player_letter_list != new_player_letter_list
+
+def test_out_of_tiles():
+    game = scrabble_game.ScrabbleGame(3)
+    game.tile_bag = game.tile_bag[:4]
+    game.player_rack_list[0] = []
+    game.place_word('BAKERS', ('h', 8), False, True)
+
 def test_out_of_bounds():
     game = scrabble_game.ScrabbleGame(3)
     game.place_word('BAKERS', ('h', 8), False, True)
     game.place_word('(S)ERIOUS', ('m', 9), True, True)
     assert game.place_word('(S)TYLISH', ('n', 14), True, True) is False
+
+def test_misalign_tiles():
+    game = scrabble_game.ScrabbleGame(3)
+    game.cheat_add_rack_tile('E', game.player_rack_list[0])
+    game.cheat_add_rack_tile('A', game.player_rack_list[0])
+    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    game.next_player_move([('E', ('h', 6)), ('A', ('i', 9)), ('I', ('h', 7))])
+
+def test_disconnect_tiles_horizontal():
+    game = scrabble_game.ScrabbleGame(3)
+    game.cheat_add_rack_tile('E', game.player_rack_list[0])
+    game.cheat_add_rack_tile('A', game.player_rack_list[0])
+    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    game.next_player_move([('E', ('h', 8)), ('A', ('h', 9)), ('I', ('h', 11))])
+
+def test_vertical_tiles_horizontal():
+    game = scrabble_game.ScrabbleGame(3)
+    game.cheat_add_rack_tile('E', game.player_rack_list[0])
+    game.cheat_add_rack_tile('A', game.player_rack_list[0])
+    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    game.next_player_move([('E', ('h', 8)), ('A', ('i', 8)), ('I', ('k', 8))])
+
+def test_stack_tiles():
+    game = scrabble_game.ScrabbleGame(3)
+    game.cheat_add_rack_tile('E', game.player_rack_list[0])
+    game.cheat_add_rack_tile('A', game.player_rack_list[0])
+    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    game.next_player_move([('E', ('h', 6)), ('A', ('h', 6)), ('I', ('h', 7))])
 
 def test_letters_not_in_rack():
     game = scrabble_game.ScrabbleGame(3)
@@ -191,6 +256,64 @@ def test_move_covers_tiles():
     game.place_word('BAKERS', ('h', 8), False, True)
     assert game.place_word('LAKERS', ('h', 6), True, True) is False
 
-'''
-def test_conclude_game
-'''
+def test_conclude_game():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKERS', ('h', 8), False, True)
+
+    game.tile_bag = []
+
+    game.player_rack_list[0] = []
+    game.cheat_add_rack_tile('C', game.player_rack_list[0])
+    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    game.cheat_add_rack_tile('O', game.player_rack_list[0])
+    game.cheat_add_rack_tile('O', game.player_rack_list[0])
+    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    game.cheat_add_rack_tile('V', game.player_rack_list[0])
+    game.cheat_add_rack_tile('A', game.player_rack_list[0])
+
+    game.player_rack_list[1] = []
+    game.cheat_add_rack_tile('A', game.player_rack_list[1])
+    game.cheat_add_rack_tile('B', game.player_rack_list[1])
+    game.cheat_add_rack_tile('C', game.player_rack_list[1])
+    game.cheat_add_rack_tile('D', game.player_rack_list[1])
+    game.cheat_add_rack_tile('E', game.player_rack_list[1])
+    game.cheat_add_rack_tile('F', game.player_rack_list[1])
+    game.cheat_add_rack_tile('G', game.player_rack_list[1])
+
+    game.player_rack_list[2] = []
+    game.cheat_add_rack_tile('A', game.player_rack_list[2])
+    game.cheat_add_rack_tile('I', game.player_rack_list[2])
+    game.cheat_add_rack_tile('U', game.player_rack_list[2])
+    game.cheat_add_rack_tile('W', game.player_rack_list[2])
+    game.cheat_add_rack_tile('Z', game.player_rack_list[2])
+    game.cheat_add_rack_tile('E', game.player_rack_list[2])
+    game.cheat_add_rack_tile('E', game.player_rack_list[2])
+
+    game.next_player_move([('A', ('h', 9)),
+                           ('B', ('h', 10)),
+                           ('C', ('h', 11)),
+                           ('D', ('h', 12)),
+                           ('E', ('h', 13)),
+                           ('F', ('h', 14)),
+                           ('G', ('h', 15))])
+
+    assert game.player_score_list_list == [[13, -12], [113, 0, 31], [-19]]
+    assert game.move_number == 2
+    assert len(game.tile_bag) == 0
+    assert str(game.board) == ('  abcdefghijklmno\n'
+                               '1 _______________\n'
+                               '2 _______________\n'
+                               '3 _______________\n'
+                               '4 _______________\n'
+                               '5 _______________\n'
+                               '6 _______________\n'
+                               '7 _______________\n'
+                               '8 _______BAKERS__\n'
+                               '9 _______A_______\n'
+                               '10_______B_______\n'
+                               '11_______C_______\n'
+                               '12_______D_______\n'
+                               '13_______E_______\n'
+                               '14_______F_______\n'
+                               '15_______G_______')
+

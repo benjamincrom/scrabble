@@ -88,8 +88,33 @@ def test_itersect_words_regular():
                                '13_______________\n'
                                '14_______________\n'
                                '15_______________')
-'''
-def test_intersetct_corner
+
+def test_intersetct_corner():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKER', ('h', 8), False, True)
+    game.place_word('FAKE', ('l', 4), True, True)
+
+    import pdb; pdb.set_trace()  # breakpoint d8548d65 //
+    assert game.player_score_list_list == [[12], [16], []]
+    assert game.move_number == 2
+    assert len(game.tile_bag) == 79
+    assert str(game.board) == ('  abcdefghijklmno\n'
+                               '1 _______________\n'
+                               '2 _______________\n'
+                               '3 _______________\n'
+                               '4 ___________F___\n'
+                               '5 ___________A___\n'
+                               '6 ___________K___\n'
+                               '7 ___________E___\n'
+                               '8 _______BAKER___\n'
+                               '9 _______________\n'
+                               '10_______________\n'
+                               '11_______________\n'
+                               '12_______________\n'
+                               '13_______________\n'
+                               '14_______________\n'
+                               '15_______________')
+
 
 def test_intersect_words_double_points
 

@@ -1,5 +1,5 @@
 import scrabble_game
-
+'''
 def test_decrement_letter():
     assert (scrabble_game.decrement_letter('d') == 'c')
 
@@ -94,8 +94,7 @@ def test_intersetct_corner():
     game.place_word('BAKER', ('h', 8), False, True)
     game.place_word('FAKE', ('l', 4), True, True)
 
-    import pdb; pdb.set_trace()  # breakpoint d8548d65 //
-    assert game.player_score_list_list == [[12], [16], []]
+    assert game.player_score_list_list == [[12], [24], []]
     assert game.move_number == 2
     assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
@@ -116,10 +115,57 @@ def test_intersetct_corner():
                                '15_______________')
 
 
-def test_intersect_words_double_points
+def test_intersect_words_double_points():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKER', ('h', 8), False, True)
+    game.place_word('FAKERS', ('m', 3), True, True)
 
-def test_intersect_parallel
+    assert game.player_score_list_list == [[12], [40], []]
+    assert game.move_number == 2
+    assert len(game.tile_bag) == 79
+    assert str(game.board) == ('  abcdefghijklmno\n'
+                               '1 _______________\n'
+                               '2 _______________\n'
+                               '3 ____________F__\n'
+                               '4 ____________A__\n'
+                               '5 ____________K__\n'
+                               '6 ____________E__\n'
+                               '7 ____________R__\n'
+                               '8 _______BAKERS__\n'
+                               '9 _______________\n'
+                               '10_______________\n'
+                               '11_______________\n'
+                               '12_______________\n'
+                               '13_______________\n'
+                               '14_______________\n'
+                               '15_______________')
+'''
+def test_intersect_parallel():
+    game = scrabble_game.ScrabbleGame(3)
+    game.place_word('BAKERS', ('h', 8), False, True)
+    game.place_word('ALAN', ('h', 9), False, True)
 
+    assert game.player_score_list_list == [[13], [20], []]
+    assert game.move_number == 2
+    assert len(game.tile_bag) == 79
+    assert str(game.board) == ('  abcdefghijklmno\n'
+                               '1 _______________\n'
+                               '2 _______________\n'
+                               '3 _______________\n'
+                               '4 _______________\n'
+                               '5 _______________\n'
+                               '6 _______________\n'
+                               '7 _______________\n'
+                               '8 _______BAKERS__\n'
+                               '9 _______ALAN____\n'
+                               '10_______________\n'
+                               '11_______________\n'
+                               '12_______________\n'
+                               '13_______________\n'
+                               '14_______________\n'
+                               '15_______________')
+
+'''
 def test_play_too_many_tiles
 
 def test_out_of_bounds

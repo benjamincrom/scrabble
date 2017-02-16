@@ -261,8 +261,6 @@ class ScrabbleGame(object):
                 square = self.board[location]
                 word_multiplier *= square.word_multiplier
                 word_score += square.tile.point_value * square.letter_multiplier
-                square.letter_multiplier = 1
-                square.word_multiplier = 1
 
             word_score *= word_multiplier
             total_score += word_score
@@ -271,6 +269,12 @@ class ScrabbleGame(object):
             total_score += 50  # Bingo
 
         return total_score
+
+    def cancel_bonus_squares(self, location_set):
+        for location in location_set:
+            square = self.board[location]
+            square.letter_multiplier = 1
+            square.word_multiplier = 1
 
     def score_move(self, letter_location_set):
         move_location_set = set(
@@ -283,6 +287,8 @@ class ScrabbleGame(object):
             word_set,
             len(move_location_set)
         )
+
+        self.cancel_bonus_squares(move_location_set)
 
         return total_score
 

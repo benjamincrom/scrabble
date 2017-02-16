@@ -216,30 +216,30 @@ def test_out_of_bounds():
 
 def test_misalign_tiles():
     game = scrabble_game.ScrabbleGame(3)
-    game.cheat_add_rack_tile('E', game.player_rack_list[0])
-    game.cheat_add_rack_tile('A', game.player_rack_list[0])
-    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    for c in 'EAI':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
     game.next_player_move([('E', ('h', 6)), ('A', ('i', 9)), ('I', ('h', 7))])
 
 def test_disconnect_tiles_horizontal():
     game = scrabble_game.ScrabbleGame(3)
-    game.cheat_add_rack_tile('E', game.player_rack_list[0])
-    game.cheat_add_rack_tile('A', game.player_rack_list[0])
-    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    for c in 'EAI':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
     game.next_player_move([('E', ('h', 8)), ('A', ('h', 9)), ('I', ('h', 11))])
 
 def test_vertical_tiles_horizontal():
     game = scrabble_game.ScrabbleGame(3)
-    game.cheat_add_rack_tile('E', game.player_rack_list[0])
-    game.cheat_add_rack_tile('A', game.player_rack_list[0])
-    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    for c in 'EAI':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
     game.next_player_move([('E', ('h', 8)), ('A', ('i', 8)), ('I', ('k', 8))])
 
 def test_stack_tiles():
     game = scrabble_game.ScrabbleGame(3)
-    game.cheat_add_rack_tile('E', game.player_rack_list[0])
-    game.cheat_add_rack_tile('A', game.player_rack_list[0])
-    game.cheat_add_rack_tile('I', game.player_rack_list[0])
+    for c in 'EAI':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
     game.next_player_move([('E', ('h', 6)), ('A', ('h', 6)), ('I', ('h', 7))])
 
 def test_letters_not_in_rack():

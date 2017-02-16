@@ -1,5 +1,7 @@
 import scrabble_game
 
+scrabble_game.input = lambda x: 'N'
+
 def test_decrement_letter():
     assert scrabble_game.decrement_letter('d') == 'c'
 
@@ -7,19 +9,41 @@ def test_increment_letter():
     assert scrabble_game.increment_letter('a') == 'b'
 
 def test_is_sublist():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(4)
     assert game.move_is_sublist([1, 2, 3], [1, 2, 3, 4])
     assert not game.move_is_sublist([1, 2, 3, 5], [1, 2])
 
-def test_board_moves_score():
+def test_challenge_fail():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(4)
-    game.place_word('SCRAB', ('h', 8), False, True)
-    game.place_word('(C)ODING', ('i', 8), True, True)
-    game.place_word('PILE', ('g', 5), True, True)
+    for c in 'BAKER':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    assert game.place_word('BAKER', ('h', 8), False) is True
+    assert game.player_score_list_list == [[12], [], [], []]
+
+def test_board_moves_score():
+    scrabble_game.input = lambda x: 'N'
+    game = scrabble_game.ScrabbleGame(4)
+
+    game.player_rack_list[0] = []
+    for c in 'SCRABBL':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'ODING':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    for c in 'PILE':
+        game.cheat_add_rack_tile(c, game.player_rack_list[2])
+
+    game.place_word('SCRAB', ('h', 8), False)
+    game.place_word('(C)ODING', ('i', 8), True)
+    game.place_word('PILE', ('g', 5), True)
 
     assert game.player_score_list_list == [[12], [13], [17], []]
     assert game.move_number == 3
-    assert len(game.tile_bag) == 72
+    assert len(game.tile_bag) == 67
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
@@ -39,16 +63,23 @@ def test_board_moves_score():
 
     assert ('Moves played: 3\n'
             'Player 4\'s move\n'
-            '72 tiles remain in bag\n'
+            '67 tiles remain in bag\n'
             'Player 1: 12\n'
             'Player 2: 13\n'
             'Player 3: 17\n'
             'Player 4: 0') in str(game)
 
 def test_bingo():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(2)
-    game.place_word('BAKER', ('h', 8), False, True)
-    game.place_word('(R)AKELAKE', ('l', 8), True, True)
+    for c in 'BAKER':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'AKELAKE':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    game.place_word('BAKER', ('h', 8), False)
+    game.place_word('(R)AKELAKE', ('l', 8), True)
 
     assert game.player_score_list_list == [[12], [84]]
     assert game.move_number == 2
@@ -70,11 +101,17 @@ def test_bingo():
                                '14___________K___\n'
                                '15___________E___')
 
-
 def test_itersect_words_regular():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKER', ('h', 8), False, True)
-    game.place_word('CA(K)E', ('j', 6), True, True)
+    for c in 'BAKER':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'CAE':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    game.place_word('BAKER', ('h', 8), False)
+    game.place_word('CA(K)E', ('j', 6), True)
 
     assert game.player_score_list_list == [[12], [16], []]
     assert game.move_number == 2
@@ -97,9 +134,16 @@ def test_itersect_words_regular():
                                '15_______________')
 
 def test_intersect_corner():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKER', ('h', 8), False, True)
-    game.place_word('FAKE(R)', ('l', 4), True, True)
+    for c in 'BAKER':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'FAKE':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    game.place_word('BAKER', ('h', 8), False)
+    game.place_word('FAKE(R)', ('l', 4), True)
 
     assert game.player_score_list_list == [[12], [24], []]
     assert game.move_number == 2
@@ -121,11 +165,17 @@ def test_intersect_corner():
                                '14_______________\n'
                                '15_______________')
 
-
 def test_intersect_words_double_points():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKER', ('h', 8), False, True)
-    game.place_word('FAKERS', ('m', 3), True, True)
+    for c in 'BAKER':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'FAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    game.place_word('BAKER', ('h', 8), False)
+    game.place_word('FAKERS', ('m', 3), True)
 
     assert game.player_score_list_list == [[12], [40], []]
     assert game.move_number == 2
@@ -148,9 +198,16 @@ def test_intersect_words_double_points():
                                '15_______________')
 
 def test_intersect_parallel():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKERS', ('h', 8), False, True)
-    game.place_word('ALAN', ('h', 9), False, True)
+    for c in 'BAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'ALAN':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    game.place_word('BAKERS', ('h', 8), False)
+    game.place_word('ALAN', ('h', 9), False)
 
     assert game.player_score_list_list == [[13], [20], []]
     assert game.move_number == 2
@@ -173,20 +230,27 @@ def test_intersect_parallel():
                                '15_______________')
 
 def test_play_too_many_tiles():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
+    for c in 'BAKERSTO':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
     assert(
-        game.place_word('BAKERSTO', ('h', 8), False, True) is False
+        game.place_word('BAKERSTO', ('h', 8), False) is False
     )
 
 def test_get_rack_tile_bad():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     assert game.get_rack_tile_index(game.player_rack_list[0], '&') is None
 
 def test_player_exchange_bad_choices():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     assert game.next_player_exchange(['Z', 'Z', 'Z', 'Z']) is False
 
 def test_player_exchange_not_enough_tiles():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     game.tile_bag = game.tile_bag[:4]
     player_letter_list = [tile.letter for tile in game.player_rack_list[0]]
@@ -196,6 +260,7 @@ def test_player_exchange_not_enough_tiles():
     assert player_letter_list == new_player_letter_list
 
 def test_player_exchange():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     player_letter_list = [str(tile) for tile in game.player_rack_list[0]]
     game.next_player_exchange(player_letter_list)
@@ -203,18 +268,30 @@ def test_player_exchange():
     assert player_letter_list != new_player_letter_list
 
 def test_out_of_tiles():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     game.tile_bag = game.tile_bag[:4]
     game.player_rack_list[0] = []
-    game.place_word('BAKERS', ('h', 8), False, True)
+    game.place_word('BAKERS', ('h', 8), False)
 
 def test_out_of_bounds():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKERS', ('h', 8), False, True)
-    game.place_word('(S)ERIOUS', ('m', 9), True, True)
-    assert game.place_word('(S)TYLISH', ('n', 14), True, True) is False
+    for c in 'BAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'ERIOUS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    for c in 'TYLISH':
+        game.cheat_add_rack_tile(c, game.player_rack_list[2])
+
+    game.place_word('BAKERS', ('h', 8), False)
+    game.place_word('(S)ERIOUS', ('m', 9), True)
+    assert game.place_word('(S)TYLISH', ('n', 14), True) is False
 
 def test_misalign_tiles():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     for c in 'EAI':
         game.cheat_add_rack_tile(c, game.player_rack_list[0])
@@ -222,6 +299,7 @@ def test_misalign_tiles():
     game.next_player_move([('E', ('h', 6)), ('A', ('i', 9)), ('I', ('h', 7))])
 
 def test_disconnect_tiles_horizontal():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     for c in 'EAI':
         game.cheat_add_rack_tile(c, game.player_rack_list[0])
@@ -229,6 +307,7 @@ def test_disconnect_tiles_horizontal():
     game.next_player_move([('E', ('h', 8)), ('A', ('h', 9)), ('I', ('h', 11))])
 
 def test_vertical_tiles_horizontal():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     for c in 'EAI':
         game.cheat_add_rack_tile(c, game.player_rack_list[0])
@@ -236,6 +315,7 @@ def test_vertical_tiles_horizontal():
     game.next_player_move([('E', ('h', 8)), ('A', ('i', 8)), ('I', ('k', 8))])
 
 def test_stack_tiles():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     for c in 'EAI':
         game.cheat_add_rack_tile(c, game.player_rack_list[0])
@@ -243,22 +323,41 @@ def test_stack_tiles():
     game.next_player_move([('E', ('h', 6)), ('A', ('h', 6)), ('I', ('h', 7))])
 
 def test_letters_not_in_rack():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    assert game.place_word('ZZZZZZ', ('h', 8), False, False) is False
+    assert game.place_word('ZZZZZZ', ('h', 8), False) is False
 
 def test_move_touches_no_tiles():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKERS', ('h', 8), False, True)
-    assert game.place_word('BAKERS', ('h', 10), False, True) is False
+    for c in 'BAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'BAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    game.place_word('BAKERS', ('h', 8), False)
+    assert game.place_word('BAKERS', ('h', 10), False) is False
 
 def test_move_covers_tiles():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKERS', ('h', 8), False, True)
-    assert game.place_word('LAKERS', ('h', 6), True, True) is False
+    for c in 'BAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    for c in 'LAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
+
+    game.place_word('BAKERS', ('h', 8), False)
+    assert game.place_word('LAKERS', ('h', 6), True) is False
 
 def test_conclude_game():
+    scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    game.place_word('BAKERS', ('h', 8), False, True)
+    for c in 'BAKERS':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    game.place_word('BAKERS', ('h', 8), False)
 
     game.tile_bag = []
     game.player_rack_list = [[], [], []]
@@ -299,3 +398,25 @@ def test_conclude_game():
                                '13_______E_______\n'
                                '14_______F_______\n'
                                '15_______G_______')
+
+def test_challenge_success():
+    scrabble_game.input = lambda x: 'Y'
+    game = scrabble_game.ScrabbleGame(4)
+    for c in 'SCRAB':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    assert game.place_word('SCRAB', ('h', 8), False) is True
+    assert game.player_score_list_list == [[0], [], [], []]
+
+def test_challenge_neither():
+    my_iter = iter(['yay'])
+    def mock_input(_):
+        return next(my_iter, 'Y')
+
+    scrabble_game.input = mock_input
+    game = scrabble_game.ScrabbleGame(4)
+    for c in 'SCRAB':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
+
+    assert game.place_word('SCRAB', ('h', 8), False) is True
+    assert game.player_score_list_list == [[0], [], [], []]

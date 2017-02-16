@@ -57,7 +57,7 @@ class ScrabbleGame(object):
         letter_counter_2 = collections.Counter(letter_list_2)
         for letter, cardinality in letter_counter_1.items():
             if cardinality > letter_counter_2[letter]:
-                print('Not have enough {} tiles in rack.'.format(letter))
+                print('Not enough {} tiles in rack.'.format(letter))
                 return False
 
         return True
@@ -145,6 +145,17 @@ class ScrabbleGame(object):
         return adjacent_location_set - remove_location_set
 
     @classmethod
+    def move_successfully_challenged(cls):
+        response = input('Challenge successful (Y/N)')
+        if response.upper() == 'Y':
+            return True
+        elif response.upper() == 'N':
+            return False
+        else:
+            print('You must enter Y or N')
+            return cls.move_successfully_challenged()
+
+    @classmethod
     def move_is_not_out_of_bounds(cls, location_set):
         for location in location_set:
             if cls.location_out_of_bounds(location):
@@ -166,9 +177,8 @@ class ScrabbleGame(object):
                 player_rack.append(tile)
                 break
 
-    def place_word(self, word, start_location, is_vertical_move, is_mock=False):
+    def place_word(self, word, start_location, is_vertical_move):
         letter_location_set = set([])
-        _, player_rack = self.get_current_player_data()
         next_location_func = self.get_next_location_function(
             use_positive_seek=True,
             use_vertical_words=is_vertical_move
@@ -182,10 +192,10 @@ class ScrabbleGame(object):
                 while character != ')':
                     current_location = next_location_func(current_location)
                     character = next(word_iterator, None)
-            else:
-                if is_mock:
-                    self.cheat_add_rack_tile(character, player_rack)
 
+                character = next(word_iterator, None)
+
+            if character:
                 letter_location_set.add((character, current_location))
                 current_location = next_location_func(current_location)
 
@@ -395,6 +405,9 @@ class ScrabbleGame(object):
         player_to_move, player_rack = self.get_current_player_data()
 
         if self.move_is_legal(letter_location_set, player_rack):
+            if self.move_successfully_challenged():
+                letter_location_set = set([])
+
             for move_letter, board_location in letter_location_set:
                 tile_index = self.get_rack_tile_index(player_rack, move_letter)
                 tile_obj = self.pop_player_rack_tile(player_rack, tile_index)

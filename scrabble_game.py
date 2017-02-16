@@ -2,7 +2,6 @@
 scrabble_game.py -- contains classes that model scrabble moves
 '''
 import collections
-import itertools
 import operator
 import random
 
@@ -348,6 +347,7 @@ class ScrabbleGame(object):
         location_set = set((location for _, location in letter_location_set))
 
         success = (
+            len(letter_location_set) <= 7 and
             self.move_is_not_out_of_bounds(location_set) and
             is_sublist(letter_list, player_rack_letter_list) and
             self.move_does_not_stack_tiles(letter_list, location_set) and

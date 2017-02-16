@@ -261,33 +261,16 @@ def test_conclude_game():
     game.place_word('BAKERS', ('h', 8), False, True)
 
     game.tile_bag = []
+    game.player_rack_list = [[], [], []]
 
-    game.player_rack_list[0] = []
-    game.cheat_add_rack_tile('C', game.player_rack_list[0])
-    game.cheat_add_rack_tile('I', game.player_rack_list[0])
-    game.cheat_add_rack_tile('O', game.player_rack_list[0])
-    game.cheat_add_rack_tile('O', game.player_rack_list[0])
-    game.cheat_add_rack_tile('I', game.player_rack_list[0])
-    game.cheat_add_rack_tile('V', game.player_rack_list[0])
-    game.cheat_add_rack_tile('A', game.player_rack_list[0])
+    for c in 'CIOOIVA':
+        game.cheat_add_rack_tile(c, game.player_rack_list[0])
 
-    game.player_rack_list[1] = []
-    game.cheat_add_rack_tile('A', game.player_rack_list[1])
-    game.cheat_add_rack_tile('B', game.player_rack_list[1])
-    game.cheat_add_rack_tile('C', game.player_rack_list[1])
-    game.cheat_add_rack_tile('D', game.player_rack_list[1])
-    game.cheat_add_rack_tile('E', game.player_rack_list[1])
-    game.cheat_add_rack_tile('F', game.player_rack_list[1])
-    game.cheat_add_rack_tile('G', game.player_rack_list[1])
+    for c in 'ABCDEFG':
+        game.cheat_add_rack_tile(c, game.player_rack_list[1])
 
-    game.player_rack_list[2] = []
-    game.cheat_add_rack_tile('A', game.player_rack_list[2])
-    game.cheat_add_rack_tile('I', game.player_rack_list[2])
-    game.cheat_add_rack_tile('U', game.player_rack_list[2])
-    game.cheat_add_rack_tile('W', game.player_rack_list[2])
-    game.cheat_add_rack_tile('Z', game.player_rack_list[2])
-    game.cheat_add_rack_tile('E', game.player_rack_list[2])
-    game.cheat_add_rack_tile('E', game.player_rack_list[2])
+    for c in 'AIUWZEE':
+        game.cheat_add_rack_tile(c, game.player_rack_list[2])
 
     game.next_player_move([('A', ('h', 9)),
                            ('B', ('h', 10)),
@@ -316,4 +299,3 @@ def test_conclude_game():
                                '13_______E_______\n'
                                '14_______F_______\n'
                                '15_______G_______')
-

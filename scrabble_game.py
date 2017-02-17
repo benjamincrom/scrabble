@@ -295,13 +295,11 @@ def get_rack_tile_index(player_rack, move_letter):
     return None
 
 def get_new_tile_bag():
-    tile_bag = [
+    return [
         scrabble_board.ScrabbleTile(letter=letter)
         for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
         for _ in range(magnitude)
     ]
-
-    return tile_bag
 
 def get_next_location_function(use_positive_seek, use_vertical_words):
     if use_vertical_words and use_positive_seek:

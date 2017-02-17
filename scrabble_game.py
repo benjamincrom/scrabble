@@ -498,23 +498,26 @@ class ScrabbleGame(object):
         return success, return_obj
 
     def exchange(self, letter_list):
-        new_self = copy.deepcopy(self)
-        if len(new_self.tile_bag) < 7 or len(letter_list) > 7:
+        if len(self.tile_bag) < 7 or len(letter_list) > 7:
             success = False
             return_obj = self
         else:
-            _, player_rack = get_current_player_data(new_self.move_number,
-                                                     new_self.player_rack_list)
+            new_self = copy.deepcopy(self)
+            player_to_move_id, player_rack = get_current_player_data(
+                new_self.move_number,
+                new_self.player_rack_list
+            )
 
             player_letter_list = [tile.letter for tile in player_rack]
 
             if move_is_sublist(letter_list, player_letter_list):
-                player_rack, new_self.tile_bag = perform_bag_exchange(
+                new_player_rack, new_self.tile_bag = perform_bag_exchange(
                     letter_list,
                     player_rack,
                     new_self.tile_bag
                 )
 
+                new_self.player_rack_list[player_to_move_id] = new_player_rack
                 new_self.move_number += 1
                 success = True
                 return_obj = new_self

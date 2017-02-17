@@ -24,13 +24,6 @@ def move_is_sublist(letter_list_1, letter_list_2):
 
     return True
 
-def get_rack_tile_index(player_rack, move_letter):
-    for i, rack_tile in enumerate(player_rack):
-        if rack_tile.letter == move_letter:
-            return i
-
-    return None
-
 def move_does_not_cover_tiles(board, location_set):
     for location in location_set:
         if board[location]:
@@ -94,6 +87,24 @@ def move_is_seven_tiles_or_less(location_set):
     else:
         return True
 
+def move_is_not_out_of_bounds(location_set):
+    for location in location_set:
+        if location_is_out_of_bounds(location):
+            print('Move location {} is out of bounds'.format(location))
+            return False
+
+    return True
+
+def move_successfully_challenged():
+    response = input('Challenge successful (Y/N)')
+    if response.upper() == 'Y':
+        return True
+    elif response.upper() == 'N':
+        return False
+    else:
+        print('You must enter Y or N')
+        return move_successfully_challenged()
+
 def location_is_out_of_bounds(location):
     column, row = location
     return (ord(column) < ord('a') or
@@ -109,6 +120,13 @@ def location_touches_tile(board, location):
 
     return False
 
+def get_rack_tile_index(player_rack, move_letter):
+    for i, rack_tile in enumerate(player_rack):
+        if rack_tile.letter == move_letter:
+            return i
+
+    return None
+
 def get_new_tile_bag():
     tile_bag = []
     for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items():
@@ -121,32 +139,6 @@ def get_new_tile_bag():
             )
 
     return tile_bag
-
-def get_word_location_set(board, location, use_vertical_words):
-    word_location_set = set([])
-
-    for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
-        current_location = location          # either up/down or left/right
-        current_tile = board[current_location]
-
-        next_location_func = get_next_location_function(
-            use_positive_seek,
-            use_vertical_words
-        )
-
-        while current_tile:
-            word_location_set.add(current_location)
-            current_location = next_location_func(current_location)
-
-            if location_is_out_of_bounds(current_location):
-                current_tile = None
-            else:
-                current_tile = board[current_location]
-
-    if len(word_location_set) > 1:           # Must be at least 2 letters to
-        return frozenset(word_location_set)  # count as a word
-    else:
-        return frozenset([])
 
 def get_next_location_function(use_positive_seek, use_vertical_words):
     if use_vertical_words and use_positive_seek:
@@ -178,23 +170,31 @@ def get_adjacent_location_set(location):
 
     return adjacent_location_set - remove_location_set
 
-def move_is_not_out_of_bounds(location_set):
-    for location in location_set:
-        if location_is_out_of_bounds(location):
-            print('Move location {} is out of bounds'.format(location))
-            return False
+def get_word_location_set(board, location, use_vertical_words):
+    word_location_set = set([])
 
-    return True
+    for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
+        current_location = location          # either up/down or left/right
+        current_tile = board[current_location]
 
-def move_successfully_challenged():
-    response = input('Challenge successful (Y/N)')
-    if response.upper() == 'Y':
-        return True
-    elif response.upper() == 'N':
-        return False
+        next_location_func = get_next_location_function(
+            use_positive_seek,
+            use_vertical_words
+        )
+
+        while current_tile:
+            word_location_set.add(current_location)
+            current_location = next_location_func(current_location)
+
+            if location_is_out_of_bounds(current_location):
+                current_tile = None
+            else:
+                current_tile = board[current_location]
+
+    if len(word_location_set) > 1:           # Must be at least 2 letters to
+        return frozenset(word_location_set)  # count as a word
     else:
-        print('You must enter Y or N')
-        return move_successfully_challenged()
+        return frozenset([])
 
 def get_word_set(board, move_location_set):
     word_set = set([])

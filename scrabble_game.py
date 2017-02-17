@@ -15,6 +15,38 @@ def decrement_letter(character):
 def increment_letter(character):
     return chr(ord(character) + 1)
 
+def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
+    all_rack_points = 0
+
+    new_player_score_list_list = copy.deepcopy(player_score_list_list)
+    for i, player_rack in enumerate(player_rack_list):
+        rack_point_total = sum((tile.point_value for tile in player_rack))
+        this_player_score_list = new_player_score_list_list[i]
+        this_player_score_list.append(-1 * rack_point_total)
+        all_rack_points += rack_point_total
+
+    if empty_rack_id:  # Empty rack player gets all other racks' points
+        empty_player_score_list = new_player_score_list_list[empty_rack_id]
+        empty_player_score_list.append(all_rack_points)
+
+    player_score_total_list = [
+        sum(player_score_list)
+        for player_score_list in new_player_score_list_list
+    ]
+
+    winning_player_id, winning_player_score = max(
+        enumerate(player_score_total_list), key=operator.itemgetter(1)
+    )
+
+    print(
+        'Game Over! Player {} wins with a score of {}'.format(
+            winning_player_id + 1,
+            winning_player_score
+        )
+    )
+
+    return new_player_score_list_list
+
 def score_move(letter_location_set, board):
     new_board = copy.deepcopy(board)
     move_location_set = set(
@@ -378,7 +410,9 @@ class ScrabbleGame(object):
             player_score_list.append(move_score)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                self._conclude_game(player_to_move)
+                conclude_game(self.player_rack_list,
+                              self.player_score_list_list,
+                              player_to_move)
 
             self.move_number += 1
             success = True
@@ -413,35 +447,6 @@ class ScrabbleGame(object):
             return True
         else:
             return False
-
-    def _conclude_game(self, empty_rack_id=None):
-        all_rack_points = 0
-
-        for i, player_rack in enumerate(self.player_rack_list):
-            rack_point_total = sum((tile.point_value for tile in player_rack))
-            this_player_score_list = self.player_score_list_list[i]
-            this_player_score_list.append(-1 * rack_point_total)
-            all_rack_points += rack_point_total
-
-        if empty_rack_id:  # Empty rack player gets all other racks' points
-            empty_player_score_list = self.player_score_list_list[empty_rack_id]
-            empty_player_score_list.append(all_rack_points)
-
-        player_score_total_list = [
-            sum(player_score_list)
-            for player_score_list in self.player_score_list_list
-        ]
-
-        winning_player_id, winning_player_score = max(
-            enumerate(player_score_total_list), key=operator.itemgetter(1)
-        )
-
-        print(
-            'Game Over! Player {} wins with a score of {}'.format(
-                winning_player_id + 1,
-                winning_player_score
-            )
-        )
 
     # Methods without side-effects
     def _get_current_player_data(self):

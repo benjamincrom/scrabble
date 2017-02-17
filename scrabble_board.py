@@ -36,7 +36,7 @@ class ScrabbleBoard(object):
         self.board_square_dict = self.initialize_board_square_dict()
 
     def __getitem__(self, key):
-        return self.board_square_dict.get(key)
+        return self.board_square_dict.get(key).tile
 
     def __setitem__(self, key, value):
         self.board_square_dict[key].tile = value

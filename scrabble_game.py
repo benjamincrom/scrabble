@@ -33,7 +33,7 @@ def get_rack_tile_index(player_rack, move_letter):
 
 def move_does_not_cover_tiles(board, location_set):
     for location in location_set:
-        if board[location].tile:
+        if board[location]:
             print(
                 'Move covers existing tiles at location {}'.format(location)
             )
@@ -58,7 +58,7 @@ def move_does_not_misalign_tiles(board, location_set):
     if is_vertical_move:
         this_column = list(location_set)[0][0]
         for this_row in range(min(row_list), max(row_list) + 1):
-            this_tile = board[(this_column, this_row)].tile
+            this_tile = board[(this_column, this_row)]
             if not (this_tile or (this_column, this_row) in location_set):
                 print(
                     'Not all tiles in vertical move are connected: '
@@ -70,7 +70,7 @@ def move_does_not_misalign_tiles(board, location_set):
         for this_column_num in range(ord(min(column_list)),
                                      ord(max(column_list)) + 1):
             this_column = chr(this_column_num)
-            this_tile = board[(this_column, this_row)].tile
+            this_tile = board[(this_column, this_row)]
             if not (this_tile or (this_column, this_row) in location_set):
                 print(
                     'Not all tiles in horizontal move are connected: '
@@ -104,7 +104,7 @@ def location_is_out_of_bounds(location):
 def location_touches_tile(board, location):
     adjacent_location_set = get_adjacent_location_set(location)
     for adjacent_location in adjacent_location_set:
-        if board[adjacent_location].tile:
+        if board[adjacent_location]:
             return True
 
     return False
@@ -127,7 +127,7 @@ def get_word_location_set(board, location, use_vertical_words):
 
     for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
         current_location = location          # either up/down or left/right
-        current_tile = board[current_location].tile
+        current_tile = board[current_location]
 
         next_location_func = get_next_location_function(
             use_positive_seek,
@@ -141,7 +141,7 @@ def get_word_location_set(board, location, use_vertical_words):
             if location_is_out_of_bounds(current_location):
                 current_tile = None
             else:
-                current_tile = board[current_location].tile
+                current_tile = board[current_location]
 
     if len(word_location_set) > 1:           # Must be at least 2 letters to
         return frozenset(word_location_set)  # count as a word
@@ -218,7 +218,7 @@ def get_word_set_total_score(board, word_set, num_move_locations):
         word_multiplier = 1
 
         for location in word_location_set:
-            square = board[location]
+            square = board.board_square_dict[location]
             word_multiplier *= square.word_multiplier
             word_score += square.tile.point_value * square.letter_multiplier
 
@@ -375,7 +375,7 @@ class ScrabbleGame(object):
 
     def _cancel_bonus_squares(self, location_set):
         for location in location_set:
-            square = self.board[location]
+            square = self.board.board_square_dict[location]
             square.letter_multiplier = 1
             square.word_multiplier = 1
 

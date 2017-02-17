@@ -8,6 +8,46 @@ def character_range(character_1, character_2):
     for this_character_ord in range(ord(character_1), ord(character_2)):
         yield chr(this_character_ord)
 
+def get_location_word_mutliplier(location):
+    column, row = location
+
+    if (column, row) in config.DOUBLE_WORD_SCORE_LOCATION_LIST:
+        word_multiplier = 2
+    elif (column, row) in config.TRIPLE_WORD_SCORE_LOCATION_LIST:
+        word_multiplier = 3
+    else:
+        word_multiplier = 1
+
+    return word_multiplier
+
+def get_location_letter_multiplier(location):
+    column, row = location
+
+    if (column, row) in config.DOUBLE_LETTER_SCORE_LOCATION_LIST:
+        letter_multiplier = 2
+    elif (column, row) in config.TRIPLE_LETTER_SCORE_LOCATION_LIST:
+        letter_multiplier = 3
+    else:
+        letter_multiplier = 1
+
+    return letter_multiplier
+
+def initialize_new_board_square_dict():
+    initial_board_square_dict = {}
+    for column in character_range('a', 'p'):
+        for row in range(1, 16):
+            location = (column, row)
+            word_multiplier = get_location_word_mutliplier(location)
+            letter_multiplier = get_location_letter_multiplier(location)
+
+            initial_board_square_dict[location] = BoardSquare(
+                tile=None,
+                word_multiplier=word_multiplier,
+                letter_multiplier=letter_multiplier
+            )
+
+    return initial_board_square_dict
+
 
 class ScrabbleTile(object):
     def __init__(self, letter):
@@ -33,7 +73,7 @@ class BoardSquare(object):
 
 class ScrabbleBoard(object):
     def __init__(self):
-        self.board_square_dict = self.initialize_board_square_dict()
+        self.board_square_dict = initialize_new_board_square_dict()
 
     def __getitem__(self, key):
         return self.board_square_dict.get(key).tile
@@ -67,46 +107,3 @@ class ScrabbleBoard(object):
         return_str = '\n'.join(return_line_list)
 
         return return_str
-
-    @staticmethod
-    def get_location_word_mutliplier(location):
-        column, row = location
-
-        if (column, row) in config.DOUBLE_WORD_SCORE_LOCATION_LIST:
-            word_multiplier = 2
-        elif (column, row) in config.TRIPLE_WORD_SCORE_LOCATION_LIST:
-            word_multiplier = 3
-        else:
-            word_multiplier = 1
-
-        return word_multiplier
-
-    @staticmethod
-    def get_location_letter_multiplier(location):
-        column, row = location
-
-        if (column, row) in config.DOUBLE_LETTER_SCORE_LOCATION_LIST:
-            letter_multiplier = 2
-        elif (column, row) in config.TRIPLE_LETTER_SCORE_LOCATION_LIST:
-            letter_multiplier = 3
-        else:
-            letter_multiplier = 1
-
-        return letter_multiplier
-
-    @classmethod
-    def initialize_board_square_dict(cls):
-        initial_board_square_dict = {}
-        for column in character_range('a', 'p'):
-            for row in range(1, 16):
-                location = (column, row)
-                word_multiplier = cls.get_location_word_mutliplier(location)
-                letter_multiplier = cls.get_location_letter_multiplier(location)
-
-                initial_board_square_dict[location] = BoardSquare(
-                    tile=None,
-                    word_multiplier=word_multiplier,
-                    letter_multiplier=letter_multiplier
-                )
-
-        return initial_board_square_dict

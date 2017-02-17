@@ -241,14 +241,16 @@ def test_get_rack_tile_bad():
 def test_player_exchange_bad_choices():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    assert game.exchange(['Z', 'Z', 'Z', 'Z']) is False
+    success, game = game.exchange(['Z', 'Z', 'Z', 'Z'])
+    assert success is False
 
 def test_player_exchange_not_enough_tiles():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     game.tile_bag = game.tile_bag[:4]
     player_letter_list = [tile.letter for tile in game.player_rack_list[0]]
-    assert game.exchange(player_letter_list) is False
+    success, game = game.exchange(player_letter_list)
+    assert success is False
 
     new_player_letter_list = [tile.letter for tile in game.player_rack_list[0]]
     assert player_letter_list == new_player_letter_list
@@ -257,7 +259,7 @@ def test_player_exchange():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     player_letter_list = [str(tile) for tile in game.player_rack_list[0]]
-    game.exchange(player_letter_list)
+    success, game = game.exchange(player_letter_list)
     new_player_letter_list = [tile.letter for tile in game.player_rack_list[0]]
     assert player_letter_list != new_player_letter_list
 

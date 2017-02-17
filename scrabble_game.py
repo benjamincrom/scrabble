@@ -345,11 +345,9 @@ def get_word_set_total_score(board, word_set, num_move_locations):
 class ScrabbleGame(object):
     def __init__(self, num_players):
         self.num_players = num_players
-        self.tile_bag = get_new_tile_bag()
-
         self.player_rack_list, self.tile_bag = initialize_player_rack_list(
             self.num_players,
-            self.tile_bag
+            get_new_tile_bag()
         )
 
         self.board = scrabble_board.ScrabbleBoard()
@@ -384,7 +382,6 @@ class ScrabbleGame(object):
             player_scores_str=player_scores_str
         )
 
-    # Methods with side-effects
     def place_word(self, word, start_location, is_vertical_move):
         letter_location_set = get_word_letter_location_set(word,
                                                            start_location,
@@ -430,37 +427,47 @@ class ScrabbleGame(object):
 
             new_self.move_number += 1
             success = True
+            return_obj = new_self
         else:
             success = False
+            return_obj = self
 
-        return success, new_self
+        return success, return_obj
 
     def exchange(self, letter_list):
-        if len(self.tile_bag) < 7 or len(letter_list) > 7:
-            return False
-
-        _, player_rack = self._get_current_player_data()
-        player_letter_list = [tile.letter for tile in player_rack]
-
-        if move_is_sublist(letter_list, player_letter_list):
-            exchange_tile_list = []
-            for letter in letter_list:
-                for tile in player_rack:
-                    if tile.letter == letter:
-                        exchange_tile_list.append(tile)
-                        player_rack.remove(tile)
-
-            for _ in range(len(letter_list)):
-                if self.tile_bag:
-                    new_tile, self.tile_bag = draw_random_tile(self.tile_bag)
-                    player_rack.append(new_tile)
-
-            self.tile_bag.extend(exchange_tile_list)
-            self.move_number += 1
-
-            return True
+        new_self = copy.deepcopy(self)
+        if len(new_self.tile_bag) < 7 or len(letter_list) > 7:
+            success = False
+            return_obj = self
         else:
-            return False
+            _, player_rack = new_self._get_current_player_data()
+            player_letter_list = [tile.letter for tile in player_rack]
+
+            if move_is_sublist(letter_list, player_letter_list):
+                exchange_tile_list = []
+                for letter in letter_list:
+                    for tile in player_rack:
+                        if tile.letter == letter:
+                            exchange_tile_list.append(tile)
+                            player_rack.remove(tile)
+
+                for _ in range(len(letter_list)):
+                    if new_self.tile_bag:
+                        new_tile, new_self.tile_bag = draw_random_tile(
+                            new_self.tile_bag
+                        )
+                        player_rack.append(new_tile)
+
+                new_self.tile_bag.extend(exchange_tile_list)
+                new_self.move_number += 1
+
+                success = True
+                return_obj = new_self
+            else:
+                success = False
+                return_obj = self
+
+        return success, return_obj
 
     # Methods without side-effects
     def _get_current_player_data(self):

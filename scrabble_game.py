@@ -2,6 +2,7 @@
 scrabble_game.py -- contains classes that model scrabble moves
 '''
 import collections
+import copy
 import operator
 import random
 
@@ -13,6 +14,26 @@ def decrement_letter(character):
 
 def increment_letter(character):
     return chr(ord(character) + 1)
+
+def cheat_create_rack_tile(character, player_rack=[]):
+    tile = scrabble_board.ScrabbleTile(letter=character)
+    new_player_rack = copy.deepcopy(player_rack)
+    new_player_rack.append(tile)
+
+    return new_player_rack
+
+def cheat_create_rack_word(word, player_rack=[]):
+    new_player_rack = copy.deepcopy(player_rack)
+    for character in word:
+        new_player_rack = cheat_create_rack_tile(character, new_player_rack)
+
+    return new_player_rack
+
+def draw_random_tile(tile_bag):
+    selected_tile = random.choice(tile_bag)
+    new_tile_bag = [tile for tile in tile_bag if tile != selected_tile]
+
+    return selected_tile, new_tile_bag
 
 def move_is_sublist(letter_list_1, letter_list_2):
     letter_counter_1 = collections.Counter(letter_list_1)
@@ -232,7 +253,7 @@ class ScrabbleGame(object):
     def __init__(self, num_players):
         self.num_players = num_players
         self.tile_bag = get_new_tile_bag()
-        self.player_rack_list = self._initialize_player_racks()
+        self.player_rack_list = self._initialize_player_rack_list()
         self.board = scrabble_board.ScrabbleBoard()
         self.player_score_list_list = [[] for _ in range(num_players)]
         self.move_number = 0
@@ -266,16 +287,6 @@ class ScrabbleGame(object):
         )
 
     # Methods with side-effects
-    @staticmethod
-    def cheat_add_rack_tile(character, player_rack):
-        tile = scrabble_board.ScrabbleTile(letter=character)
-        player_rack.append(tile)
-
-    @classmethod
-    def cheat_add_rack_word(cls, word, player_rack):
-        for character in word:
-            cls.cheat_add_rack_tile(character, player_rack)
-
     def place_word(self, word, start_location, is_vertical_move):
         letter_location_set = set([])
         next_location_func = get_next_location_function(
@@ -314,7 +325,8 @@ class ScrabbleGame(object):
 
             while len(player_rack) < 7:
                 if self.tile_bag:
-                    player_rack.append(self._draw_random_tile())
+                    new_tile, self.tile_bag = draw_random_tile(self.tile_bag)
+                    player_rack.append(new_tile)
                 else:
                     break
 
@@ -349,7 +361,8 @@ class ScrabbleGame(object):
 
             for _ in range(len(letter_list)):
                 if self.tile_bag:
-                    player_rack.append(self._draw_random_tile())
+                    new_tile, self.tile_bag = draw_random_tile(self.tile_bag)
+                    player_rack.append(new_tile)
 
             self.tile_bag.extend(exchange_tile_list)
             self.move_number += 1
@@ -407,14 +420,14 @@ class ScrabbleGame(object):
             )
         )
 
-    def _draw_random_tile(self):
-        random_index = random.randrange(0, len(self.tile_bag))
-        return self.tile_bag.pop(random_index)
-
-    def _initialize_player_racks(self):
+    def _initialize_player_rack_list(self):
         player_rack_list = []
         for _ in range(self.num_players):
-            this_rack = [self._draw_random_tile() for _ in range(7)]
+            this_rack = []
+            for _ in range(7):
+                this_tile, self.tile_bag = draw_random_tile(self.tile_bag)
+                this_rack.append(this_tile)
+
             player_rack_list.append(this_rack)
 
         return player_rack_list

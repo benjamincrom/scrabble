@@ -455,10 +455,10 @@ class ScrabbleGame(object):
 
     def next_player_move(self, letter_location_set):
         new_self = copy.deepcopy(self)
-        player_to_move_id, player_rack = get_current_player_data(
-            new_self.move_number,
-            new_self.player_rack_list
-        )
+
+        (player_to_move_id,
+         player_rack) = get_current_player_data(new_self.move_number,
+                                                new_self.player_rack_list)
 
         is_legal_move = move_is_legal(new_self.board,
                                       new_self.move_number,
@@ -474,18 +474,16 @@ class ScrabbleGame(object):
                 tile_obj = player_rack.pop(tile_index)
                 new_self.board[board_location] = tile_obj
 
-            player_rack, tile_bag = refill_player_rack(player_rack,
-                                                       new_self.tile_bag)
+            filled_player_rack, tile_bag = refill_player_rack(player_rack,
+                                                              new_self.tile_bag)
 
             move_score, new_self.board = score_move(letter_location_set,
                                                     new_self.board)
 
-            player_score_list = (
-                new_self.player_score_list_list[player_to_move_id]
-            )
-            player_score_list.append(move_score)
+            score_list = new_self.player_score_list_list[player_to_move_id]
+            score_list.append(move_score)
 
-            if len(player_rack) == 0 and len(new_self.tile_bag) == 0:
+            if len(player_rack) == 0 and len(tile_bag) == 0:
                 new_self.player_score_list_list = conclude_game(
                     new_self.player_rack_list,
                     new_self.player_score_list_list,

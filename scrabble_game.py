@@ -436,7 +436,7 @@ class ScrabbleGame(object):
         letter_list = [letter for letter, _ in letter_location_set]
         location_set = set((location for _, location in letter_location_set))
 
-        success = (
+        return (
             move_is_seven_tiles_or_less(location_set) and
             move_is_not_out_of_bounds(location_set) and
             move_is_sublist(letter_list, player_rack_letter_list) and
@@ -445,8 +445,6 @@ class ScrabbleGame(object):
             move_does_not_cover_tiles(self.board, location_set) and
             self._move_touches_tile(location_set)
         )
-
-        return success
 
     def _move_touches_tile(self, location_set):
         if self.move_number == 0:

@@ -15,6 +15,24 @@ def decrement_letter(character):
 def increment_letter(character):
     return chr(ord(character) + 1)
 
+def perform_bag_exchange(letter_list, player_rack, tile_bag):
+    new_tile_bag = copy.deepcopy(tile_bag)
+    new_player_rack = copy.deepcopy(player_rack)
+    exchange_tile_list = []
+    for letter in letter_list:
+        for tile in new_player_rack:
+            if tile.letter == letter:
+                exchange_tile_list.append(tile)
+                new_player_rack.remove(tile)
+
+    for _ in range(len(letter_list)):
+        new_tile, new_tile_bag = draw_random_tile(new_tile_bag)
+        new_player_rack.append(new_tile)
+
+    new_tile_bag.extend(exchange_tile_list)
+
+    return new_player_rack, new_tile_bag
+
 def get_current_player_data(move_number, player_rack_list):
     num_players = len(player_rack_list)
     player_to_move_id = move_number % num_players
@@ -491,23 +509,13 @@ class ScrabbleGame(object):
             player_letter_list = [tile.letter for tile in player_rack]
 
             if move_is_sublist(letter_list, player_letter_list):
-                exchange_tile_list = []
-                for letter in letter_list:
-                    for tile in player_rack:
-                        if tile.letter == letter:
-                            exchange_tile_list.append(tile)
-                            player_rack.remove(tile)
+                player_rack, new_self.tile_bag = perform_bag_exchange(
+                    letter_list,
+                    player_rack,
+                    new_self.tile_bag
+                )
 
-                for _ in range(len(letter_list)):
-                    if new_self.tile_bag:
-                        new_tile, new_self.tile_bag = draw_random_tile(
-                            new_self.tile_bag
-                        )
-                        player_rack.append(new_tile)
-
-                new_self.tile_bag.extend(exchange_tile_list)
                 new_self.move_number += 1
-
                 success = True
                 return_obj = new_self
             else:
@@ -515,4 +523,3 @@ class ScrabbleGame(object):
                 return_obj = self
 
         return success, return_obj
-

@@ -311,7 +311,7 @@ class ScrabbleGame(object):
             for move_letter, board_location in letter_location_set:
                 tile_index = get_rack_tile_index(player_rack, move_letter)
                 tile_obj = player_rack.pop(tile_index)
-                self._place_tile(tile_obj, board_location)
+                self.board[board_location] = tile_obj
 
             while len(player_rack) < 7:
                 if self.tile_bag:
@@ -407,10 +407,6 @@ class ScrabbleGame(object):
                 winning_player_score
             )
         )
-
-    def _place_tile(self, tile_obj, board_location):
-        ''' Takes format of rack_tile_index, board_location '''
-        self.board[board_location].tile = tile_obj
 
     def _draw_random_tile(self):
         random_index = random.randrange(0, len(self.tile_bag))

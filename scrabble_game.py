@@ -15,6 +15,13 @@ def decrement_letter(character):
 def increment_letter(character):
     return chr(ord(character) + 1)
 
+def get_current_player_data(move_number, player_rack_list):
+    num_players = len(player_rack_list)
+    player_to_move_id = move_number % num_players
+    player_rack = player_rack_list[player_to_move_id]
+
+    return player_to_move_id, player_rack
+
 def get_word_letter_location_set(word, start_location, is_vertical_move):
     letter_location_set = set([])
     next_location_func = get_next_location_function(
@@ -127,6 +134,33 @@ def draw_random_tile(tile_bag):
     new_tile_bag = [tile for tile in tile_bag if tile != selected_tile]
 
     return selected_tile, new_tile_bag
+
+def move_is_legal(board, move_number, letter_location_set, player_rack):
+    player_rack_letter_list = [tile.letter for tile in player_rack]
+    letter_list = [letter for letter, _ in letter_location_set]
+    location_set = set((location for _, location in letter_location_set))
+
+    return (
+        move_is_seven_tiles_or_less(location_set) and
+        move_is_not_out_of_bounds(location_set) and
+        move_is_sublist(letter_list, player_rack_letter_list) and
+        move_does_not_stack_tiles(letter_list, location_set) and
+        move_does_not_misalign_tiles(board, location_set) and
+        move_does_not_cover_tiles(board, location_set) and
+        move_touches_tile(move_number, board, location_set)
+    )
+
+def move_touches_tile(move_number, board, location_set):
+    if move_number == 0:
+        if config.START_SQUARE in location_set:
+            return True
+    else:
+        for this_location in location_set:
+            if location_touches_tile(board, this_location):
+                return True
+
+    print('Move does not touch any existing tiles.')
+    return False
 
 def move_is_sublist(letter_list_1, letter_list_2):
     letter_counter_1 = collections.Counter(letter_list_1)
@@ -344,9 +378,8 @@ def get_word_set_total_score(board, word_set, num_move_locations):
 
 class ScrabbleGame(object):
     def __init__(self, num_players):
-        self.num_players = num_players
         self.player_rack_list, self.tile_bag = initialize_player_rack_list(
-            self.num_players,
+            num_players,
             get_new_tile_bag()
         )
 
@@ -365,6 +398,8 @@ class ScrabbleGame(object):
             )
 
         player_scores_str = '\n'.join(player_score_str_list)
+        player_to_move_id, _ = get_current_player_data(self.move_number,
+                                                       self.player_rack_list)
 
         return (
             '{board}\n'
@@ -377,7 +412,7 @@ class ScrabbleGame(object):
             board=str(self.board),
             player_rack_list=self.player_rack_list,
             move_number=self.move_number,
-            player_to_move=(self.move_number % self.num_players) + 1,
+            player_to_move=player_to_move_id + 1,
             tiles_remaining=len(self.tile_bag),
             player_scores_str=player_scores_str
         )
@@ -391,9 +426,17 @@ class ScrabbleGame(object):
 
     def next_player_move(self, letter_location_set):
         new_self = copy.deepcopy(self)
-        player_to_move, player_rack = new_self._get_current_player_data()
+        player_to_move_id, player_rack = get_current_player_data(
+            new_self.move_number,
+            new_self.player_rack_list
+        )
 
-        if new_self._move_is_legal(letter_location_set, player_rack):
+        is_legal_move = move_is_legal(new_self.board,
+                                      new_self.move_number,
+                                      letter_location_set,
+                                      player_rack)
+
+        if is_legal_move:
             if move_successfully_challenged():
                 letter_location_set = set([])
 
@@ -415,14 +458,16 @@ class ScrabbleGame(object):
             move_score, new_self.board = score_move(letter_location_set,
                                                     new_self.board)
 
-            player_score_list = new_self.player_score_list_list[player_to_move]
+            player_score_list = (
+                new_self.player_score_list_list[player_to_move_id]
+            )
             player_score_list.append(move_score)
 
             if len(player_rack) == 0 and len(new_self.tile_bag) == 0:
                 new_self.player_score_list_list = conclude_game(
                     new_self.player_rack_list,
                     new_self.player_score_list_list,
-                    player_to_move
+                    player_to_move_id
                 )
 
             new_self.move_number += 1
@@ -440,7 +485,9 @@ class ScrabbleGame(object):
             success = False
             return_obj = self
         else:
-            _, player_rack = new_self._get_current_player_data()
+            _, player_rack = get_current_player_data(new_self.move_number,
+                                                     new_self.player_rack_list)
+
             player_letter_list = [tile.letter for tile in player_rack]
 
             if move_is_sublist(letter_list, player_letter_list):
@@ -468,38 +515,4 @@ class ScrabbleGame(object):
                 return_obj = self
 
         return success, return_obj
-
-    # Methods without side-effects
-    def _get_current_player_data(self):
-        player_to_move = self.move_number % self.num_players
-        player_rack = self.player_rack_list[player_to_move]
-
-        return player_to_move, player_rack
-
-    def _move_is_legal(self, letter_location_set, player_rack):
-        player_rack_letter_list = [tile.letter for tile in player_rack]
-        letter_list = [letter for letter, _ in letter_location_set]
-        location_set = set((location for _, location in letter_location_set))
-
-        return (
-            move_is_seven_tiles_or_less(location_set) and
-            move_is_not_out_of_bounds(location_set) and
-            move_is_sublist(letter_list, player_rack_letter_list) and
-            move_does_not_stack_tiles(letter_list, location_set) and
-            move_does_not_misalign_tiles(self.board, location_set) and
-            move_does_not_cover_tiles(self.board, location_set) and
-            self._move_touches_tile(location_set)
-        )
-
-    def _move_touches_tile(self, location_set):
-        if self.move_number == 0:
-            if config.START_SQUARE in location_set:
-                return True
-        else:
-            for this_location in location_set:
-                if location_touches_tile(self.board, this_location):
-                    return True
-
-        print('Move does not touch any existing tiles.')
-        return False
 

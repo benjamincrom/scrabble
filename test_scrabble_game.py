@@ -52,7 +52,7 @@ def test_board_moves_score():
 
     assert game.player_score_list_list == [[12], [13], [17], []]
     assert game.move_number == 3
-    assert len(game.tile_bag) == 53
+    assert len(game.tile_bag) == 72
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
@@ -72,7 +72,7 @@ def test_board_moves_score():
 
     assert ('Moves played: 3\n'
             'Player 4\'s move\n'
-            '53 tiles remain in bag\n'
+            '72 tiles remain in bag\n'
             'Player 1: 12\n'
             'Player 2: 13\n'
             'Player 3: 17\n'
@@ -89,7 +89,7 @@ def test_bingo():
 
     assert game.player_score_list_list == [[12], [84]]
     assert game.move_number == 2
-    assert len(game.tile_bag) == 72
+    assert len(game.tile_bag) == 86
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
@@ -118,7 +118,7 @@ def test_itersect_words_regular():
 
     assert game.player_score_list_list == [[12], [16], []]
     assert game.move_number == 2
-    assert len(game.tile_bag) == 65
+    assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
@@ -147,7 +147,7 @@ def test_intersect_corner():
 
     assert game.player_score_list_list == [[12], [24], []]
     assert game.move_number == 2
-    assert len(game.tile_bag) == 65
+    assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
@@ -176,7 +176,7 @@ def test_intersect_words_double_points():
 
     assert game.player_score_list_list == [[12], [40], []]
     assert game.move_number == 2
-    assert len(game.tile_bag) == 65
+    assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
@@ -205,7 +205,7 @@ def test_intersect_parallel():
 
     assert game.player_score_list_list == [[13], [20], []]
     assert game.move_number == 2
-    assert len(game.tile_bag) == 65
+    assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'

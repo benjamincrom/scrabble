@@ -15,9 +15,23 @@ def decrement_letter(character):
 def increment_letter(character):
     return chr(ord(character) + 1)
 
+def refill_player_rack(player_rack, tile_bag): 
+    new_player_rack = copy.deepcopy(player_rack)
+    new_tile_bag = copy.deepcopy(tile_bag)
+
+    while len(new_player_rack) < 7:
+        if new_tile_bag:
+            new_tile, new_tile_bag = draw_random_tile(new_tile_bag)
+            new_player_rack.append(new_tile)
+        else:
+            break
+
+    return new_player_rack, new_tile_bag
+
 def perform_bag_exchange(letter_list, player_rack, tile_bag):
     new_tile_bag = copy.deepcopy(tile_bag)
     new_player_rack = copy.deepcopy(player_rack)
+
     exchange_tile_list = []
     for letter in letter_list:
         for tile in new_player_rack:
@@ -98,6 +112,7 @@ def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
 
 def score_move(letter_location_set, board):
     new_board = copy.deepcopy(board)
+
     move_location_set = set(
         (location for _, location in letter_location_set)
     )
@@ -113,6 +128,7 @@ def score_move(letter_location_set, board):
 
 def cancel_bonus_squares(location_set, board):
     new_board = copy.deepcopy(board)
+
     for location in location_set:
         square = new_board.board_square_dict[location]
         square.letter_multiplier = 1
@@ -123,6 +139,7 @@ def cancel_bonus_squares(location_set, board):
 def initialize_player_rack_list(num_players, tile_bag):
     new_tile_bag = copy.deepcopy(tile_bag)
     player_rack_list = []
+
     for _ in range(num_players):
         this_rack = []
         for _ in range(7):
@@ -135,6 +152,7 @@ def initialize_player_rack_list(num_players, tile_bag):
 
 def cheat_create_rack_tile(character, player_rack=[]):
     new_player_rack = copy.deepcopy(player_rack)
+
     tile = scrabble_board.ScrabbleTile(letter=character)
     new_player_rack.append(tile)
 
@@ -142,6 +160,7 @@ def cheat_create_rack_tile(character, player_rack=[]):
 
 def cheat_create_rack_word(word, player_rack=[]):
     new_player_rack = copy.deepcopy(player_rack)
+
     for character in word:
         new_player_rack = cheat_create_rack_tile(character, new_player_rack)
 
@@ -149,6 +168,7 @@ def cheat_create_rack_word(word, player_rack=[]):
 
 def draw_random_tile(tile_bag):
     new_tile_bag = copy.deepcopy(tile_bag)
+
     random_index = random.randrange(0, len(new_tile_bag))
     selected_tile = new_tile_bag.pop(random_index)
 
@@ -454,15 +474,8 @@ class ScrabbleGame(object):
                 tile_obj = player_rack.pop(tile_index)
                 new_self.board[board_location] = tile_obj
 
-            while len(player_rack) < 7:
-                if new_self.tile_bag:
-                    new_tile, new_self.tile_bag = draw_random_tile(
-                        new_self.tile_bag
-                    )
-
-                    player_rack.append(new_tile)
-                else:
-                    break
+            player_rack, tile_bag = refill_player_rack(player_rack,
+                                                       new_self.tile_bag)
 
             move_score, new_self.board = score_move(letter_location_set,
                                                     new_self.board)

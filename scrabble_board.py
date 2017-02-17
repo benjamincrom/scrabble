@@ -27,11 +27,9 @@ class BoardSquare(object):
 
     def __repr__(self):
         if self.tile:
-            return_value = str(self.tile)
+            return str(self.tile)
         else:
-            return_value = config.BLANK_SQUARE_CHARACTER
-
-        return return_value
+            return config.BLANK_SQUARE_CHARACTER
 
 
 class ScrabbleBoard(object):
@@ -103,7 +101,7 @@ class ScrabbleBoard(object):
                 word_multiplier = cls.get_location_word_mutliplier(location)
                 letter_multiplier = cls.get_location_letter_multiplier(location)
 
-                initial_board_square_dict[(column, row)] = BoardSquare(
+                initial_board_square_dict[location] = BoardSquare(
                     location=location,
                     tile=None,
                     word_multiplier=word_multiplier,

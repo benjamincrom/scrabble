@@ -21,7 +21,10 @@ board_character_array, player_scores_list_list = read_input_file(
 num_players = len(player_scores_list_list)
 game = scrabble_game.ScrabbleGame(num_players)
 
-for row_number, row_value in enumerate(board_character_array):
-    for column_number, column_value in enumerate(row):
-        column_letter = chr(ord('a') + column_number)
-        board[column_letter, i]
+for row_number, row in enumerate(board_character_array):
+    for column_number, letter in enumerate(row):
+        if letter:
+            column_letter = chr(ord('a') + column_number)
+            game.board[column_letter, row_number] = scrabble_board.ScrabbleTile(
+                letter
+            )

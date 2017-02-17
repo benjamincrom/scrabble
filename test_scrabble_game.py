@@ -31,8 +31,8 @@ def test_is_sublist():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(4)
 
-    assert game.move_is_sublist([1, 2, 3], [1, 2, 3, 4])
-    assert not game.move_is_sublist([1, 2, 3, 5], [1, 2])
+    assert scrabble_game.move_is_sublist([1, 2, 3], [1, 2, 3, 4])
+    assert not scrabble_game.move_is_sublist([1, 2, 3, 5], [1, 2])
 
 def test_challenge_fail():
     scrabble_game.input = lambda x: 'N'
@@ -262,7 +262,7 @@ def test_play_too_many_tiles():
 def test_get_rack_tile_bad():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    assert game.get_rack_tile_index(game.player_rack_list[0], '&') is None
+    assert scrabble_game.get_rack_tile_index(game.player_rack_list[0], '&') is None
 
 def test_player_exchange_bad_choices():
     scrabble_game.input = lambda x: 'N'

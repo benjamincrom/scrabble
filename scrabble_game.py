@@ -410,9 +410,11 @@ class ScrabbleGame(object):
             player_score_list.append(move_score)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                conclude_game(self.player_rack_list,
-                              self.player_score_list_list,
-                              player_to_move)
+                self.player_score_list_list = conclude_game(
+                    self.player_rack_list,
+                    self.player_score_list_list,
+                    player_to_move
+                )
 
             self.move_number += 1
             success = True

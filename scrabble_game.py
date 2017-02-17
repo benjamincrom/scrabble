@@ -390,7 +390,7 @@ class ScrabbleGame(object):
                                                            start_location,
                                                            is_vertical_move)
 
-        self.next_player_move(letter_location_set)
+        return self.next_player_move(letter_location_set)
 
     def next_player_move(self, letter_location_set):
         new_self = copy.deepcopy(self)
@@ -407,12 +407,16 @@ class ScrabbleGame(object):
 
             while len(player_rack) < 7:
                 if new_self.tile_bag:
-                    new_tile, new_self.tile_bag = draw_random_tile(new_self.tile_bag)
+                    new_tile, new_self.tile_bag = draw_random_tile(
+                        new_self.tile_bag
+                    )
+
                     player_rack.append(new_tile)
                 else:
                     break
 
-            move_score, new_self.board = score_move(letter_location_set, new_self.board)
+            move_score, new_self.board = score_move(letter_location_set,
+                                                    new_self.board)
 
             player_score_list = new_self.player_score_list_list[player_to_move]
             player_score_list.append(move_score)
@@ -425,8 +429,11 @@ class ScrabbleGame(object):
                 )
 
             new_self.move_number += 1
+            success = True
+        else:
+            success = False
 
-        return new_self
+        return success, new_self
 
     def exchange(self, letter_list):
         if len(self.tile_bag) < 7 or len(letter_list) > 7:
@@ -488,3 +495,4 @@ class ScrabbleGame(object):
 
         print('Move does not touch any existing tiles.')
         return False
+

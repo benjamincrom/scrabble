@@ -78,6 +78,44 @@ def get_next_location_function(use_positive_seek, use_vertical_words):
     elif not use_vertical_words and not use_positive_seek:
         return lambda x: (decrement_letter(x[0]), x[1])
 
+def get_adjacent_location_set(location):
+    column, row = location
+
+    adjacent_location_set = set(
+        [
+            (increment_letter(column), row),
+            (decrement_letter(column), row),
+            (column, row + 1),
+            (column, row - 1)
+        ]
+    )
+
+    # Board boundary check
+    remove_location_set = set(
+        (location for location in adjacent_location_set
+         if location_out_of_bounds(location))
+    )
+
+    return adjacent_location_set - remove_location_set
+
+def move_is_not_out_of_bounds(location_set):
+    for location in location_set:
+        if location_out_of_bounds(location):
+            print('Move location {} is out of bounds'.format(location))
+            return False
+
+    return True
+
+def move_successfully_challenged():
+    response = input('Challenge successful (Y/N)')
+    if response.upper() == 'Y':
+        return True
+    elif response.upper() == 'N':
+        return False
+    else:
+        print('You must enter Y or N')
+        return move_successfully_challenged()
+
 
 class ScrabbleGame(object):
     def __init__(self, num_players):
@@ -115,48 +153,6 @@ class ScrabbleGame(object):
             tiles_remaining=len(self.tile_bag),
             player_scores_str=player_scores_str
         )
-
-
-    @classmethod
-    def get_adjacent_location_set(cls, location):
-        column, row = location
-
-        adjacent_location_set = set(
-            [
-                (increment_letter(column), row),
-                (decrement_letter(column), row),
-                (column, row + 1),
-                (column, row - 1)
-            ]
-        )
-
-        # Board boundary check
-        remove_location_set = set(
-            (location for location in adjacent_location_set
-             if location_out_of_bounds(location))
-        )
-
-        return adjacent_location_set - remove_location_set
-
-    @classmethod
-    def move_successfully_challenged(cls):
-        response = input('Challenge successful (Y/N)')
-        if response.upper() == 'Y':
-            return True
-        elif response.upper() == 'N':
-            return False
-        else:
-            print('You must enter Y or N')
-            return cls.move_successfully_challenged()
-
-    @classmethod
-    def move_is_not_out_of_bounds(cls, location_set):
-        for location in location_set:
-            if location_out_of_bounds(location):
-                print('Move location {} is out of bounds'.format(location))
-                return False
-
-        return True
 
     def get_current_player_data(self):
         player_to_move = self.move_number % self.num_players
@@ -308,7 +304,7 @@ class ScrabbleGame(object):
         return total_score
 
     def location_touches_tile(self, location):
-        adjacent_location_set = self.get_adjacent_location_set(location)
+        adjacent_location_set = get_adjacent_location_set(location)
         for adjacent_location in adjacent_location_set:
             if self.board[adjacent_location].tile:
                 return True
@@ -385,7 +381,7 @@ class ScrabbleGame(object):
 
         success = (
             move_is_seven_tiles_or_less(location_set) and
-            self.move_is_not_out_of_bounds(location_set) and
+            move_is_not_out_of_bounds(location_set) and
             move_is_sublist(letter_list, player_rack_letter_list) and
             move_does_not_stack_tiles(letter_list, location_set) and
             self.move_does_not_misalign_tiles(location_set) and
@@ -399,7 +395,7 @@ class ScrabbleGame(object):
         player_to_move, player_rack = self.get_current_player_data()
 
         if self.move_is_legal(letter_location_set, player_rack):
-            if self.move_successfully_challenged():
+            if move_successfully_challenged():
                 letter_location_set = set([])
 
             for move_letter, board_location in letter_location_set:

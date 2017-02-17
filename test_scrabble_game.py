@@ -28,9 +28,6 @@ def test_game_board():
                                '15_______________')
 
 def test_is_sublist():
-    scrabble_game.input = lambda x: 'N'
-    game = scrabble_game.ScrabbleGame(4)
-
     assert scrabble_game.move_is_sublist([1, 2, 3], [1, 2, 3, 4])
     assert not scrabble_game.move_is_sublist([1, 2, 3, 5], [1, 2])
 

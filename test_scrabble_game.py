@@ -234,7 +234,9 @@ def test_play_too_many_tiles():
 def test_get_rack_tile_bad():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
-    assert scrabble_game.get_rack_tile_index(game.player_rack_list[0], '&') is None
+    assert (
+        scrabble_game.get_rack_tile_index(game.player_rack_list[0], '&') is None
+    )
 
 def test_player_exchange_bad_choices():
     scrabble_game.input = lambda x: 'N'

@@ -134,8 +134,8 @@ def initialize_player_rack_list(num_players, tile_bag):
     return player_rack_list, new_tile_bag
 
 def cheat_create_rack_tile(character, player_rack=[]):
-    tile = scrabble_board.ScrabbleTile(letter=character)
     new_player_rack = copy.deepcopy(player_rack)
+    tile = scrabble_board.ScrabbleTile(letter=character)
     new_player_rack.append(tile)
 
     return new_player_rack
@@ -148,8 +148,9 @@ def cheat_create_rack_word(word, player_rack=[]):
     return new_player_rack
 
 def draw_random_tile(tile_bag):
-    selected_tile = random.choice(tile_bag)
-    new_tile_bag = [tile for tile in tile_bag if tile != selected_tile]
+    new_tile_bag = copy.deepcopy(tile_bag)
+    random_index = random.randrange(0, len(new_tile_bag))
+    selected_tile = new_tile_bag.pop(random_index)
 
     return selected_tile, new_tile_bag
 
@@ -294,12 +295,11 @@ def get_rack_tile_index(player_rack, move_letter):
     return None
 
 def get_new_tile_bag():
-    tile_bag = []
-    for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items():
-        for _ in range(magnitude):
-            tile_bag.append(
-                scrabble_board.ScrabbleTile(letter=letter)
-            )
+    tile_bag = [
+        scrabble_board.ScrabbleTile(letter=letter)
+        for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
+        for _ in range(magnitude)
+    ]
 
     return tile_bag
 

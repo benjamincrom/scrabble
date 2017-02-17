@@ -46,8 +46,11 @@ def test_board_moves_score():
     game.player_rack_list[2] = scrabble_game.cheat_create_rack_word('PILE')
 
     game.place_word('SCRAB', ('h', 8), False)
+    import pdb; pdb.set_trace()  # breakpoint 25f1b0ab //
     game.place_word('(C)ODING', ('i', 8), True)
+    import pdb; pdb.set_trace()  # breakpoint bb74bd66 //
     game.place_word('PILE', ('g', 5), True)
+    import pdb; pdb.set_trace()  # breakpoint d020d3ab //
 
     assert game.player_score_list_list == [[12], [13], [17], []]
     assert game.move_number == 3

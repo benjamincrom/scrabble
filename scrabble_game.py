@@ -15,6 +15,30 @@ def decrement_letter(character):
 def increment_letter(character):
     return chr(ord(character) + 1)
 
+def get_word_letter_location_set(word, start_location, is_vertical_move):
+    letter_location_set = set([])
+    next_location_func = get_next_location_function(
+        use_positive_seek=True,
+        use_vertical_words=is_vertical_move
+    )
+
+    current_location = start_location
+    word_iterator = iter(word)
+    for character in word_iterator:
+        if character == '(':
+            character = next(word_iterator, None)
+            while character != ')':
+                current_location = next_location_func(current_location)
+                character = next(word_iterator, None)
+
+            character = next(word_iterator, None)
+
+        if character:
+            letter_location_set.add((character, current_location))
+            current_location = next_location_func(current_location)
+
+    return letter_location_set
+
 def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
     all_rack_points = 0
 
@@ -362,66 +386,47 @@ class ScrabbleGame(object):
 
     # Methods with side-effects
     def place_word(self, word, start_location, is_vertical_move):
-        letter_location_set = set([])
-        next_location_func = get_next_location_function(
-            use_positive_seek=True,
-            use_vertical_words=is_vertical_move
-        )
+        letter_location_set = get_word_letter_location_set(word,
+                                                           start_location,
+                                                           is_vertical_move)
 
-        current_location = start_location
-        word_iterator = iter(word)
-        for character in word_iterator:
-            if character == '(':
-                character = next(word_iterator, None)
-                while character != ')':
-                    current_location = next_location_func(current_location)
-                    character = next(word_iterator, None)
-
-                character = next(word_iterator, None)
-
-            if character:
-                letter_location_set.add((character, current_location))
-                current_location = next_location_func(current_location)
-
-        return self.next_player_move(letter_location_set)
+        self.next_player_move(letter_location_set)
 
     def next_player_move(self, letter_location_set):
-        player_to_move, player_rack = self._get_current_player_data()
+        new_self = copy.deepcopy(self)
+        player_to_move, player_rack = new_self._get_current_player_data()
 
-        if self._move_is_legal(letter_location_set, player_rack):
+        if new_self._move_is_legal(letter_location_set, player_rack):
             if move_successfully_challenged():
                 letter_location_set = set([])
 
             for move_letter, board_location in letter_location_set:
                 tile_index = get_rack_tile_index(player_rack, move_letter)
                 tile_obj = player_rack.pop(tile_index)
-                self.board[board_location] = tile_obj
+                new_self.board[board_location] = tile_obj
 
             while len(player_rack) < 7:
-                if self.tile_bag:
-                    new_tile, self.tile_bag = draw_random_tile(self.tile_bag)
+                if new_self.tile_bag:
+                    new_tile, new_self.tile_bag = draw_random_tile(new_self.tile_bag)
                     player_rack.append(new_tile)
                 else:
                     break
 
-            move_score, self.board = score_move(letter_location_set, self.board)
+            move_score, new_self.board = score_move(letter_location_set, new_self.board)
 
-            player_score_list = self.player_score_list_list[player_to_move]
+            player_score_list = new_self.player_score_list_list[player_to_move]
             player_score_list.append(move_score)
 
-            if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                self.player_score_list_list = conclude_game(
-                    self.player_rack_list,
-                    self.player_score_list_list,
+            if len(player_rack) == 0 and len(new_self.tile_bag) == 0:
+                new_self.player_score_list_list = conclude_game(
+                    new_self.player_rack_list,
+                    new_self.player_score_list_list,
                     player_to_move
                 )
 
-            self.move_number += 1
-            success = True
-        else:
-            success = False
+            new_self.move_number += 1
 
-        return success
+        return new_self
 
     def exchange(self, letter_list):
         if len(self.tile_bag) < 7 or len(letter_list) > 7:

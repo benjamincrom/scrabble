@@ -314,20 +314,13 @@ def get_next_location_function(use_positive_seek, use_vertical_words):
 def get_adjacent_location_set(location):
     column, row = location
 
-    adjacent_location_set = set(
-        [
-            (increment_letter(column), row),
-            (decrement_letter(column), row),
-            (column, row + 1),
-            (column, row - 1)
-        ]
-    )
-
+    adjacent_location_set = set([(increment_letter(column), row),
+                                 (decrement_letter(column), row),
+                                 (column, row + 1),
+                                 (column, row - 1)])
     # Board boundary check
-    remove_location_set = set(
-        (location for location in adjacent_location_set
-         if location_is_out_of_bounds(location))
-    )
+    remove_location_set = set(location for location in adjacent_location_set
+                              if location_is_out_of_bounds(location))
 
     return adjacent_location_set - remove_location_set
 

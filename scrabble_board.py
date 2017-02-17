@@ -10,9 +10,9 @@ def character_range(character_1, character_2):
 
 
 class ScrabbleTile(object):
-    def __init__(self, letter, point_value):
+    def __init__(self, letter):
         self.letter = letter
-        self.point_value = point_value
+        self.point_value=config.LETTER_POINT_VALUES_DICT[letter]
 
     def __repr__(self):
         return self.letter

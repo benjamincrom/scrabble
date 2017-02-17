@@ -132,10 +132,7 @@ def get_new_tile_bag():
     for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items():
         for _ in range(magnitude):
             tile_bag.append(
-                scrabble_board.ScrabbleTile(
-                    letter=letter,
-                    point_value=config.LETTER_POINT_VALUES_DICT[letter]
-                )
+                scrabble_board.ScrabbleTile(letter=letter)
             )
 
     return tile_bag
@@ -271,11 +268,13 @@ class ScrabbleGame(object):
     # Methods with side-effects
     @staticmethod
     def cheat_add_rack_tile(character, player_rack):
-        mock_tile_bag = get_new_tile_bag()
-        for tile in mock_tile_bag:
-            if character == tile.letter:
-                player_rack.append(tile)
-                break
+        tile = scrabble_board.ScrabbleTile(letter=character)
+        player_rack.append(tile)
+
+    @classmethod
+    def cheat_add_rack_word(cls, word, player_rack):
+        for character in word:
+            cls.cheat_add_rack_tile(character, player_rack)
 
     def place_word(self, word, start_location, is_vertical_move):
         letter_location_set = set([])

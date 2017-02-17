@@ -69,7 +69,7 @@ def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
 
     new_player_score_list_list = copy.deepcopy(player_score_list_list)
     for i, player_rack in enumerate(player_rack_list):
-        rack_point_total = sum((tile.point_value for tile in player_rack))
+        rack_point_total = sum(tile.point_value for tile in player_rack)
         this_player_score_list = new_player_score_list_list[i]
         this_player_score_list.append(-1 * rack_point_total)
         all_rack_points += rack_point_total
@@ -157,7 +157,7 @@ def draw_random_tile(tile_bag):
 def move_is_legal(board, move_number, letter_location_set, player_rack):
     player_rack_letter_list = [tile.letter for tile in player_rack]
     letter_list = [letter for letter, _ in letter_location_set]
-    location_set = set((location for _, location in letter_location_set))
+    location_set = set(location for _, location in letter_location_set)
 
     return (
         move_is_seven_tiles_or_less(location_set) and

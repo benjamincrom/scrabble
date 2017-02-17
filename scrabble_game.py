@@ -31,6 +31,55 @@ def get_rack_tile_index(player_rack, move_letter):
 
     return None
 
+def move_does_not_cover_tiles(board, location_set):
+    for location in location_set:
+        if board[location].tile:
+            print(
+                'Move covers existing tiles at location {}'.format(location)
+            )
+            return False
+
+    return True
+
+def move_does_not_misalign_tiles(board, location_set):
+    # All tiles places are in one row or one column
+    column_list = [location[0] for location in location_set]
+    row_list = [location[1] for location in location_set]
+
+    if len(set(column_list)) == 1:
+        is_vertical_move = True
+    elif len(set(row_list)) == 1:
+        is_vertical_move = False
+    else:
+        print('Move does not place all tiles in one row or column.')
+        return False
+
+     # All tiles must be connected
+    if is_vertical_move:
+        this_column = list(location_set)[0][0]
+        for this_row in range(min(row_list), max(row_list) + 1):
+            this_tile = board[(this_column, this_row)].tile
+            if not (this_tile or (this_column, this_row) in location_set):
+                print(
+                    'Not all tiles in vertical move are connected: '
+                    'location {} is empty'.format((this_column, this_row))
+                )
+                return False
+    else:
+        this_row = list(location_set)[0][1]
+        for this_column_num in range(ord(min(column_list)),
+                                     ord(max(column_list)) + 1):
+            this_column = chr(this_column_num)
+            this_tile = board[(this_column, this_row)].tile
+            if not (this_tile or (this_column, this_row) in location_set):
+                print(
+                    'Not all tiles in horizontal move are connected: '
+                    'location {} is empty'.format((this_column, this_row))
+                )
+                return False
+
+    return True
+
 def move_does_not_stack_tiles(letter_list, location_set):
     if len(letter_list) == len(location_set):
         return True
@@ -52,6 +101,14 @@ def location_is_out_of_bounds(location):
             row < 1 or
             row > 15)
 
+def location_touches_tile(board, location):
+    adjacent_location_set = get_adjacent_location_set(location)
+    for adjacent_location in adjacent_location_set:
+        if board[adjacent_location].tile:
+            return True
+
+    return False
+
 def get_new_tile_bag():
     tile_bag = []
     for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items():
@@ -64,6 +121,32 @@ def get_new_tile_bag():
             )
 
     return tile_bag
+
+def get_word_location_set(board, location, use_vertical_words):
+    word_location_set = set([])
+
+    for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
+        current_location = location          # either up/down or left/right
+        current_tile = board[current_location].tile
+
+        next_location_func = get_next_location_function(
+            use_positive_seek,
+            use_vertical_words
+        )
+
+        while current_tile:
+            word_location_set.add(current_location)
+            current_location = next_location_func(current_location)
+
+            if location_is_out_of_bounds(current_location):
+                current_tile = None
+            else:
+                current_tile = board[current_location].tile
+
+    if len(word_location_set) > 1:           # Must be at least 2 letters to
+        return frozenset(word_location_set)  # count as a word
+    else:
+        return frozenset([])
 
 def get_next_location_function(use_positive_seek, use_vertical_words):
     if use_vertical_words and use_positive_seek:
@@ -113,6 +196,40 @@ def move_successfully_challenged():
         print('You must enter Y or N')
         return move_successfully_challenged()
 
+def get_word_set(board, move_location_set):
+    word_set = set([])
+
+    for use_vertical_words in [True, False]:  # Search for vertical words
+        for location in move_location_set:    # created, then horizontal
+            word_set.add(
+                get_word_location_set(board,
+                                      location,
+                                      use_vertical_words=use_vertical_words)
+            )
+
+    return word_set
+
+def get_word_set_total_score(board, word_set, num_move_locations):
+    total_score = 0
+    word_score = 0
+
+    for word_location_set in word_set:
+        word_score = 0
+        word_multiplier = 1
+
+        for location in word_location_set:
+            square = board[location]
+            word_multiplier *= square.word_multiplier
+            word_score += square.tile.point_value * square.letter_multiplier
+
+        word_score *= word_multiplier
+        total_score += word_score
+
+    if num_move_locations == 7:
+        total_score += 50  # Bingo
+
+    return total_score
+
 
 class ScrabbleGame(object):
     def __init__(self, num_players):
@@ -151,9 +268,7 @@ class ScrabbleGame(object):
             player_scores_str=player_scores_str
         )
 
-    #############################
-    # Methods with side-effects #
-    #############################
+    # Methods with side-effects
     @staticmethod
     def cheat_add_rack_tile(character, player_rack):
         mock_tile_bag = get_new_tile_bag()
@@ -244,6 +359,20 @@ class ScrabbleGame(object):
         else:
             return False
 
+    def _score_move(self, letter_location_set):
+        move_location_set = set(
+            (location for _, location in letter_location_set)
+        )
+
+        word_set = get_word_set(self.board, move_location_set)
+        total_score = get_word_set_total_score(self.board,
+                                               word_set,
+                                               len(move_location_set))
+
+        self._cancel_bonus_squares(move_location_set)
+
+        return total_score
+
     def _cancel_bonus_squares(self, location_set):
         for location in location_set:
             square = self.board[location]
@@ -295,162 +424,12 @@ class ScrabbleGame(object):
 
         return player_rack_list
 
-    ################################
-    # Methods without side-effects #
-    ################################
+    # Methods without side-effects
     def _get_current_player_data(self):
         player_to_move = self.move_number % self.num_players
         player_rack = self.player_rack_list[player_to_move]
 
         return player_to_move, player_rack
-
-    def _get_word_location_set(self, location, use_vertical_words):
-        word_location_set = set([])
-
-        for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
-            current_location = location          # either up/down or left/right
-            current_tile = self.board[current_location].tile
-
-            next_location_func = get_next_location_function(
-                use_positive_seek,
-                use_vertical_words
-            )
-
-            while current_tile:
-                word_location_set.add(current_location)
-                current_location = next_location_func(current_location)
-
-                if location_is_out_of_bounds(current_location):
-                    current_tile = None
-                else:
-                    current_tile = self.board[current_location].tile
-
-        if len(word_location_set) > 1:           # Must be at least 2 letters to
-            return frozenset(word_location_set)  # count as a word
-        else:
-            return frozenset([])
-
-    def _get_word_set(self, move_location_set):
-        word_set = set([])
-
-        for use_vertical_words in [True, False]:  # Search for vertical words
-            for location in move_location_set:    # created, then horizontal
-                word_set.add(
-                    self._get_word_location_set(
-                        location,
-                        use_vertical_words=use_vertical_words
-                    )
-                )
-
-        return word_set
-
-    def _get_word_set_total_score(self, word_set, num_move_locations):
-        total_score = 0
-        word_score = 0
-
-        for word_location_set in word_set:
-            word_score = 0
-            word_multiplier = 1
-
-            for location in word_location_set:
-                square = self.board[location]
-                word_multiplier *= square.word_multiplier
-                word_score += square.tile.point_value * square.letter_multiplier
-
-            word_score *= word_multiplier
-            total_score += word_score
-
-        if num_move_locations == 7:
-            total_score += 50  # Bingo
-
-        return total_score
-
-    def _score_move(self, letter_location_set):
-        move_location_set = set(
-            (location for _, location in letter_location_set)
-        )
-
-        word_set = self._get_word_set(move_location_set)
-
-        total_score = self._get_word_set_total_score(
-            word_set,
-            len(move_location_set)
-        )
-
-        self._cancel_bonus_squares(move_location_set)
-
-        return total_score
-
-    def _location_touches_tile(self, location):
-        adjacent_location_set = get_adjacent_location_set(location)
-        for adjacent_location in adjacent_location_set:
-            if self.board[adjacent_location].tile:
-                return True
-
-        return False
-
-    def _move_touches_tile(self, location_set):
-        if self.move_number == 0:
-            if config.START_SQUARE in location_set:
-                return True
-        else:
-            for this_location in location_set:
-                if self._location_touches_tile(this_location):
-                    return True
-
-        print('Move does not touch any existing tiles.')
-        return False
-
-    def _move_does_not_misalign_tiles(self, location_set):
-        # All tiles places are in one row or one column
-        column_list = [location[0] for location in location_set]
-        row_list = [location[1] for location in location_set]
-
-        if len(set(column_list)) == 1:
-            is_vertical_move = True
-        elif len(set(row_list)) == 1:
-            is_vertical_move = False
-        else:
-            print('Move does not place all tiles in one row or column.')
-            return False
-
-         # All tiles must be connected
-        if is_vertical_move:
-            this_column = list(location_set)[0][0]
-            for this_row in range(min(row_list), max(row_list) + 1):
-                this_tile = self.board[(this_column, this_row)].tile
-                if not (this_tile or (this_column, this_row) in location_set):
-                    print(
-                        'Not all tiles in vertical move are connected: '
-                        'location {} is empty'.format((this_column, this_row))
-                    )
-                    return False
-        else:
-            this_row = list(location_set)[0][1]
-            for this_column_num in range(ord(min(column_list)),
-                                         ord(max(column_list)) + 1):
-                this_column = chr(this_column_num)
-                this_tile = self.board[(this_column, this_row)].tile
-                if not (this_tile or (this_column, this_row) in location_set):
-                    print(
-                        'Not all tiles in horizontal move are connected: '
-                        'location {} is empty'.format((this_column, this_row))
-                    )
-                    return False
-
-        return True
-
-    def _move_does_not_cover_tiles(self, location_set):
-        for location in location_set:
-            if self.board[location].tile:
-                print(
-                    'Move covers existing tiles at location {}'.format(
-                        location
-                    )
-                )
-                return False
-
-        return True
 
     def _move_is_legal(self, letter_location_set, player_rack):
         player_rack_letter_list = [tile.letter for tile in player_rack]
@@ -462,10 +441,21 @@ class ScrabbleGame(object):
             move_is_not_out_of_bounds(location_set) and
             move_is_sublist(letter_list, player_rack_letter_list) and
             move_does_not_stack_tiles(letter_list, location_set) and
-            self._move_does_not_misalign_tiles(location_set) and
-            self._move_does_not_cover_tiles(location_set) and
+            move_does_not_misalign_tiles(self.board, location_set) and
+            move_does_not_cover_tiles(self.board, location_set) and
             self._move_touches_tile(location_set)
         )
 
         return success
-    
+
+    def _move_touches_tile(self, location_set):
+        if self.move_number == 0:
+            if config.START_SQUARE in location_set:
+                return True
+        else:
+            for this_location in location_set:
+                if location_touches_tile(self.board, this_location):
+                    return True
+
+        print('Move does not touch any existing tiles.')
+        return False

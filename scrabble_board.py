@@ -19,8 +19,7 @@ class ScrabbleTile(object):
 
 
 class BoardSquare(object):
-    def __init__(self, location, tile, letter_multiplier, word_multiplier):
-        self.location = location
+    def __init__(self, tile, letter_multiplier, word_multiplier):
         self.tile = tile
         self.letter_multiplier = letter_multiplier
         self.word_multiplier = word_multiplier
@@ -102,7 +101,6 @@ class ScrabbleBoard(object):
                 letter_multiplier = cls.get_location_letter_multiplier(location)
 
                 initial_board_square_dict[location] = BoardSquare(
-                    location=location,
                     tile=None,
                     word_multiplier=word_multiplier,
                     letter_multiplier=letter_multiplier

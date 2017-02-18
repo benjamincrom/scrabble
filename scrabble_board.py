@@ -52,7 +52,7 @@ def initialize_new_board_square_dict():
 class ScrabbleTile(object):
     def __init__(self, letter):
         self.letter = letter
-        self.point_value=config.LETTER_POINT_VALUES_DICT[letter]
+        self.point_value = config.LETTER_POINT_VALUES_DICT[letter]
 
     def __repr__(self):
         return self.letter

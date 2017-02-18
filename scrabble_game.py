@@ -16,36 +16,26 @@ def increment_letter(character):
     return chr(ord(character) + 1)
 
 def refill_player_rack(player_rack, tile_bag): 
-    new_player_rack = copy.deepcopy(player_rack)
-    new_tile_bag = copy.deepcopy(tile_bag)
-
-    while len(new_player_rack) < 7:
-        if new_tile_bag:
-            new_tile, new_tile_bag = draw_random_tile(new_tile_bag)
-            new_player_rack.append(new_tile)
+    while len(player_rack) < 7:
+        if tile_bag:
+            tile = draw_random_tile(tile_bag)
+            player_rack.append(tile)
         else:
             break
 
-    return new_player_rack, new_tile_bag
-
 def perform_bag_exchange(letter_list, player_rack, tile_bag):
-    new_tile_bag = copy.deepcopy(tile_bag)
-    new_player_rack = copy.deepcopy(player_rack)
-
     exchange_tile_list = []
     for letter in letter_list:
-        for tile in new_player_rack:
+        for tile in player_rack:
             if tile.letter == letter:
                 exchange_tile_list.append(tile)
-                new_player_rack.remove(tile)
+                player_rack.remove(tile)
 
     for _ in range(len(letter_list)):
-        new_tile, new_tile_bag = draw_random_tile(new_tile_bag)
-        new_player_rack.append(new_tile)
+        new_tile = draw_random_tile(tile_bag)
+        player_rack.append(new_tile)
 
-    new_tile_bag.extend(exchange_tile_list)
-
-    return new_player_rack, new_tile_bag
+    tile_bag.extend(exchange_tile_list)
 
 def get_current_player_data(move_number, player_rack_list):
     num_players = len(player_rack_list)
@@ -81,20 +71,19 @@ def get_word_letter_location_set(word, start_location, is_vertical_move):
 def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
     all_rack_points = 0
 
-    new_player_score_list_list = copy.deepcopy(player_score_list_list)
     for i, player_rack in enumerate(player_rack_list):
         rack_point_total = sum(tile.point_value for tile in player_rack)
-        this_player_score_list = new_player_score_list_list[i]
+        this_player_score_list = player_score_list_list[i]
         this_player_score_list.append(-1 * rack_point_total)
         all_rack_points += rack_point_total
 
     if empty_rack_id:  # Empty rack player gets all other racks' points
-        empty_player_score_list = new_player_score_list_list[empty_rack_id]
+        empty_player_score_list = player_score_list_list[empty_rack_id]
         empty_player_score_list.append(all_rack_points)
 
     player_score_total_list = [
         sum(player_score_list)
-        for player_score_list in new_player_score_list_list
+        for player_score_list in player_score_list_list
     ]
 
     winning_player_id, winning_player_score = max(
@@ -108,71 +97,52 @@ def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
         )
     )
 
-    return new_player_score_list_list
-
 def score_move(letter_location_set, board):
-    new_board = copy.deepcopy(board)
-
     move_location_set = set(
         (location for _, location in letter_location_set)
     )
 
-    word_set = get_word_set(new_board, move_location_set)
-    total_score = get_word_set_total_score(new_board,
+    word_set = get_word_set(board, move_location_set)
+    total_score = get_word_set_total_score(board,
                                            word_set,
                                            len(move_location_set))
 
-    new_board = cancel_bonus_squares(move_location_set, new_board)
+    cancel_bonus_squares(move_location_set, board)
 
-    return total_score, new_board
+    return total_score
 
 def cancel_bonus_squares(location_set, board):
-    new_board = copy.deepcopy(board)
-
     for location in location_set:
-        square = new_board.board_square_dict[location]
+        square = board.board_square_dict[location]
         square.letter_multiplier = 1
         square.word_multiplier = 1
 
-    return new_board
-
 def initialize_player_rack_list(num_players, tile_bag):
-    new_tile_bag = copy.deepcopy(tile_bag)
     player_rack_list = []
 
     for _ in range(num_players):
         this_rack = []
         for _ in range(7):
-            this_tile, new_tile_bag = draw_random_tile(new_tile_bag)
+            this_tile = draw_random_tile(tile_bag)
             this_rack.append(this_tile)
 
         player_rack_list.append(this_rack)
 
-    return player_rack_list, new_tile_bag
+    return player_rack_list
 
-def cheat_create_rack_tile(character, player_rack=[]):
-    new_player_rack = copy.deepcopy(player_rack)
-
+def cheat_create_rack_tile(character, player_rack):
     tile = scrabble_board.ScrabbleTile(letter=character)
-    new_player_rack.append(tile)
+    player_rack.append(tile)
 
-    return new_player_rack
-
-def cheat_create_rack_word(word, player_rack=[]):
-    new_player_rack = copy.deepcopy(player_rack)
-
+def cheat_create_rack_word(word, player_rack):
     for character in word:
-        new_player_rack = cheat_create_rack_tile(character, new_player_rack)
-
-    return new_player_rack
+        cheat_create_rack_tile(character, player_rack)
 
 def draw_random_tile(tile_bag):
-    new_tile_bag = copy.deepcopy(tile_bag)
+    random_index = random.randrange(0, len(tile_bag))
+    selected_tile = tile_bag.pop(random_index)
 
-    random_index = random.randrange(0, len(new_tile_bag))
-    selected_tile = new_tile_bag.pop(random_index)
-
-    return selected_tile, new_tile_bag
+    return selected_tile
 
 def move_is_legal(board, move_number, letter_location_set, player_rack):
     player_rack_letter_list = [tile.letter for tile in player_rack]
@@ -407,10 +377,9 @@ def get_word_set_total_score(board, word_set, num_move_locations):
 
 class ScrabbleGame(object):
     def __init__(self, num_players):
-        self.player_rack_list, self.tile_bag = initialize_player_rack_list(
-            num_players,
-            get_new_tile_bag()
-        )
+        self.tile_bag = get_new_tile_bag()
+        self.player_rack_list = initialize_player_rack_list(num_players,
+                                                            self.tile_bag)
 
         self.board = scrabble_board.ScrabbleBoard()
         self.player_score_list_list = [[] for _ in range(num_players)]
@@ -454,14 +423,12 @@ class ScrabbleGame(object):
         return self.next_player_move(letter_location_set)
 
     def next_player_move(self, letter_location_set):
-        new_self = copy.deepcopy(self)
-
         (player_to_move_id,
-         player_rack) = get_current_player_data(new_self.move_number,
-                                                new_self.player_rack_list)
+         player_rack) = get_current_player_data(self.move_number,
+                                                self.player_rack_list)
 
-        is_legal_move = move_is_legal(new_self.board,
-                                      new_self.move_number,
+        is_legal_move = move_is_legal(self.board,
+                                      self.move_number,
                                       letter_location_set,
                                       player_rack)
 
@@ -472,59 +439,42 @@ class ScrabbleGame(object):
             for move_letter, board_location in letter_location_set:
                 tile_index = get_rack_tile_index(player_rack, move_letter)
                 tile_obj = player_rack.pop(tile_index)
-                new_self.board[board_location] = tile_obj
+                self.board[board_location] = tile_obj
 
-            filled_player_rack, tile_bag = refill_player_rack(player_rack,
-                                                              new_self.tile_bag)
+            refill_player_rack(player_rack, self.tile_bag)
 
-            move_score, new_self.board = score_move(letter_location_set,
-                                                    new_self.board)
-
-            score_list = new_self.player_score_list_list[player_to_move_id]
+            move_score = score_move(letter_location_set, self.board)
+            score_list = self.player_score_list_list[player_to_move_id]
             score_list.append(move_score)
 
-            if len(player_rack) == 0 and len(tile_bag) == 0:
-                new_self.player_score_list_list = conclude_game(
-                    new_self.player_rack_list,
-                    new_self.player_score_list_list,
+            if len(player_rack) == 0 and len(self.tile_bag) == 0:
+                conclude_game(
+                    self.player_rack_list,
+                    self.player_score_list_list,
                     player_to_move_id
                 )
 
-            new_self.move_number += 1
-            success = True
-            return_obj = new_self
+            self.move_number += 1
+            return True
         else:
-            success = False
-            return_obj = self
-
-        return success, return_obj
+            return False
 
     def exchange(self, letter_list):
         if len(self.tile_bag) < 7 or len(letter_list) > 7:
-            success = False
-            return_obj = self
+            return False
         else:
-            new_self = copy.deepcopy(self)
-            player_to_move_id, player_rack = get_current_player_data(
-                new_self.move_number,
-                new_self.player_rack_list
+            _, player_rack = get_current_player_data(
+                self.move_number,
+                self.player_rack_list
             )
 
             player_letter_list = [tile.letter for tile in player_rack]
 
             if move_is_sublist(letter_list, player_letter_list):
-                new_player_rack, new_self.tile_bag = perform_bag_exchange(
-                    letter_list,
-                    player_rack,
-                    new_self.tile_bag
-                )
+                perform_bag_exchange(letter_list, player_rack, self.tile_bag)
 
-                new_self.player_rack_list[player_to_move_id] = new_player_rack
-                new_self.move_number += 1
-                success = True
-                return_obj = new_self
+                self.move_number += 1
+                return True
             else:
-                success = False
-                return_obj = self
+                return False
 
-        return success, return_obj

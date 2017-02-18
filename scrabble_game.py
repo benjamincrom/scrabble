@@ -14,7 +14,7 @@ def decrement_letter(character):
 def increment_letter(character):
     return chr(ord(character) + 1)
 
-def refill_player_rack(player_rack, tile_bag): 
+def refill_player_rack(player_rack, tile_bag):
     while len(player_rack) < 7:
         if tile_bag:
             tile = draw_random_tile(tile_bag)

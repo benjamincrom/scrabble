@@ -2,7 +2,6 @@
 scrabble_game.py -- contains classes that model scrabble moves
 '''
 import collections
-import copy
 import operator
 import random
 

@@ -268,6 +268,7 @@ def test_out_of_tiles():
     game = scrabble_game.ScrabbleGame(3)
     game.tile_bag = game.tile_bag[:4]
     game.player_rack_list[0] = []
+    scrabble_game.cheat_create_rack_word('BAKERS', game.player_rack_list[0])
     game.place_word('BAKERS', ('h', 8), False)
 
 def test_out_of_bounds():

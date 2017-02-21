@@ -342,13 +342,6 @@ class ScrabbleGame(object):
             player_scores_str=player_scores_str
         )
     
-    def place_word(self, word, start_location, is_vertical_move):
-        letter_location_set = get_word_letter_location_set(word,
-                                                           start_location,
-                                                           is_vertical_move)
-
-        return self.next_player_move(letter_location_set)
-
     def exchange(self, letter_list):
         if (len(self.tile_bag) < config.PLAYER_RACK_SIZE or
                 len(letter_list) > config.PLAYER_RACK_SIZE):
@@ -365,6 +358,13 @@ class ScrabbleGame(object):
                 return True
             else:
                 return False
+
+    def place_word(self, word, start_location, is_vertical_move):
+        letter_location_set = get_word_letter_location_set(word,
+                                                           start_location,
+                                                           is_vertical_move)
+
+        return self.next_player_move(letter_location_set)
 
     def next_player_move(self, letter_location_set):
         player_to_move_id, player_rack = get_current_player_data(

@@ -109,7 +109,7 @@ def get_word_letter_location_set(word, start_location, is_vertical_move):
     current_location = start_location
     word_iterator = iter(word)
     for character in word_iterator:
-        if character == '(':
+        if character == '(':  # characters in parenthesis are existing tiles
             character = next(word_iterator, None)
             while character != ')':
                 current_location = next_location_func(current_location)
@@ -351,7 +351,7 @@ def get_word_set_total_score(board, word_set, num_move_locations):
         total_score += word_score
 
     if num_move_locations == config.PLAYER_RACK_SIZE:
-        total_score += 50  # Bingo
+        total_score += config.BINGO_SCORE
 
     return total_score
 

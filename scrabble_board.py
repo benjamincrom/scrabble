@@ -114,12 +114,11 @@ class ScrabbleBoard(object):
 
         center_row_num = config.BOARD_NUM_ROWS // 2
         center_column_num = config.BOARD_NUM_COLUMNS // 2
-        center_array_element = (
-            board_array[center_row_num + 1][center_column_num + 2]
-        )
+        start_char = config.START_SQUARE_CHARACTER
+        blank_char = config.BLANK_SQUARE_CHARACTER
 
-        if center_array_element == config.BLANK_SQUARE_CHARACTER:
-            center_array_element = config.START_SQUARE_CHARACTER
+        if board_array[center_column_num + 1][center_row_num + 2] == blank_char:
+            board_array[center_column_num + 1][center_row_num + 2] = start_char
 
         return_line_list = [''.join(row) for row in board_array]
         return_str = '\n'.join(return_line_list)

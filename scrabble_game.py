@@ -148,7 +148,7 @@ def move_is_legal(board, move_number, letter_location_set, player_rack):
         move_is_sublist(letter_list, player_rack_letter_list) and
         move_does_not_stack_tiles(letter_list, location_set) and
         move_does_not_misalign_tiles(board, location_set) and
-        all_move_tiles_connected(board, location_set, is_vertical_move) and 
+        all_move_tiles_connected(board, location_set) and 
         move_does_not_cover_tiles(board, location_set) and
         move_touches_tile(move_number, board, location_set)
     )

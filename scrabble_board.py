@@ -78,8 +78,8 @@ class ScrabbleBoard(object):
     def __init__(self):
         self.board_square_dict = initialize_new_board_square_dict()
 
-        center_row = config.BOARD_NUM_ROWS // 2
-        center_column = chr(ord('a') + config.BOARD_NUM_COLUMNS // 2)
+        center_row = (config.BOARD_NUM_ROWS // 2) + 1
+        center_column = chr((config.BOARD_NUM_COLUMNS // 2) + ord('a'))
         self.start_square_location = (center_column, center_row)
 
     def __getitem__(self, key):
@@ -101,7 +101,7 @@ class ScrabbleBoard(object):
         board_array = [board_array_first_row]  # Column labels
         board_array.extend(
             [' ' for _ in range(config.BOARD_NUM_COLUMNS+2)]
-            for _ in range(config.BOARD_NUM_ROWS + 1)
+            for _ in range(config.BOARD_NUM_ROWS)
         )
 
         for i in range(1, config.BOARD_NUM_ROWS + 1):

@@ -8,7 +8,7 @@ import random
 import config
 import scrabble_board
 
-def conclude_game(player_score_list_list):   
+def conclude_game(player_score_list_list):
     player_score_total_list = [sum(player_score_list)
                                for player_score_list in player_score_list_list]
 
@@ -94,8 +94,8 @@ def move_is_legal(board, move_number, letter_location_set, player_rack):
         move_is_not_out_of_bounds(location_set) and
         move_is_sublist(letter_list, player_rack_letter_list) and
         move_does_not_stack_tiles(letter_list, location_set) and
-        move_does_not_misalign_tiles(board, location_set) and
-        all_move_tiles_connected(board, location_set) and 
+        move_does_not_misalign_tiles(location_set) and
+        all_move_tiles_connected(board, location_set) and
         move_does_not_cover_tiles(board, location_set) and
         move_touches_tile(move_number, board, location_set)
     )
@@ -161,7 +161,7 @@ def all_move_tiles_connected(board, location_set):
 
     return True
 
-def move_does_not_misalign_tiles(board, location_set):
+def move_does_not_misalign_tiles(location_set):
     column_list = [column for column, _ in location_set]
     row_list = [row for _, row in location_set]
 
@@ -341,7 +341,7 @@ class ScrabbleGame(object):
             tiles_remaining=len(self.tile_bag),
             player_scores_str=player_scores_str
         )
-    
+
     def exchange(self, letter_list):
         if (len(self.tile_bag) < config.PLAYER_RACK_SIZE or
                 len(letter_list) > config.PLAYER_RACK_SIZE):
@@ -444,7 +444,7 @@ class ScrabbleGame(object):
             square.letter_multiplier = 1
             square.word_multiplier = 1
 
-    
+
     def _perform_bag_exchange(self, letter_list, player_rack):
         exchange_tile_list = []
         for letter in letter_list:

@@ -14,28 +14,6 @@ def cheat_create_rack_word(word, player_rack):
         tile = scrabble_board.ScrabbleTile(letter=character)
         player_rack.append(tile)
 
-def refill_player_rack(player_rack, tile_bag):
-    while len(player_rack) < config.PLAYER_RACK_SIZE:
-        if tile_bag:
-            tile = draw_random_tile(tile_bag)
-            player_rack.append(tile)
-        else:
-            break
-
-def perform_bag_exchange(letter_list, player_rack, tile_bag):
-    exchange_tile_list = []
-    for letter in letter_list:
-        for tile in player_rack:
-            if tile.letter == letter:
-                exchange_tile_list.append(tile)
-                player_rack.remove(tile)
-
-    for _ in range(len(letter_list)):
-        new_tile = draw_random_tile(tile_bag)
-        player_rack.append(new_tile)
-
-    tile_bag.extend(exchange_tile_list)
-
 def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
     all_rack_points = 0
 
@@ -69,6 +47,28 @@ def cancel_bonus_squares(letter_location_set, board):
         square = board.board_square_dict[location]
         square.letter_multiplier = 1
         square.word_multiplier = 1
+
+def refill_player_rack(player_rack, tile_bag):
+    while len(player_rack) < config.PLAYER_RACK_SIZE:
+        if tile_bag:
+            tile = draw_random_tile(tile_bag)
+            player_rack.append(tile)
+        else:
+            break
+
+def perform_bag_exchange(letter_list, player_rack, tile_bag):
+    exchange_tile_list = []
+    for letter in letter_list:
+        for tile in player_rack:
+            if tile.letter == letter:
+                exchange_tile_list.append(tile)
+                player_rack.remove(tile)
+
+    for _ in range(len(letter_list)):
+        new_tile = draw_random_tile(tile_bag)
+        player_rack.append(new_tile)
+
+    tile_bag.extend(exchange_tile_list)
 
 def draw_random_tile(tile_bag):
     random_index = random.randrange(0, len(tile_bag))

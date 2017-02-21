@@ -352,7 +352,7 @@ def test_conclude_game():
     scrabble_game.cheat_create_rack_word('AIUWZEE', game.player_rack_list[2])
     game.place_word('ABCDEFG', ('h', 9), True)
 
-    assert game.player_score_list_list == [[13, -12], [113, 0, 31], [-19]]
+    assert game.player_score_list_list == [[13, -12], [113, 31], [-19]]
     assert game.move_number == 2
     assert len(game.tile_bag) == 0
     assert str(game.board) == ('  abcdefghijklmno\n'

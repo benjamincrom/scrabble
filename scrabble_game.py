@@ -8,39 +8,11 @@ import random
 import config
 import scrabble_board
 
-# Functions with side effects
+# Functions with side effects (NOT idempotent)
 def cheat_create_rack_word(word, player_rack):
     for character in word:
         tile = scrabble_board.ScrabbleTile(letter=character)
         player_rack.append(tile)
-
-def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
-    all_rack_points = 0
-
-    for i, player_rack in enumerate(player_rack_list):
-        rack_point_total = sum(tile.point_value for tile in player_rack)
-        this_player_score_list = player_score_list_list[i]
-        this_player_score_list.append(-1 * rack_point_total)
-        all_rack_points += rack_point_total
-
-    if empty_rack_id:  # Empty rack player gets all other racks' points
-        empty_player_score_list = player_score_list_list[empty_rack_id]
-        empty_player_score_list.append(all_rack_points)
-
-    player_score_total_list = [sum(player_score_list)
-                               for player_score_list in player_score_list_list]
-
-    winning_player_id, winning_player_score = max(
-        enumerate(player_score_total_list),
-        key=operator.itemgetter(1)
-    )
-
-    print(
-        'Game Over! Player {} wins with a score of {}'.format(
-            winning_player_id + 1,
-            winning_player_score
-        )
-    )
 
 def cancel_bonus_squares(letter_location_set, board):
     for _, location in letter_location_set:
@@ -76,7 +48,37 @@ def draw_random_tile(tile_bag):
 
     return selected_tile
 
-# Functions without side effects
+# Functions without side effects (idempotent)
+def conclude_game(player_score_list_list):   
+    player_score_total_list = [sum(player_score_list)
+                               for player_score_list in player_score_list_list]
+
+    winning_player_id, winning_player_score = max(
+        enumerate(player_score_total_list),
+        key=operator.itemgetter(1)
+    )
+
+    print(
+        'Game Over! Player {} wins with a score of {}'.format(
+            winning_player_id + 1,
+            winning_player_score
+        )
+    )
+
+def score_final_move(player_rack_list, empty_rack_id=None):
+    final_move_score_list = [0 for x in range(len(player_rack_list))]
+    all_rack_points = 0
+
+    for i, player_rack in enumerate(player_rack_list):
+        rack_point_total = sum(tile.point_value for tile in player_rack)
+        final_move_score_list[i] += (-1 * rack_point_total)
+        all_rack_points += rack_point_total
+
+    if empty_rack_id:  # Empty rack player gets all other racks' points
+        final_move_score_list[empty_rack_id] += all_rack_points
+
+    return final_move_score_list
+
 def score_move(letter_location_set, board):
     move_location_set = set(location for _, location in letter_location_set)
     word_set = get_word_set(board, move_location_set)
@@ -409,7 +411,6 @@ class ScrabbleGame(object):
             self.player_rack_list
         )
 
-        player_score_list = self.player_score_list_list[player_to_move_id]
         is_legal_move = move_is_legal(self.board,
                                       self.move_number,
                                       letter_location_set,
@@ -425,15 +426,18 @@ class ScrabbleGame(object):
                 self.board[board_location] = tile_obj
 
             move_score = score_move(letter_location_set, self.board)
-            player_score_list.append(move_score)
-
+            self.player_score_list_list[player_to_move_id].append(move_score)
             refill_player_rack(player_rack, self.tile_bag)
             cancel_bonus_squares(letter_location_set, self.board)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                conclude_game(self.player_rack_list,
-                              self.player_score_list_list,
-                              player_to_move_id)
+                last_move_score_list = score_final_move(self.player_rack_list,
+                                                        player_to_move_id)
+
+                for i, last_move_score in enumerate(last_move_score_list):
+                    self.player_score_list_list[i].append(last_move_score)
+
+                conclude_game(self.player_score_list_list)
 
             self.move_number += 1
             return True

@@ -8,6 +8,9 @@ def character_range(character_1, character_2):
     for this_character_ord in range(ord(character_1), ord(character_2)):
         yield chr(this_character_ord)
 
+def get_board_final_column():
+    return chr(ord('a') + config.BOARD_NUM_COLUMNS)
+
 def get_location_word_mutliplier(location):
     column, row = location
 
@@ -34,8 +37,8 @@ def get_location_letter_multiplier(location):
 
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
-    for column in character_range('a', 'p'):
-        for row in range(1, 16):
+    for column in character_range('a', get_board_final_column()):
+        for row in range(1, config.BOARD_NUM_ROWS + 1):
             location = (column, row)
             word_multiplier = get_location_word_mutliplier(location)
             letter_multiplier = get_location_letter_multiplier(location)
@@ -75,6 +78,10 @@ class ScrabbleBoard(object):
     def __init__(self):
         self.board_square_dict = initialize_new_board_square_dict()
 
+        center_row = config.BOARD_NUM_ROWS // 2
+        center_column = chr(ord('a') + config.BOARD_NUM_COLUMNS // 2)
+        self.start_square_location = (center_column, center_row)
+
     def __getitem__(self, key):
         return self.board_square_dict.get(key).tile
 
@@ -83,25 +90,36 @@ class ScrabbleBoard(object):
 
     def __repr__(self):
         square_letter_gen = (
-            str(square[1]) for square in sorted(self.board_square_dict.items())
+            str(square)
+            for location, square in sorted(self.board_square_dict.items())
         )
 
-        board_array_first_row = [' ', ' '] + list(character_range('a', 'p'))
+        board_array_first_row = (
+            [' ', ' '] + list(character_range('a', get_board_final_column()))
+        )
+
         board_array = [board_array_first_row]  # Column labels
         board_array.extend(
-            ([' ' for _ in range(17)] for _ in range(15))
+            [' ' for _ in range(config.BOARD_NUM_COLUMNS+2)]
+            for _ in range(config.BOARD_NUM_ROWS + 1)
         )
 
-        for i in range(1, 16):
+        for i in range(1, config.BOARD_NUM_ROWS + 1):
             board_array[i][0] = str(i)  # Row labels
             if i > 9:
                 board_array[i][1] = ''  # Shrink empty spaces to make room for
                                         # two-digit row numbers
-            for j in range(2, 17):
+            for j in range(2, config.BOARD_NUM_COLUMNS + 2):
                 board_array[j-1][i+1] = next(square_letter_gen) # swap x and y
 
-        if board_array[8][9] == config.BLANK_SQUARE_CHARACTER:
-            board_array[8][9] = config.START_SQUARE_CHARACTER
+        center_row_num = config.BOARD_NUM_ROWS // 2
+        center_column_num = config.BOARD_NUM_COLUMNS // 2
+        center_array_element = (
+            board_array[center_row_num + 1][center_column_num + 2]
+        )
+
+        if center_array_element == config.BLANK_SQUARE_CHARACTER:
+            center_array_element = config.START_SQUARE_CHARACTER
 
         return_line_list = [''.join(row) for row in board_array]
         return_str = '\n'.join(return_line_list)

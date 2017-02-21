@@ -154,7 +154,7 @@ def move_is_legal(board, move_number, letter_location_set, player_rack):
 
 def move_touches_tile(move_number, board, location_set):
     if move_number == 0:
-        if config.START_SQUARE in location_set:
+        if board.start_square_location in location_set:
             return True
     else:
         for this_location in location_set:

@@ -8,47 +8,6 @@ import random
 import config
 import scrabble_board
 
-# Functions with side effects (NOT idempotent)
-def cheat_create_rack_word(word, player_rack):
-    for character in word:
-        tile = scrabble_board.ScrabbleTile(letter=character)
-        player_rack.append(tile)
-
-def cancel_bonus_squares(letter_location_set, board):
-    for _, location in letter_location_set:
-        square = board.board_square_dict[location]
-        square.letter_multiplier = 1
-        square.word_multiplier = 1
-
-def refill_player_rack(player_rack, tile_bag):
-    while len(player_rack) < config.PLAYER_RACK_SIZE:
-        if tile_bag:
-            tile = draw_random_tile(tile_bag)
-            player_rack.append(tile)
-        else:
-            break
-
-def perform_bag_exchange(letter_list, player_rack, tile_bag):
-    exchange_tile_list = []
-    for letter in letter_list:
-        for tile in player_rack:
-            if tile.letter == letter:
-                exchange_tile_list.append(tile)
-                player_rack.remove(tile)
-
-    for _ in range(len(letter_list)):
-        new_tile = draw_random_tile(tile_bag)
-        player_rack.append(new_tile)
-
-    tile_bag.extend(exchange_tile_list)
-
-def draw_random_tile(tile_bag):
-    random_index = random.randrange(0, len(tile_bag))
-    selected_tile = tile_bag.pop(random_index)
-
-    return selected_tile
-
-# Functions without side effects (idempotent)
 def conclude_game(player_score_list_list):   
     player_score_total_list = [sum(player_score_list)
                                for player_score_list in player_score_list_list]
@@ -124,19 +83,6 @@ def get_word_letter_location_set(word, start_location, is_vertical_move):
             current_location = next_location_func(current_location)
 
     return letter_location_set
-
-def get_new_player_rack_list(num_players, tile_bag):
-    player_rack_list = []
-
-    for _ in range(num_players):
-        this_rack = []
-        for _ in range(config.PLAYER_RACK_SIZE):
-            this_tile = draw_random_tile(tile_bag)
-            this_rack.append(this_tile)
-
-        player_rack_list.append(this_rack)
-
-    return player_rack_list
 
 def move_is_legal(board, move_number, letter_location_set, player_rack):
     player_rack_letter_list = [tile.letter for tile in player_rack]
@@ -361,9 +307,7 @@ def get_word_set_total_score(board, word_set, num_move_locations):
 class ScrabbleGame(object):
     def __init__(self, num_players):
         self.tile_bag = get_new_tile_bag()
-        self.player_rack_list = get_new_player_rack_list(num_players,
-                                                         self.tile_bag)
-
+        self.player_rack_list = self.get_new_player_rack_list(num_players)
         self.board = scrabble_board.ScrabbleBoard()
         self.player_score_list_list = [[] for _ in range(num_players)]
         self.move_number = 0
@@ -398,6 +342,59 @@ class ScrabbleGame(object):
             player_scores_str=player_scores_str
         )
 
+    @staticmethod
+    def cheat_create_rack_word(word, player_rack):
+        for character in word:
+            tile = scrabble_board.ScrabbleTile(letter=character)
+            player_rack.append(tile)
+
+    def get_new_player_rack_list(self, num_players):
+        player_rack_list = []
+
+        for _ in range(num_players):
+            this_rack = []
+            for _ in range(config.PLAYER_RACK_SIZE):
+                this_tile = self.draw_random_tile()
+                this_rack.append(this_tile)
+
+            player_rack_list.append(this_rack)
+
+        return player_rack_list
+
+    def draw_random_tile(self):
+        random_index = random.randrange(0, len(self.tile_bag))
+        selected_tile = self.tile_bag.pop(random_index)
+
+        return selected_tile
+
+    def refill_player_rack(self, player_rack):
+        while len(player_rack) < config.PLAYER_RACK_SIZE:
+            if self.tile_bag:
+                tile = self.draw_random_tile()
+                player_rack.append(tile)
+            else:
+                break
+
+    def cancel_bonus_squares(self, letter_location_set):
+        for _, location in letter_location_set:
+            square = self.board.board_square_dict[location]
+            square.letter_multiplier = 1
+            square.word_multiplier = 1
+
+    def perform_bag_exchange(self, letter_list, player_rack):
+        exchange_tile_list = []
+        for letter in letter_list:
+            for tile in player_rack:
+                if tile.letter == letter:
+                    exchange_tile_list.append(tile)
+                    player_rack.remove(tile)
+
+        for _ in range(len(letter_list)):
+            new_tile = self.draw_random_tile()
+            player_rack.append(new_tile)
+
+        self.tile_bag.extend(exchange_tile_list)
+
     def place_word(self, word, start_location, is_vertical_move):
         letter_location_set = get_word_letter_location_set(word,
                                                            start_location,
@@ -427,8 +424,8 @@ class ScrabbleGame(object):
 
             move_score = score_move(letter_location_set, self.board)
             self.player_score_list_list[player_to_move_id].append(move_score)
-            refill_player_rack(player_rack, self.tile_bag)
-            cancel_bonus_squares(letter_location_set, self.board)
+            self.refill_player_rack(player_rack)
+            self.cancel_bonus_squares(letter_location_set)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:  # Final move
                 last_move_score_list = score_end_of_game(self.player_rack_list,
@@ -455,7 +452,7 @@ class ScrabbleGame(object):
             player_letter_list = [tile.letter for tile in player_rack]
 
             if move_is_sublist(letter_list, player_letter_list):
-                perform_bag_exchange(letter_list, player_rack, self.tile_bag)
+                self.perform_bag_exchange(letter_list, player_rack)
                 self.move_number += 1
                 return True
             else:

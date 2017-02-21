@@ -342,8 +342,8 @@ class ScrabbleGame(object):
             player_scores_str=player_scores_str
         )
 
-    @staticmethod
-    def cheat_create_rack_word(word, player_rack):
+    def cheat_create_rack_word(self, word, player_id):
+        player_rack = self.player_rack_list[player_id]
         for character in word:
             tile = scrabble_board.ScrabbleTile(letter=character)
             player_rack.append(tile)

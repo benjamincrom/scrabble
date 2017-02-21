@@ -148,6 +148,7 @@ def move_is_legal(board, move_number, letter_location_set, player_rack):
         move_is_sublist(letter_list, player_rack_letter_list) and
         move_does_not_stack_tiles(letter_list, location_set) and
         move_does_not_misalign_tiles(board, location_set) and
+        all_move_tiles_connected(board, location_set, is_vertical_move) and 
         move_does_not_cover_tiles(board, location_set) and
         move_touches_tile(move_number, board, location_set)
     )
@@ -184,44 +185,43 @@ def move_does_not_cover_tiles(board, location_set):
 
     return True
 
-def move_does_not_misalign_tiles(board, location_set):
-    # All tiles places are in one row or one column
-    column_list = [location[0] for location in location_set]
-    row_list = [location[1] for location in location_set]
+def all_move_tiles_connected(board, location_set):
+    column_list = [column for column, _ in location_set]
+    row_list = [row for _, row in location_set]
+    move_is_vertical = (len(set(column_list)) == 1)
 
-    if len(set(column_list)) == 1:
-        is_vertical_move = True
-    elif len(set(row_list)) == 1:
-        is_vertical_move = False
-    else:
-        print('Move does not place all tiles in one row or column.')
-        return False
-
-     # All tiles must be connected
-    if is_vertical_move:
-        this_column = list(location_set)[0][0]
+    if move_is_vertical:
+        this_column = column_list[0]
         for this_row in range(min(row_list), max(row_list) + 1):
             this_tile = board[(this_column, this_row)]
             if not (this_tile or (this_column, this_row) in location_set):
-                print(
-                    'Not all tiles in vertical move are connected: '
-                    'location {} is empty'.format((this_column, this_row))
-                )
+                print('Not all tiles in vertical move are connected: '
+                      'location {} is empty'.format((this_column, this_row)))
+
                 return False
     else:
-        this_row = list(location_set)[0][1]
+        this_row = row_list[0]
         for this_column_num in range(ord(min(column_list)),
                                      ord(max(column_list)) + 1):
             this_column = chr(this_column_num)
             this_tile = board[(this_column, this_row)]
             if not (this_tile or (this_column, this_row) in location_set):
-                print(
-                    'Not all tiles in horizontal move are connected: '
-                    'location {} is empty'.format((this_column, this_row))
-                )
+                print('Not all tiles in horizontal move are connected: '
+                      'location {} is empty'.format((this_column, this_row)))
+
                 return False
 
     return True
+
+def move_does_not_misalign_tiles(board, location_set):
+    column_list = [column for column, _ in location_set]
+    row_list = [row for _, row in location_set]
+
+    if len(set(column_list)) == 1 or len(set(row_list)) == 1:
+        return True
+    else:
+        print('Move is not limited to one column or row.')
+        return False
 
 def move_does_not_stack_tiles(letter_list, location_set):
     if len(letter_list) == len(location_set):

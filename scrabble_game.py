@@ -65,7 +65,7 @@ def conclude_game(player_score_list_list):
         )
     )
 
-def score_final_move(player_rack_list, empty_rack_id=None):
+def score_end_of_game(player_rack_list, empty_rack_id=None):
     final_move_score_list = [0 for x in range(len(player_rack_list))]
     all_rack_points = 0
 
@@ -430,9 +430,9 @@ class ScrabbleGame(object):
             refill_player_rack(player_rack, self.tile_bag)
             cancel_bonus_squares(letter_location_set, self.board)
 
-            if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                last_move_score_list = score_final_move(self.player_rack_list,
-                                                        player_to_move_id)
+            if len(player_rack) == 0 and len(self.tile_bag) == 0:  # Final move
+                last_move_score_list = score_end_of_game(self.player_rack_list,
+                                                         player_to_move_id)
 
                 for i, last_move_score in enumerate(last_move_score_list):
                     self.player_score_list_list[i].append(last_move_score)

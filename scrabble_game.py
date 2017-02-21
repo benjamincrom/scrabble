@@ -258,9 +258,9 @@ def move_successfully_challenged():
 def location_is_out_of_bounds(location):
     column, row = location
     return (ord(column) < ord('a') or
-            ord(column) > ord('o') or
+            ord(column) > ord('a') - 1 + config.BOARD_NUM_COLUMNS or
             row < 1 or
-            row > 15)
+            row > config.BOARD_NUM_ROWS)
 
 def location_touches_tile(board, location):
     adjacent_location_set = get_adjacent_location_set(location)

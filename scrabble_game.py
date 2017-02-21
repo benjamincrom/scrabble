@@ -278,11 +278,9 @@ def get_rack_tile_index(player_rack, move_letter):
     return None
 
 def get_new_tile_bag():
-    return [
-        scrabble_board.ScrabbleTile(letter=letter)
-        for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
-        for _ in range(magnitude)
-    ]
+    return [scrabble_board.ScrabbleTile(letter=letter)
+            for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
+            for _ in range(magnitude)]
 
 def get_next_location_function(use_positive_seek, use_vertical_words):
     if use_vertical_words and use_positive_seek:
@@ -302,49 +300,39 @@ def get_adjacent_location_set(location):
                                  (column, row + 1),
                                  (column, row - 1)])
     # Board boundary check
-    remove_location_set = set(location for location in adjacent_location_set
-                              if location_is_out_of_bounds(location))
+    bad_location_set = set(location for location in adjacent_location_set
+                           if location_is_out_of_bounds(location))
 
-    return adjacent_location_set - remove_location_set
+    return adjacent_location_set - bad_location_set
 
-def get_word_location_set(board, location, use_vertical_words):
+def get_word_location_set(board, initial_location, use_vertical_words):
     word_location_set = set([])
 
     for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
-        current_location = location          # either up/down or left/right
+        current_location = initial_location  # either up/down or left/right
         current_tile = board[current_location]
-
-        next_location_func = get_next_location_function(
-            use_positive_seek,
-            use_vertical_words
-        )
+        next_location_func = get_next_location_function(use_positive_seek,
+                                                        use_vertical_words)
 
         while current_tile:
             word_location_set.add(current_location)
             current_location = next_location_func(current_location)
-
             if location_is_out_of_bounds(current_location):
                 current_tile = None
             else:
                 current_tile = board[current_location]
 
-    if len(word_location_set) > 1:           # Must be at least 2 letters to
-        return frozenset(word_location_set)  # count as a word
-    else:
+    if len(word_location_set) > 1:  # Must be at least 2 letters to be a word
+        return frozenset(word_location_set)  # Must be hashable so we can have
+    else:                                    # a set of frozensets
         return frozenset([])
 
 def get_word_set(board, move_location_set):
-    word_set = set([])
-
-    for use_vertical_words in [True, False]:  # Search for vertical words
-        for location in move_location_set:    # created, then horizontal
-            word_set.add(
-                get_word_location_set(board,
-                                      location,
-                                      use_vertical_words=use_vertical_words)
-            )
-
-    return word_set
+    return set(
+        get_word_location_set(board, location, use_vertical_words=vertical_bool)
+        for vertical_bool in [True, False]  # Search for vertical words created
+        for location in move_location_set   # then for horizontal words
+    )
 
 def get_word_set_total_score(board, word_set, num_move_locations):
     total_score = 0
@@ -416,10 +404,12 @@ class ScrabbleGame(object):
         return self.next_player_move(letter_location_set)
 
     def next_player_move(self, letter_location_set):
-        (player_to_move_id,
-         player_rack) = get_current_player_data(self.move_number,
-                                                self.player_rack_list)
+        player_to_move_id, player_rack = get_current_player_data(
+            self.move_number,
+            self.player_rack_list
+        )
 
+        player_score_list = self.player_score_list_list[player_to_move_id]
         is_legal_move = move_is_legal(self.board,
                                       self.move_number,
                                       letter_location_set,
@@ -434,20 +424,16 @@ class ScrabbleGame(object):
                 tile_obj = player_rack.pop(tile_index)
                 self.board[board_location] = tile_obj
 
-            refill_player_rack(player_rack, self.tile_bag)
-
             move_score = score_move(letter_location_set, self.board)
-            player_score_list = self.player_score_list_list[player_to_move_id]
             player_score_list.append(move_score)
 
+            refill_player_rack(player_rack, self.tile_bag)
             cancel_bonus_squares(letter_location_set, self.board)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:
-                conclude_game(
-                    self.player_rack_list,
-                    self.player_score_list_list,
-                    player_to_move_id
-                )
+                conclude_game(self.player_rack_list,
+                              self.player_score_list_list,
+                              player_to_move_id)
 
             self.move_number += 1
             return True
@@ -458,16 +444,14 @@ class ScrabbleGame(object):
         if len(self.tile_bag) < 7 or len(letter_list) > 7:
             return False
         else:
-            _, player_rack = get_current_player_data(
-                self.move_number,
-                self.player_rack_list
-            )
+            _, player_rack = get_current_player_data(self.move_number,
+                                                     self.player_rack_list)
 
             player_letter_list = [tile.letter for tile in player_rack]
 
             if move_is_sublist(letter_list, player_letter_list):
                 perform_bag_exchange(letter_list, player_rack, self.tile_bag)
-
+ 
                 self.move_number += 1
                 return True
             else:

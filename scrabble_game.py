@@ -15,7 +15,7 @@ def cheat_create_rack_word(word, player_rack):
         player_rack.append(tile)
 
 def refill_player_rack(player_rack, tile_bag):
-    while len(player_rack) < 7:
+    while len(player_rack) < config.PLAYER_RACK_SIZE:
         if tile_bag:
             tile = draw_random_tile(tile_bag)
             player_rack.append(tile)
@@ -128,7 +128,7 @@ def get_new_player_rack_list(num_players, tile_bag):
 
     for _ in range(num_players):
         this_rack = []
-        for _ in range(7):
+        for _ in range(config.PLAYER_RACK_SIZE):
             this_tile = draw_random_tile(tile_bag)
             this_rack.append(this_tile)
 
@@ -142,7 +142,7 @@ def move_is_legal(board, move_number, letter_location_set, player_rack):
     location_set = set(location for _, location in letter_location_set)
 
     return (
-        move_is_seven_tiles_or_less(location_set) and
+        move_is_rack_size_or_less(location_set) and
         move_is_not_out_of_bounds(location_set) and
         move_is_sublist(letter_list, player_rack_letter_list) and
         move_does_not_stack_tiles(letter_list, location_set) and
@@ -230,8 +230,8 @@ def move_does_not_stack_tiles(letter_list, location_set):
         print('Move stacks tiles.')
         return False
 
-def move_is_seven_tiles_or_less(location_set):
-    if len(location_set) > 7:
+def move_is_rack_size_or_less(location_set):
+    if len(location_set) > config.PLAYER_RACK_SIZE:
         print('Move places greater than seven tiles.')
         return False
     else:
@@ -350,7 +350,7 @@ def get_word_set_total_score(board, word_set, num_move_locations):
         word_score *= word_multiplier
         total_score += word_score
 
-    if num_move_locations == 7:
+    if num_move_locations == config.PLAYER_RACK_SIZE:
         total_score += 50  # Bingo
 
     return total_score
@@ -441,7 +441,8 @@ class ScrabbleGame(object):
             return False
 
     def exchange(self, letter_list):
-        if len(self.tile_bag) < 7 or len(letter_list) > 7:
+        if (len(self.tile_bag) < config.PLAYER_RACK_SIZE or
+                len(letter_list) > config.PLAYER_RACK_SIZE):
             return False
         else:
             _, player_rack = get_current_player_data(self.move_number,

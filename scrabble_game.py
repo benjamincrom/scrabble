@@ -49,13 +49,12 @@ def conclude_game(player_rack_list, player_score_list_list, empty_rack_id=None):
         empty_player_score_list = player_score_list_list[empty_rack_id]
         empty_player_score_list.append(all_rack_points)
 
-    player_score_total_list = [
-        sum(player_score_list)
-        for player_score_list in player_score_list_list
-    ]
+    player_score_total_list = [sum(player_score_list)
+                               for player_score_list in player_score_list_list]
 
     winning_player_id, winning_player_score = max(
-        enumerate(player_score_total_list), key=operator.itemgetter(1)
+        enumerate(player_score_total_list),
+        key=operator.itemgetter(1)
     )
 
     print(
@@ -181,6 +180,7 @@ def move_does_not_cover_tiles(board, location_set):
             print(
                 'Move covers existing tiles at location {}'.format(location)
             )
+
             return False
 
     return True
@@ -451,7 +451,6 @@ class ScrabbleGame(object):
 
             if move_is_sublist(letter_list, player_letter_list):
                 perform_bag_exchange(letter_list, player_rack, self.tile_bag)
- 
                 self.move_number += 1
                 return True
             else:

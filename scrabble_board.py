@@ -100,25 +100,25 @@ class ScrabbleBoard(object):
 
         board_array = [board_array_first_row]  # Column labels
         board_array.extend(
-            [' ' for _ in range(config.BOARD_NUM_COLUMNS+2)]
+            [' ' for _ in range(config.BOARD_NUM_COLUMNS+1)]
             for _ in range(config.BOARD_NUM_ROWS)
         )
 
         for i in range(1, config.BOARD_NUM_ROWS + 1):
             board_array[i][0] = str(i)  # Row labels
-            if i > 9:
-                board_array[i][1] = ''  # Shrink empty spaces to make room for
-                                        # two-digit row numbers
-            for j in range(2, config.BOARD_NUM_COLUMNS + 2):
-                board_array[j-1][i+1] = next(square_letter_gen) # swap x and y
+            if i < 10:
+                board_array[i][0] += ' '  # Pad single digit numbers with space
+
+            for j in range(1, config.BOARD_NUM_COLUMNS + 1):
+                board_array[j][i] = next(square_letter_gen)  # swap x and y
 
         center_row_num = config.BOARD_NUM_ROWS // 2
         center_column_num = config.BOARD_NUM_COLUMNS // 2
         start_char = config.START_SQUARE_CHARACTER
         blank_char = config.BLANK_SQUARE_CHARACTER
 
-        if board_array[center_column_num + 1][center_row_num + 2] == blank_char:
-            board_array[center_column_num + 1][center_row_num + 2] = start_char
+        if board_array[center_column_num + 1][center_row_num + 1] == blank_char:
+            board_array[center_column_num + 1][center_row_num + 1] = start_char
 
         return_line_list = [''.join(row) for row in board_array]
         return_str = '\n'.join(return_line_list)

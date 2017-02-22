@@ -1,7 +1,16 @@
+import itertools
 import json
 
 import scrabble_board
 import scrabble_game
+
+def find_kleene_star(input_iterable):
+    master_set = set([])
+    for i in range(len(input_iterable) + 1):
+        for this_set in itertools.combinations(input_iterable, i):
+            master_set.add(this_set)
+        
+    return master_set
 
 def load_file(input_filename):
     with open(input_filename, 'r') as filehandle:

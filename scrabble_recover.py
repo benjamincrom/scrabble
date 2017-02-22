@@ -9,15 +9,16 @@ def load_file(input_filename):
 
     input_dict = json.loads(input_str)
     board_character_array = input_dict['board']
-    player_scores_list_list = input_dict['scores']
+    player_score_list_list = input_dict['scores']
 
-    return board_character_array, player_scores_list_list
+    return board_character_array, player_score_list_list
 
 def read_input_file(input_filename):
-    board_character_array, player_scores_list_list = load_file(input_filename)
+    board_character_array, player_score_list_list = load_file(input_filename)
 
-    num_players = len(player_scores_list_list)
+    num_players = len(player_score_list_list)
     game = scrabble_game.ScrabbleGame(num_players)
+    game.player_score_list_list = player_score_list_list
     game.player_rack_list = [[] for _ in range(num_players)]
     game.tile_bag = []
 
@@ -29,3 +30,11 @@ def read_input_file(input_filename):
                 game.board[this_location] = scrabble_board.ScrabbleTile(letter)
 
     return game
+
+def get_all_board_tiles(game):
+    return [square_tuple
+            for square_tuple in game.board.board_square_dict.items()
+            if square_tuple[1].tile]
+
+game = read_input_file('sample_input.json')
+location_tile_list = get_all_board_tiles(game)

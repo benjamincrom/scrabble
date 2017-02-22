@@ -32,9 +32,9 @@ def read_input_file(input_filename):
     return game
 
 def get_all_board_tiles(game):
-    return [square_tuple
-            for square_tuple in game.board.board_square_dict.items()
-            if square_tuple[1].tile]
+    return set(square_tuple
+               for square_tuple in game.board.board_square_dict.items()
+               if square_tuple[1].tile)
 
 game = read_input_file('sample_input.json')
-location_tile_list = get_all_board_tiles(game)
+location_tile_set = get_all_board_tiles(game)

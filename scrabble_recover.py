@@ -1,3 +1,4 @@
+import copy
 import itertools
 import json
 
@@ -65,9 +66,8 @@ def get_legal_move_set(new_game, reference_game):
 
     legal_move_set = set()
     for move_set in all_possible_moves_set:
-        temp_game = scrabble_game.ScrabbleGame(len(new_game.player_rack_list))
-
-        if scrabble_game.move_is_legal(temp_game.board, 0, move_set):
+        temp_game = copy.deepcopy(new_game)
+        if scrabble_game.move_is_legal(temp_game.board, new_game.move_number, move_set):
             for tile, location in move_set:
                 temp_game.board[location] = tile
 

@@ -109,13 +109,13 @@ def get_legal_move_set(new_game, reference_game):
 
     legal_move_set = set()
     for move_set in all_possible_moves_set:
-        temp_board = copy_board(new_game.board)
         is_board_subset = move_is_board_subset(move_set, reference_game.board)
-        is_legal = scrabble_game.move_is_legal(temp_board,
+        is_legal = scrabble_game.move_is_legal(new_game.board,
                                                new_game.move_number,
                                                move_set)
 
-        if is_legal and is_board_subset:
+        if is_board_subset and is_legal:
+            temp_board = copy_board(new_game.board)
             for tile, location in move_set:
                 temp_board[location] = tile
 

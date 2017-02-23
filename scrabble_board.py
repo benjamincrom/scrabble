@@ -11,37 +11,21 @@ def character_range(character_1, character_2):
 def get_board_final_column():
     return chr(ord('a') + config.BOARD_NUM_COLUMNS)
 
-def get_location_word_mutliplier(location):
-    column, row = location
-
-    if (column, row) in config.DOUBLE_WORD_SCORE_LOCATION_LIST:
-        word_multiplier = 2
-    elif (column, row) in config.TRIPLE_WORD_SCORE_LOCATION_LIST:
-        word_multiplier = 3
-    else:
-        word_multiplier = 1
-
-    return word_multiplier
-
-def get_location_letter_multiplier(location):
-    column, row = location
-
-    if (column, row) in config.DOUBLE_LETTER_SCORE_LOCATION_LIST:
-        letter_multiplier = 2
-    elif (column, row) in config.TRIPLE_LETTER_SCORE_LOCATION_LIST:
-        letter_multiplier = 3
-    else:
-        letter_multiplier = 1
-
-    return letter_multiplier
-
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
     for column in character_range('a', get_board_final_column()):
         for row in range(1, config.BOARD_NUM_ROWS + 1):
             location = (column, row)
-            word_multiplier = get_location_word_mutliplier(location)
-            letter_multiplier = get_location_letter_multiplier(location)
+
+            word_multiplier = config.WORD_SCORE_MULT_LOCATION_DICT.get(
+                location,
+                1
+            )
+
+            letter_multiplier = config.LETTER_SCORE_MULT_LOCATION_DICT.get(
+                location,
+                1
+            )
 
             initial_board_square_dict[location] = BoardSquare(
                 tile=None,

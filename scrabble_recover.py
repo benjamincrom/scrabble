@@ -126,7 +126,9 @@ def get_move_list_generator(new_game, reference_game, move_list):
             if boards_are_equivalent(reference_game.board, new_game_copy.board):
                 yield move_list_copy
         else:
-            get_move_list_generator(new_game_copy, reference_game, move_list_copy)
+            yield from get_move_list_generator(new_game_copy,
+                                               reference_game,
+                                               move_list_copy)
 
 reference_game = read_input_file('sample_input.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))

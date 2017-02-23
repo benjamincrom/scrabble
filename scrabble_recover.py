@@ -4,6 +4,8 @@ import json
 import scrabble_board
 import scrabble_game
 
+scrabble_game.input = lambda x: 'N'
+
 def find_kleene_star(input_iterable):
     master_set = set()
     for i in range(len(input_iterable) + 1):
@@ -45,24 +47,60 @@ def get_all_board_tiles(game):
                for square_tuple in game.board.board_square_dict.items()
                if square_tuple[1].tile)
 
-def get_legal_move_set(game):
-    location_tile_set = get_all_board_tiles(game)
-    all_possible_moves_set = find_kleene_star(location_tile_set)
+def get_legal_move_set(new_game, reference_game):
+    game_tile_set = get_all_board_tiles(new_game)
+    reference_tile_set = get_all_board_tiles(reference_game)
+
+    search_set = set()
+    for reference_tile, reference_location in reference_tile_set:
+        flag = True
+        for game_tile, _ in game_tile_set:
+            if game_tile.letter == reference_tile.letter:
+                flag = False
+
+        if flag:
+            search_set.add((reference_tile, reference_location))
+
+    all_possible_moves_set = find_kleene_star(search_set)
 
     legal_move_set = set()
     for move_set in all_possible_moves_set:
-        new_game = scrabble_game.ScrabbleGame(len(game.player_rack_list))
+        temp_game = scrabble_game.ScrabbleGame(len(new_game.player_rack_list))
 
-        if scrabble_game.move_is_legal(new_game.board, 0, move_set):
+        if scrabble_game.move_is_legal(temp_game.board, 0, move_set):
             for tile, location in move_set:
-                new_game.board[location] = tile
+                temp_game.board[location] = tile
 
             legal_move_set.add(
-                (scrabble_game.score_move(move_set, new_game.board), move_set)
+                (scrabble_game.score_move(move_set, temp_game.board), move_set)
             )
 
     return legal_move_set
 
-game = read_input_file('sample_input.json')
-legal_move_set = get_legal_move_set(game)
+def find_next_move(new_game, reference_game):
+    legal_move_set = get_legal_move_set(new_game, reference_game)
 
+    player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
+    player_score_list = reference_game.player_score_list_list[player_to_move_id]
+
+    player_move_number = new_game.move_number // len(new_game.player_rack_list)
+    target_score = player_score_list[player_move_number]
+
+    for score, move_set in legal_move_set:
+        if score == target_score:
+            return set((str(tile), location) for tile, location in move_set)
+
+    return None
+
+reference_game = read_input_file('sample_input.json')
+new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
+
+next_move_set = find_next_move(new_game, reference_game)
+next_move_str = ''.join(str(tile) for tile, location in next_move_set)
+
+player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
+new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
+new_game.next_player_move(next_move_set)
+
+import pdb; pdb.set_trace()  # breakpoint 37c48ad1 //
+next_move_set = find_next_move(new_game, reference_game)

@@ -96,14 +96,10 @@ def copy_game(input_game):
     new_game = scrabble_game.ScrabbleGame(len(input_game.player_rack_list))
     new_game.board = copy_board(input_game.board)
     new_game.move_number = input_game.move_number
-
-    new_game.player_score_list_list = []
-    for input_player_score_list in input_game.player_score_list_list:
-        new_player_score_list = []
-        for player_score in input_player_score_list:
-            new_player_score_list.append(player_score)
-
-        new_game.player_score_list_list.append(new_player_score_list)
+    new_game.player_score_list_list = [
+        input_player_score_list[:]
+        for input_player_score_list in input_game.player_score_list_list
+    ]
 
     return new_game
 
@@ -145,7 +141,7 @@ def get_move_set_generator(new_game, reference_game, move_list):
 
     for next_move in next_move_set:
         new_game_copy = copy_game(new_game)
-        move_list_copy = copy_game(move_list)
+        move_list_copy = move_list[:]
         player_to_move_id = (
             new_game_copy.move_number % len(new_game_copy.player_rack_list)
         )

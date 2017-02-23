@@ -7,13 +7,10 @@ import scrabble_game
 
 scrabble_game.input = lambda x: 'N'
 
-def find_kleene_star(input_iterable):
-    master_set = set()
-    for i in range(len(input_iterable) + 1):
-        for this_set in itertools.combinations(input_iterable, i):
-            master_set.add(this_set)
-        
-    return master_set
+def get_kleene_closure(input_iterable):
+    return set(this_set
+               for i in range(len(input_iterable) + 1)
+               for this_set in itertools.combinations(input_iterable, i))
 
 def load_file(input_filename):
     with open(input_filename, 'r') as filehandle:
@@ -62,14 +59,14 @@ def move_is_board_subset(move_set, board):
 def boards_are_equivalent(board_1, board_2):
     return str(board_1) == str(board_2)
 
-def get_legal_move_set(new_game, reference_game):
-    game_tile_set = get_all_board_tiles(new_game)
-    reference_tile_set = get_all_board_tiles(reference_game)
+def get_all_possible_moves_set(new_game, reference_game):
+    game_tile_location_set = get_all_board_tiles(new_game)
+    reference_tile_location_set = get_all_board_tiles(reference_game)
 
     search_set = set()
-    for reference_tile, reference_location in reference_tile_set:
+    for reference_tile, reference_location in reference_tile_location_set:
         flag = True
-        for game_tile, game_location in game_tile_set:
+        for game_tile, game_location in game_tile_location_set:
             if (game_tile.letter == reference_tile.letter and
                     game_location == reference_location):
                 flag = False
@@ -77,7 +74,11 @@ def get_legal_move_set(new_game, reference_game):
         if flag:
             search_set.add((reference_tile, reference_location))
 
-    all_possible_moves_set = find_kleene_star(search_set)
+    return get_kleene_closure(search_set)
+
+def get_legal_move_set(new_game, reference_game):
+    all_possible_moves_set = get_all_possible_moves_set(new_game,
+                                                        reference_game)
 
     legal_move_set = set()
     for move_set in all_possible_moves_set:
@@ -102,7 +103,6 @@ def get_move_list_generator(new_game, reference_game, move_list):
 
     player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
     player_score_list = reference_game.player_score_list_list[player_to_move_id]
-
     player_move_number = new_game.move_number // len(new_game.player_rack_list)
     target_score = player_score_list[player_move_number]
 

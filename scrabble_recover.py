@@ -49,6 +49,15 @@ def get_all_board_tiles(game):
                for square_tuple in game.board.board_square_dict.items()
                if square_tuple[1].tile)
 
+def move_is_board_subset(move_set, board):
+    for tile, location in move_set:
+        move_letter = tile.letter
+        board_tile = board[location]
+        if not board_tile or board_tile.letter != move_letter:
+            return False
+
+    return True
+
 def get_legal_move_set(new_game, reference_game):
     game_tile_set = get_all_board_tiles(new_game)
     reference_tile_set = get_all_board_tiles(reference_game)
@@ -68,7 +77,8 @@ def get_legal_move_set(new_game, reference_game):
     legal_move_set = set()
     for move_set in all_possible_moves_set:
         temp_game = copy.deepcopy(new_game)
-        if scrabble_game.move_is_legal(temp_game.board, new_game.move_number, move_set):
+        if (scrabble_game.move_is_legal(temp_game.board, new_game.move_number, move_set) and
+                move_is_board_subset(move_set, reference_game.board)):
             for tile, location in move_set:
                 temp_game.board[location] = tile
 
@@ -89,7 +99,7 @@ def find_next_move(new_game, reference_game):
 
     for score, move_set in legal_move_set:
         if score == target_score:
-            return set((str(tile), location) for tile, location in move_set)
+            return set((tile.letter, location) for tile, location in move_set)
 
     return None
 
@@ -99,13 +109,13 @@ def reverse_engineer_move_list(input_filename):
 
     move_set_list = []
     while new_game.move_number <= reference_game.move_number:
-        next_move_set = find_next_move(new_game, reference_game)
-        move_set_list.append(next_move_set)
+        next_letter_location_set = find_next_move(new_game, reference_game)
+        move_set_list.append(next_letter_location_set)
 
         player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-        next_move_str = ''.join(str(tile) for tile, location in next_move_set)
+        next_move_str = ''.join(letter for letter, location in next_letter_location_set)
         new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
-        new_game.next_player_move(next_move_set)
+        new_game.next_player_move(next_letter_location_set)
 
     return move_set_list
 

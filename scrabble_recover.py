@@ -33,6 +33,7 @@ def read_input_file(input_filename):
     game.player_score_list_list = player_score_list_list
     game.player_rack_list = [[] for _ in range(num_players)]
     game.tile_bag = []
+    game.move_number = len(player_score_list_list[0])
 
     for row_number, row in enumerate(board_character_array):
         for column_number, letter in enumerate(row):
@@ -95,16 +96,12 @@ def find_next_move(new_game, reference_game):
 reference_game = read_input_file('sample_input.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 
-next_move_set = find_next_move(new_game, reference_game)
-next_move_str = ''.join(str(tile) for tile, location in next_move_set)
+move_set_list = []
+while new_game.move_number <= reference_game.move_number:
+    next_move_set = find_next_move(new_game, reference_game)
+    move_set_list.append(next_move_set)
 
-player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
-new_game.next_player_move(next_move_set)
-
-next_move_set = find_next_move(new_game, reference_game)
-next_move_str = ''.join(str(tile) for tile, location in next_move_set)
-
-player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
-new_game.next_player_move(next_move_set)
+    player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
+    next_move_str = ''.join(str(tile) for tile, location in next_move_set)
+    new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
+    new_game.next_player_move(next_move_set)

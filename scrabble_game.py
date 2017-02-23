@@ -89,7 +89,6 @@ def move_is_legal(board, move_number, letter_location_set, player_rack=None):
     location_set = set(location for _, location in letter_location_set)
 
     return_bool = (
-        len(letter_location_set) > 1 and
         move_is_rack_size_or_less(location_set) and
         move_is_not_out_of_bounds(location_set) and
         move_does_not_stack_tiles(letter_list, location_set) and

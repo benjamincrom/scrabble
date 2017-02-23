@@ -58,6 +58,9 @@ def move_is_board_subset(move_set, board):
 
     return True
 
+def boards_are_equivalent(board_1, board_2):
+    return str(board_1) == str(board_2)
+
 def get_legal_move_set(new_game, reference_game):
     game_tile_set = get_all_board_tiles(new_game)
     reference_tile_set = get_all_board_tiles(reference_game)
@@ -65,8 +68,9 @@ def get_legal_move_set(new_game, reference_game):
     search_set = set()
     for reference_tile, reference_location in reference_tile_set:
         flag = True
-        for game_tile, _ in game_tile_set:
-            if game_tile.letter == reference_tile.letter:
+        for game_tile, game_location in game_tile_set:
+            if (game_tile.letter == reference_tile.letter and
+                    game_location == reference_location):
                 flag = False
 
         if flag:
@@ -108,7 +112,7 @@ def reverse_engineer_move_list(input_filename):
     new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 
     move_set_list = []
-    while new_game.move_number <= reference_game.move_number:
+    while new_game.move_number <= reference_game.move_number + 1:
         next_letter_location_set = find_next_move(new_game, reference_game)
         move_set_list.append(next_letter_location_set)
 
@@ -117,6 +121,9 @@ def reverse_engineer_move_list(input_filename):
         new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
         new_game.next_player_move(next_letter_location_set)
 
-    return move_set_list
+    if boards_are_equivalent(reference_game.board, new_game.board):
+        return move_set_list
+    else:
+        return None
 
 print(reverse_engineer_move_list('sample_input.json'))

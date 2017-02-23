@@ -109,4 +109,4 @@ def reverse_engineer_move_list(input_filename):
 
     return move_set_list
 
-reverse_engineer_move_list('sample_input.json')
+print(reverse_engineer_move_list('sample_input.json'))

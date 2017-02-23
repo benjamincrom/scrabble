@@ -115,8 +115,10 @@ def get_move_set_generator(new_game, reference_game, move_list):
     for next_move in next_move_set:
         new_game_copy = copy.deepcopy(new_game)
         move_list_copy = copy.deepcopy(move_list)
+        player_to_move_id = (
+            new_game_copy.move_number % len(new_game_copy.player_rack_list)
+        )
 
-        player_to_move_id = new_game_copy.move_number % len(new_game_copy.player_rack_list)
         next_move_str = ''.join(letter for letter, location in next_move)
         new_game_copy.cheat_create_rack_word(next_move_str, player_to_move_id)
         new_game_copy.next_player_move(next_move)

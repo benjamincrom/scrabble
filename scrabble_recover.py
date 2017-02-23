@@ -103,3 +103,8 @@ new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
 new_game.next_player_move(next_move_set)
 
 next_move_set = find_next_move(new_game, reference_game)
+next_move_str = ''.join(str(tile) for tile, location in next_move_set)
+
+player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
+new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
+new_game.next_player_move(next_move_set)

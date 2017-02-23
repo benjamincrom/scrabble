@@ -33,7 +33,8 @@ def read_input_file(input_filename):
     game.player_score_list_list = player_score_list_list
     game.player_rack_list = [[] for _ in range(num_players)]
     game.tile_bag = []
-    game.move_number = len(player_score_list_list[0])
+    game.move_number = sum(1 for player_score_list in player_score_list_list
+                             for _ in player_score_list)
 
     for row_number, row in enumerate(board_character_array):
         for column_number, letter in enumerate(row):
@@ -81,8 +82,12 @@ def get_legal_move_set(new_game, reference_game):
     legal_move_set = set()
     for move_set in all_possible_moves_set:
         temp_game = copy.deepcopy(new_game)
-        if (scrabble_game.move_is_legal(temp_game.board, new_game.move_number, move_set) and
-                move_is_board_subset(move_set, reference_game.board)):
+        is_board_subset = move_is_board_subset(move_set, reference_game.board)
+        is_legal = scrabble_game.move_is_legal(temp_game.board,
+                                               new_game.move_number,
+                                               move_set)
+
+        if is_legal and is_board_subset:
             for tile, location in move_set:
                 temp_game.board[location] = tile
 
@@ -92,7 +97,7 @@ def get_legal_move_set(new_game, reference_game):
 
     return legal_move_set
 
-def find_next_move(new_game, reference_game):
+def find_move_list(new_game, reference_game, move_list):
     legal_move_set = get_legal_move_set(new_game, reference_game)
 
     player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
@@ -101,29 +106,29 @@ def find_next_move(new_game, reference_game):
     player_move_number = new_game.move_number // len(new_game.player_rack_list)
     target_score = player_score_list[player_move_number]
 
-    for score, move_set in legal_move_set:
-        if score == target_score:
-            return set((tile.letter, location) for tile, location in move_set)
+    next_move_set = set(
+        frozenset((tile.letter, location) for tile, location in move_set)
+        for score, move_set in legal_move_set
+        if score == target_score
+    )
 
-    return None
+    for next_move in next_move_set:
+        new_game_copy = copy.deepcopy(new_game)
+        move_list_copy = copy.deepcopy(move_list)
 
-def reverse_engineer_move_list(input_filename):
-    reference_game = read_input_file(input_filename)
-    new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
+        player_to_move_id = new_game_copy.move_number % len(new_game_copy.player_rack_list)
+        next_move_str = ''.join(letter for letter, location in next_move)
+        new_game_copy.cheat_create_rack_word(next_move_str, player_to_move_id)
+        new_game_copy.next_player_move(next_move)
+        move_list_copy.append(next_move)
 
-    move_set_list = []
-    while new_game.move_number <= reference_game.move_number + 1:
-        next_letter_location_set = find_next_move(new_game, reference_game)
-        move_set_list.append(next_letter_location_set)
+        if new_game_copy.move_number == reference_game.move_number:
+            if boards_are_equivalent(reference_game.board, new_game_copy.board):
+                yield move_list_copy
+        else:
+            find_move_list(new_game_copy, reference_game, move_list_copy)
 
-        player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-        next_move_str = ''.join(letter for letter, location in next_letter_location_set)
-        new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
-        new_game.next_player_move(next_letter_location_set)
+reference_game = read_input_file('sample_input.json')
+new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 
-    if boards_are_equivalent(reference_game.board, new_game.board):
-        return move_set_list
-    else:
-        return None
-
-print(reverse_engineer_move_list('sample_input.json'))
+print([x for x in find_move_list(new_game, reference_game, [])])

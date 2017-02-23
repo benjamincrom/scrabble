@@ -102,5 +102,4 @@ player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
 new_game.cheat_create_rack_word(next_move_str, player_to_move_id)
 new_game.next_player_move(next_move_set)
 
-import pdb; pdb.set_trace()  # breakpoint 37c48ad1 //
 next_move_set = find_next_move(new_game, reference_game)

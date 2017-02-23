@@ -76,24 +76,56 @@ def get_all_possible_moves_set(new_game, reference_game):
 
     return get_kleene_closure(search_set)
 
+def copy_board(input_board):
+    input_square_dict = input_board.board_square_dict
+
+    new_board = scrabble_board.ScrabbleBoard()
+    new_square_dict = new_board.board_square_dict
+
+    for location, square in input_square_dict.items():
+        if square.tile:
+            new_board_square = new_square_dict[location]
+            new_board_square.letter_multiplier = square.letter_multiplier
+            new_board_square.word_multiplier = square.word_multiplier
+            new_board_square.tile = scrabble_board.ScrabbleTile(
+                square.tile.letter
+            )
+
+    return new_board
+
+def copy_game(input_game):
+    new_game = scrabble_game.ScrabbleGame(len(input_game.player_rack_list))
+    new_game.board = copy_board(input_game.board)
+    new_game.move_number = input_game.move_number
+
+    new_game.player_score_list_list = []
+    for input_player_score_list in input_game.player_score_list_list:
+        new_player_score_list = []
+        for player_score in input_player_score_list:
+            new_player_score_list.append(player_score)
+
+        new_game.player_score_list_list.append(new_player_score_list)
+
+    return new_game
+
 def get_legal_move_set(new_game, reference_game):
     all_possible_moves_set = get_all_possible_moves_set(new_game,
                                                         reference_game)
 
     legal_move_set = set()
     for move_set in all_possible_moves_set:
-        temp_game = copy.deepcopy(new_game)
+        temp_board = copy_board(new_game.board)
         is_board_subset = move_is_board_subset(move_set, reference_game.board)
-        is_legal = scrabble_game.move_is_legal(temp_game.board,
+        is_legal = scrabble_game.move_is_legal(temp_board,
                                                new_game.move_number,
                                                move_set)
 
         if is_legal and is_board_subset:
             for tile, location in move_set:
-                temp_game.board[location] = tile
+                temp_board[location] = tile
 
             legal_move_set.add(
-                (scrabble_game.score_move(move_set, temp_game.board), move_set)
+                (scrabble_game.score_move(move_set, temp_board), move_set)
             )
 
     return legal_move_set
@@ -113,8 +145,8 @@ def get_move_set_generator(new_game, reference_game, move_list):
     )
 
     for next_move in next_move_set:
-        new_game_copy = copy.deepcopy(new_game)
-        move_list_copy = copy.deepcopy(move_list)
+        new_game_copy = copy_game(new_game)
+        move_list_copy = copy_game(move_list)
         player_to_move_id = (
             new_game_copy.move_number % len(new_game_copy.player_rack_list)
         )
@@ -136,3 +168,6 @@ reference_game = read_input_file('sample_input.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]
+
+for move_set in move_set_list:
+    print(move_set)

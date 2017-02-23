@@ -97,7 +97,7 @@ def get_legal_move_set(new_game, reference_game):
 
     return legal_move_set
 
-def find_move_list(new_game, reference_game, move_list):
+def get_move_list_generator(new_game, reference_game, move_list):
     legal_move_set = get_legal_move_set(new_game, reference_game)
 
     player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
@@ -126,9 +126,8 @@ def find_move_list(new_game, reference_game, move_list):
             if boards_are_equivalent(reference_game.board, new_game_copy.board):
                 yield move_list_copy
         else:
-            find_move_list(new_game_copy, reference_game, move_list_copy)
+            get_move_list_generator(new_game_copy, reference_game, move_list_copy)
 
 reference_game = read_input_file('sample_input.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
-
-print([x for x in find_move_list(new_game, reference_game, [])])
+move_list_generator = get_move_list_generator(new_game, reference_game, [])

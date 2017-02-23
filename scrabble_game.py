@@ -61,7 +61,7 @@ def get_current_player_data(move_number, player_rack_list):
     return player_to_move_id, player_rack
 
 def get_word_letter_location_set(word, start_location, is_vertical_move):
-    letter_location_set = set([])
+    letter_location_set = set()
     next_location_func = get_next_location_function(
         use_positive_seek=True,
         use_vertical_words=is_vertical_move
@@ -84,21 +84,27 @@ def get_word_letter_location_set(word, start_location, is_vertical_move):
 
     return letter_location_set
 
-def move_is_legal(board, move_number, letter_location_set, player_rack):
-    player_rack_letter_list = [tile.letter for tile in player_rack]
+def move_is_legal(board, move_number, letter_location_set, player_rack=None):
     letter_list = [letter for letter, _ in letter_location_set]
     location_set = set(location for _, location in letter_location_set)
 
-    return (
+    return_bool = (
+        len(letter_location_set) > 1 and
         move_is_rack_size_or_less(location_set) and
         move_is_not_out_of_bounds(location_set) and
-        move_is_sublist(letter_list, player_rack_letter_list) and
         move_does_not_stack_tiles(letter_list, location_set) and
         move_does_not_misalign_tiles(location_set) and
         all_move_tiles_connected(board, location_set) and
         move_does_not_cover_tiles(board, location_set) and
         move_touches_tile(move_number, board, location_set)
     )
+
+    if player_rack:
+        player_rack_letter_list = [tile.letter for tile in player_rack]
+        return_bool = return_bool and move_is_sublist(letter_list,
+                                                      player_rack_letter_list)
+
+    return return_bool
 
 def move_touches_tile(move_number, board, location_set):
     if move_number == 0:
@@ -254,7 +260,7 @@ def get_adjacent_location_set(location):
     return adjacent_location_set - bad_location_set
 
 def get_word_location_set(board, initial_location, use_vertical_words):
-    word_location_set = set([])
+    word_location_set = set()
 
     for use_positive_seek in [True, False]:  # Search tiles in 2 directions:
         current_location = initial_location  # either up/down or left/right
@@ -273,7 +279,7 @@ def get_word_location_set(board, initial_location, use_vertical_words):
     if len(word_location_set) > 1:  # Must be at least 2 letters to be a word
         return frozenset(word_location_set)  # Must be hashable so we can have
     else:                                    # a set of frozensets
-        return frozenset([])
+        return frozenset()
 
 def get_word_set(board, move_location_set):
     return set(
@@ -379,7 +385,7 @@ class ScrabbleGame(object):
 
         if is_legal_move:
             if move_successfully_challenged():
-                letter_location_set = set([])
+                letter_location_set = set()
 
             for move_letter, board_location in letter_location_set:
                 tile_index = get_rack_tile_index(player_rack, move_letter)

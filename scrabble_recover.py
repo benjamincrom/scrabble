@@ -5,7 +5,7 @@ import scrabble_board
 import scrabble_game
 
 def find_kleene_star(input_iterable):
-    master_set = set([])
+    master_set = set()
     for i in range(len(input_iterable) + 1):
         for this_set in itertools.combinations(input_iterable, i):
             master_set.add(this_set)
@@ -41,9 +41,28 @@ def read_input_file(input_filename):
     return game
 
 def get_all_board_tiles(game):
-    return set(square_tuple
+    return set((square_tuple[1].tile, square_tuple[0])  # tile then location
                for square_tuple in game.board.board_square_dict.items()
                if square_tuple[1].tile)
 
+def get_legal_move_set(game):
+    location_tile_set = get_all_board_tiles(game)
+    all_possible_moves_set = find_kleene_star(location_tile_set)
+
+    legal_move_set = set()
+    for move_set in all_possible_moves_set:
+        new_game = scrabble_game.ScrabbleGame(len(game.player_rack_list))
+
+        if scrabble_game.move_is_legal(new_game.board, 0, move_set):
+            for tile, location in move_set:
+                new_game.board[location] = tile
+
+            legal_move_set.add(
+                (scrabble_game.score_move(move_set, new_game.board), move_set)
+            )
+
+    return legal_move_set
+
 game = read_input_file('sample_input.json')
-location_tile_set = get_all_board_tiles(game)
+legal_move_set = get_legal_move_set(game)
+

@@ -164,7 +164,7 @@ new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]
 
-
+'''
 for move_set in move_set_list:
     new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
     for move in move_set:
@@ -175,5 +175,4 @@ for move_set in move_set_list:
 
         new_game.next_player_move(move)
         word_set = scrabble_game.get_word_set(new_game.board, move_location_set)
-        import pdb; pdb.set_trace()  # breakpoint 1e730a3a //
-
+'''

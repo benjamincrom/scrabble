@@ -171,28 +171,28 @@ def all_move_tiles_connected(board, location_set):
     return True
 
 def move_does_not_misalign_tiles(location_set):
-    column_list = [column for column, _ in location_set]
-    row_list = [row for _, row in location_set]
+    column_set = set(column for column, _ in location_set)
+    row_set = set(row for _, row in location_set)
 
-    if len(set(column_list)) == 1 or len(set(row_list)) == 1:
-        return True
-    else:
+    return len(column_set) == 1 or len(row_set) == 1
+    #    return True
+    # else:
         # print('Move is not limited to one column or row.')
-        return False
+    #     return False
 
 def move_does_not_stack_tiles(letter_list, location_set):
-    if len(letter_list) == len(location_set):
-        return True
-    else:
+    return len(letter_list) == len(location_set)
+    #     return True
+    # else:
         # print('Move stacks tiles.')
-        return False
+    #     return False
 
 def move_is_rack_size_or_less(location_set):
-    if len(location_set) > config.PLAYER_RACK_SIZE:
+    return len(location_set) > config.PLAYER_RACK_SIZE
         # print('Move places greater than seven tiles.')
-        return False
-    else:
-        return True
+    #     return False
+    # else:
+    #     return True
 
 def move_is_not_out_of_bounds(location_set):
     for location in location_set:

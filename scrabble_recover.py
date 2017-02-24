@@ -7,6 +7,12 @@ import scrabble_game
 scrabble_game.input = lambda x: 'N'
 
 def get_kleene_closure(input_iterable):
+    input_iterable = list(input_iterable)[:25]
+    x = set(this_set
+            for i in range(len(input_iterable) + 1)
+            for this_set in itertools.combinations(input_iterable, i))
+
+    import pdb; pdb.set_trace()  # breakpoint 9688efee //
     return set(this_set
                for i in range(len(input_iterable) + 1)
                for this_set in itertools.combinations(input_iterable, i))

@@ -188,7 +188,7 @@ def move_does_not_stack_tiles(letter_list, location_set):
     #     return False
 
 def move_is_rack_size_or_less(location_set):
-    return len(location_set) > config.PLAYER_RACK_SIZE
+    return len(location_set) <= config.PLAYER_RACK_SIZE
         # print('Move places greater than seven tiles.')
     #     return False
     # else:

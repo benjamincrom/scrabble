@@ -7,12 +7,6 @@ import scrabble_game
 scrabble_game.input = lambda x: 'N'
 
 def get_kleene_closure(input_iterable):
-    input_iterable = list(input_iterable)[:25]
-    x = set(this_set
-            for i in range(len(input_iterable) + 1)
-            for this_set in itertools.combinations(input_iterable, i))
-
-    import pdb; pdb.set_trace()  # breakpoint 9688efee //
     return set(this_set
                for i in range(len(input_iterable) + 1)
                for this_set in itertools.combinations(input_iterable, i))
@@ -165,7 +159,7 @@ def get_move_set_generator(new_game, reference_game, move_list):
                                               reference_game,
                                               move_list_copy)
 
-reference_game = read_input_file('sample_input.json')
+reference_game = read_input_file('sample_input2.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]

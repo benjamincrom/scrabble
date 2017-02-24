@@ -7,7 +7,7 @@ import scrabble_game
 
 scrabble_game.input = lambda x: 'N'
 
-def get_kleene_closure(input_iterable):
+def get_combinations(input_iterable):
     return set(this_set
                for i in range(config.PLAYER_RACK_SIZE)
                for this_set in itertools.combinations(input_iterable, i))
@@ -74,7 +74,7 @@ def get_all_possible_moves_set(new_game, reference_game):
         if flag:
             search_set.add((reference_tile, reference_location))
 
-    return get_kleene_closure(search_set)
+    return get_combinations(search_set)
 
 def copy_board(input_board):
     input_square_dict = input_board.board_square_dict

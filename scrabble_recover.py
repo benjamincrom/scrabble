@@ -1,6 +1,7 @@
 import itertools
 import json
 
+import config
 import scrabble_board
 import scrabble_game
 
@@ -8,7 +9,7 @@ scrabble_game.input = lambda x: 'N'
 
 def get_kleene_closure(input_iterable):
     return set(this_set
-               for i in range(len(input_iterable) + 1)
+               for i in range(config.PLAYER_RACK_SIZE)
                for this_set in itertools.combinations(input_iterable, i))
 
 def load_file(input_filename):

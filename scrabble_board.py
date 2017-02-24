@@ -4,16 +4,12 @@ scrabble_board.py -- contain classes that model scrabble board
 '''
 import config
 
-def character_range(character_1, character_2):
-    for this_character_ord in range(ord(character_1), ord(character_2)):
-        yield chr(this_character_ord)
-
 def get_board_final_column():
-    return chr(ord('a') + config.BOARD_NUM_COLUMNS)
+    return config.UPPER_COLUMN_LETTER_BOUND
 
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
-    for column in character_range('a', get_board_final_column()):
+    for column in config.LETTER_CODE_DICT:
         for row in range(1, config.BOARD_NUM_ROWS + 1):
             location = (column, row)
 
@@ -63,7 +59,10 @@ class ScrabbleBoard(object):
         self.board_square_dict = initialize_new_board_square_dict()
 
         center_row = (config.BOARD_NUM_ROWS // 2) + 1
-        center_column = chr((config.BOARD_NUM_COLUMNS // 2) + ord('a'))
+        center_column = chr(
+            (config.BOARD_NUM_COLUMNS // 2) + config.LOWER_COLUMN_INT_BOUND
+        )
+
         self.start_square_location = (center_column, center_row)
 
     def __getitem__(self, key):
@@ -79,7 +78,7 @@ class ScrabbleBoard(object):
         )
 
         board_array_first_row = (
-            [' ', ' '] + list(character_range('a', get_board_final_column()))
+            [' ', ' '] + sorted(list(config.LETTER_CODE_DICT.keys()))
         )
 
         board_array = [board_array_first_row]  # Column labels

@@ -36,7 +36,7 @@ def test_challenge_fail():
 
     success = game.place_word('BAKER', ('h', 8), False)
     assert success is True
-    assert game.player_score_list_list == [[12], [], [], []]
+    assert game.player_score_list_list == [[24], [], [], []]
 
 def test_board_moves_score():
     scrabble_game.input = lambda x: 'N'
@@ -50,7 +50,7 @@ def test_board_moves_score():
     game.place_word('(C)ODING', ('i', 8), True)
     game.place_word('PILE', ('g', 5), True)
 
-    assert game.player_score_list_list == [[12], [13], [17], []]
+    assert game.player_score_list_list == [[24], [13], [17], []]
     assert game.move_number == 3
     assert len(game.tile_bag) == 72
     assert str(game.board) == ('  abcdefghijklmno\n'
@@ -73,7 +73,7 @@ def test_board_moves_score():
     assert ('Moves played: 3\n'
             'Player 4\'s move\n'
             '72 tiles remain in bag\n'
-            'Player 1: 12\n'
+            'Player 1: 24\n'
             'Player 2: 13\n'
             'Player 3: 17\n'
             'Player 4: 0') in str(game)
@@ -87,7 +87,7 @@ def test_bingo():
     game.place_word('BAKER', ('h', 8), False)
     game.place_word('(R)AKELAKE', ('l', 8), True)
 
-    assert game.player_score_list_list == [[12], [84]]
+    assert game.player_score_list_list == [[24], [84]]
     assert game.move_number == 2
     assert len(game.tile_bag) == 86
     assert str(game.board) == ('  abcdefghijklmno\n'
@@ -116,7 +116,7 @@ def test_itersect_words_regular():
     game.place_word('BAKER', ('h', 8), False)
     game.place_word('CA(K)E', ('j', 6), True)
 
-    assert game.player_score_list_list == [[12], [16], []]
+    assert game.player_score_list_list == [[24], [16], []]
     assert game.move_number == 2
     assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
@@ -145,7 +145,7 @@ def test_intersect_corner():
     game.place_word('BAKER', ('h', 8), False)
     game.place_word('FAKE(R)', ('l', 4), True)
 
-    assert game.player_score_list_list == [[12], [24], []]
+    assert game.player_score_list_list == [[24], [24], []]
     assert game.move_number == 2
     assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
@@ -174,7 +174,7 @@ def test_intersect_words_double_points():
     game.place_word('BAKER', ('h', 8), False)
     game.place_word('FAKERS', ('m', 3), True)
 
-    assert game.player_score_list_list == [[12], [40], []]
+    assert game.player_score_list_list == [[24], [40], []]
     assert game.move_number == 2
     assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
@@ -203,7 +203,7 @@ def test_intersect_parallel():
     game.place_word('BAKERS', ('h', 8), False)
     game.place_word('ALAN', ('h', 9), False)
 
-    assert game.player_score_list_list == [[13], [20], []]
+    assert game.player_score_list_list == [[26], [20], []]
     assert game.move_number == 2
     assert len(game.tile_bag) == 79
     assert str(game.board) == ('  abcdefghijklmno\n'
@@ -352,7 +352,7 @@ def test_conclude_game():
     game.cheat_create_rack_word('AIUWZEE', 2)
     game.place_word('ABCDEFG', ('h', 9), True)
 
-    assert game.player_score_list_list == [[13, -12], [113, 31], [-19]]
+    assert game.player_score_list_list == [[26, -12], [113, 31], [-19]]
     assert game.move_number == 2
     assert len(game.tile_bag) == 0
     assert str(game.board) == ('  abcdefghijklmno\n'

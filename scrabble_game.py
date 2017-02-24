@@ -48,10 +48,10 @@ def score_move(letter_location_set, board):
     return total_score
 
 def decrement_letter(character):
-    return chr(ord(character) - 1)
+    return chr(config.LETTER_CODE_DICT[character] - 1)
 
 def increment_letter(character):
-    return chr(ord(character) + 1)
+    return chr(config.LETTER_CODE_DICT[character] + 1)
 
 def get_current_player_data(move_number, player_rack_list):
     num_players = len(player_rack_list)
@@ -153,9 +153,13 @@ def all_move_tiles_connected(board, location_set):
 
                 return False
     else:
+        column_range = range(
+            config.LETTER_CODE_DICT[min(column_list)],
+            config.LETTER_CODE_DICT[max(column_list)] + 1
+        )
+
         this_row = row_list[0]
-        for this_column_num in range(ord(min(column_list)),
-                                     ord(max(column_list)) + 1):
+        for this_column_num in column_range:
             this_column = chr(this_column_num)
             this_tile = board[(this_column, this_row)]
             if not (this_tile or (this_column, this_row) in location_set):
@@ -210,10 +214,12 @@ def move_successfully_challenged():
 
 def location_is_out_of_bounds(location):
     column, row = location
-    return (ord(column) < ord('a') or
-            ord(column) > ord('a') - 1 + config.BOARD_NUM_COLUMNS or
-            row < 1 or
-            row > config.BOARD_NUM_ROWS)
+    return (
+        config.LETTER_CODE_DICT[column] < config.LOWER_COLUMN_INT_BOUND or
+        config.LETTER_CODE_DICT[column] > config.UPPER_COLUMN_INT_BOUND or
+        row < 1 or
+        row > config.BOARD_NUM_ROWS
+    )
 
 def location_touches_tile(board, location):
     adjacent_location_set = get_adjacent_location_set(location)

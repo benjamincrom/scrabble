@@ -449,7 +449,6 @@ class ScrabbleGame(object):
             square.letter_multiplier = 1
             square.word_multiplier = 1
 
-
     def _perform_bag_exchange(self, letter_list, player_rack):
         exchange_tile_list = []
         for letter in letter_list:

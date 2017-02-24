@@ -92,8 +92,8 @@ def move_is_legal(board, move_number, letter_location_set, player_rack=None):
         move_is_rack_size_or_less(location_set) and
         move_does_not_misalign_tiles(location_set) and
         move_is_not_out_of_bounds(location_set) and
-        move_does_not_stack_tiles(letter_list, location_set) and
         all_move_tiles_connected(board, location_set) and
+        move_does_not_stack_tiles(letter_list, location_set) and
         move_does_not_cover_tiles(board, location_set) and
         move_touches_tile(move_number, board, location_set)
     )

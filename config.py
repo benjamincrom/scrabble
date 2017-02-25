@@ -139,7 +139,8 @@ UPPER_COLUMN_INT_BOUND = LOWER_COLUMN_INT_BOUND + BOARD_NUM_COLUMNS - 1
 
 LETTER_CODE_DICT = {
     chr(code_point): code_point
-    for code_point in range(LOWER_COLUMN_INT_BOUND, UPPER_COLUMN_INT_BOUND + 1)
+    for code_point in range(LOWER_COLUMN_INT_BOUND - 40,
+                            UPPER_COLUMN_INT_BOUND + 40)
 }
 
 UPPER_COLUMN_LETTER_BOUND = max(LETTER_CODE_DICT)

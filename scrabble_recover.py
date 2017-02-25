@@ -158,7 +158,7 @@ def get_move_set_generator(new_game, reference_game, move_list):
                                               reference_game,
                                               move_list_copy)
 
-reference_game = read_input_file('sample_input2.json')
+reference_game = read_input_file('sample_input10.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]

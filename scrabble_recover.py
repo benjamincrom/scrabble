@@ -165,14 +165,23 @@ move_set_list = [this_set for this_set in move_set_generator]
 print(len(move_set_list))
 print(move_set_list)
 
-for move_set in move_set_list:
+def get_move_set_notation(move_set):
     new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
+    word_notation_list_list_list = [
+        [] for _ in range(len(reference_game.player_rack_list))
+    ]
+
     for move in move_set:
         player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
         move_location_set = set(location for _, location in move)
         rack_word = ''.join([letter for letter, _ in move])
         new_game.cheat_create_rack_word(rack_word, player_to_move_id)
 
+        player_words_notation_list = (
+            word_notation_list_list[player_to_move_id]
+        )
+
+        notation_word_list = []
         new_game.next_player_move(move)
         word_set = scrabble_game.get_word_set(new_game.board, move_location_set)
         for word_location_set in word_set:
@@ -197,5 +206,8 @@ for move_set in move_set_list:
                 if parens_flag:
                     move_word += ')'
 
-                import pdb; pdb.set_trace()  # breakpoint 1ef093ac //
-                pass
+            notation_word_list.append((notation_location, move_word))
+
+        player_words_notation_list.append(notation_word_list)
+
+    import pdb; pdb.set_trace()  # breakpoint 757bee11 //

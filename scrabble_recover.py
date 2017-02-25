@@ -180,9 +180,22 @@ for move_set in move_set_list:
                 word_location_list = sorted(word_location_set)
                 notation_location = word_location_list[0]
                 move_word = ''
+                parens_flag = False
                 for location in word_location_list:
                     tile = new_game.board[location]
                     if tile:
+                        if location not in move_location_set:
+                            if not parens_flag:
+                                move_word += '('
+                                parens_flag = True
+                        else:
+                            if parens_flag:
+                                move_word += ')'
+                                parens_flag = False
+
                         move_word += tile.letter
+                if parens_flag:
+                    move_word += ')'
+
                 import pdb; pdb.set_trace()  # breakpoint 1ef093ac //
                 pass

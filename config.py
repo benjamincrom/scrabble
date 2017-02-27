@@ -143,5 +143,11 @@ LETTER_CODE_DICT = {
                             UPPER_COLUMN_INT_BOUND + 40)
 }
 
+BOARD_CODE_DICT = {
+    chr(code_point): code_point
+    for code_point in range(LOWER_COLUMN_INT_BOUND,
+                            UPPER_COLUMN_INT_BOUND + 1)
+}
+
 UPPER_COLUMN_LETTER_BOUND = max(LETTER_CODE_DICT)
 LOWER_COLUMN_LETTER_BOUND = min(LETTER_CODE_DICT)

@@ -9,7 +9,7 @@ def get_board_final_column():
 
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
-    for column in config.LETTER_CODE_DICT:
+    for column in config.BOARD_CODE_DICT:
         for row in range(1, config.BOARD_NUM_ROWS + 1):
             location = (column, row)
 
@@ -78,7 +78,7 @@ class ScrabbleBoard(object):
         )
 
         board_array_first_row = (
-            [' ', ' '] + sorted(list(config.LETTER_CODE_DICT.keys()))
+            [' ', ' '] + sorted(list(config.BOARD_CODE_DICT.keys()))
         )
 
         board_array = [board_array_first_row]  # Column labels

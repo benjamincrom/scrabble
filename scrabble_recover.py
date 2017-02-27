@@ -190,23 +190,22 @@ def get_move_set_notation(move_set):
 
     for move in move_set:
         player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-        move_location_set = set(location for _, location in move)
+        player_words_notation_list = word_notation_list_list[player_to_move_id]
         rack_word = ''.join([letter for letter, _ in move])
         new_game.cheat_create_rack_word(rack_word, player_to_move_id)
 
-        player_words_notation_list = (
-            word_notation_list_list[player_to_move_id]
-        )
-
-        notation_word_list = []
-        new_game.next_player_move(move)
+        move_location_set = set(location for _, location in move)
         word_set = scrabble_game.get_word_set(new_game.board, move_location_set)
+
+        new_game.next_player_move(move)
+        notation_word_list = []
         for word_location_set in word_set:
-            move_word = ''
             if word_location_set:
+                move_word = ''
                 word_location_list = sorted(word_location_set)
                 notation_location = word_location_list[0]
                 parens_flag = False
+
                 for location in word_location_list:
                     tile = new_game.board[location]
                     if tile:
@@ -220,6 +219,7 @@ def get_move_set_notation(move_set):
                                 parens_flag = False
 
                         move_word += tile.letter
+
                 if parens_flag:
                     move_word += ')'
 
@@ -229,7 +229,7 @@ def get_move_set_notation(move_set):
 
     return word_notation_list_list
 
-reference_game = read_input_file('sample_input7.json')
+reference_game = read_input_file('sample_input15.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]

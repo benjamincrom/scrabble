@@ -423,32 +423,6 @@ class ScrabbleGame(object):
             tile = scrabble_board.ScrabbleTile(letter=character)
             player_rack.append(tile)
 
-    def get_best_move(self):
-        player_to_move_id, player_rack = get_current_player_data(
-            self.move_number,
-            self.player_rack_list
-        )
-
-        player_letter_list = [tile.letter for tile in player_rack]
-        word_list = scrabble_recover.get_combinations(player_letter_list)
-
-        high_score = 0
-        best_move = None
-        for location in self.board.board_square_dict:
-            for word in word_list:
-                for is_vertical in [True, False]:
-                    temp_game = scrabble_recover.copy_game(self)
-                    temp_game.place_word(word, location, is_vertical)
-                    word_score = (
-                        temp_game.player_score_list_list[player_to_move_id][-1]
-                    )
-
-                    if word_score > high_score:
-                        best_move = (location, word, is_vertical)
-                        high_score = word_score
-
-        return best_move, high_score
-
     def _get_new_player_rack_list(self, num_players):
         player_rack_list = []
 

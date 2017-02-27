@@ -47,29 +47,6 @@ def get_all_board_tiles(game):
                for square_tuple in game.board.board_square_dict.items()
                if square_tuple[1].tile)
 
-def get_best_move(game):
-    player_to_move_id = game.move_number % len(game.player_rack_list)
-    player_rack = game.player_rack_list[player_to_move_id]
-    player_letter_list = [tile.letter for tile in player_rack]
-
-    word_list = get_combinations(player_letter_list)
-    high_score = 0
-    best_move = None
-    for location in game.board.board_square_dict:
-        for word in word_list:
-            for is_vertical in [True, False]:
-                temp_game = copy_game(game)
-                temp_game.place_word(word, location, is_vertical)
-                word_score = (
-                    temp_game.player_score_list_list[player_to_move_id][-1]
-                )
-
-                if word_score > high_score:
-                    best_move = (location, word, is_vertical)
-                    high_score = word_score
-
-    return best_move, high_score
-
 def move_is_board_subset(move_set, board):
     for tile, location in move_set:
         move_letter = tile.letter
@@ -229,7 +206,6 @@ def get_move_set_notation(move_set):
     return word_notation_list_list
 
 reference_game = read_input_file('sample_input7.json')
-import pdb; pdb.set_trace()  # breakpoint 1a5656ae //
 print(get_best_move(reference_game))
 
 # new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))

@@ -7,7 +7,6 @@ import random
 
 import config
 import scrabble_board
-import scrabble_recover
 
 def conclude_game(player_score_list_list):
     player_score_total_list = [sum(player_score_list)

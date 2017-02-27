@@ -129,14 +129,14 @@ def get_best_move(game):
     player_rack = game.player_rack_list[player_to_move_id]
 
     player_letter_list = [tile.letter for tile in player_rack]
-    word_list = scrabble_recover.get_combinations(player_letter_list)
+    word_list = get_combinations(player_letter_list)
 
     high_score = 0
     best_move = None
     for location in game.board.board_square_dict:
         for word in word_list:
             for is_vertical in [True, False]:
-                temp_game = scrabble_recover.copy_game(game)
+                temp_game = copy_game(game)
                 temp_game.place_word(word, location, is_vertical)
                 word_score = (
                     temp_game.player_score_list_list[player_to_move_id][-1]
@@ -228,8 +228,10 @@ def get_move_set_notation(move_set):
         player_words_notation_list.append(notation_word_list)
 
     return word_notation_list_list
-'''
+
 reference_game = read_input_file('sample_input7.json')
+print(get_best_move(reference_game))
+'''
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]

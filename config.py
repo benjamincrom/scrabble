@@ -70,7 +70,7 @@ LETTER_SCORE_MULT_LOCATION_DICT = {
     ('j', 10): 3,
     ('j', 14): 3,
     ('n', 6): 3,
-    ('n', 10): 3  
+    ('n', 10): 3
 }
 
 # Captial letters are used to distinguish letter glyphs from locations

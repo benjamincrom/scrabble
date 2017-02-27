@@ -25,7 +25,7 @@ def conclude_game(player_score_list_list):
     # )
 
 def score_end_of_game(player_rack_list, empty_rack_id=None):
-    final_move_score_list = [0 for x in range(len(player_rack_list))]
+    final_move_score_list = [0 for _ in range(len(player_rack_list))]
     all_rack_points = 0
 
     for i, player_rack in enumerate(player_rack_list):

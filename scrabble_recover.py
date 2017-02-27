@@ -66,7 +66,7 @@ def get_best_move(game):
 
                 if word_score > high_score:
                     best_move = (location, word, is_vertical)
-                    high_score = temp_game.player_score_list_list[0][0]
+                    high_score = word_score
 
     return best_move, high_score
 
@@ -229,6 +229,7 @@ def get_move_set_notation(move_set):
     return word_notation_list_list
 
 reference_game = read_input_file('sample_input7.json')
+import pdb; pdb.set_trace()  # breakpoint 1a5656ae //
 print(get_best_move(reference_game))
 
 # new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))

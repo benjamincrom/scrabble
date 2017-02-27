@@ -190,15 +190,17 @@ def get_move_set_notation(move_set):
 
     for move in move_set:
         player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-        player_words_notation_list = word_notation_list_list[player_to_move_id]
+        move_location_set = set(location for _, location in move)
         rack_word = ''.join([letter for letter, _ in move])
         new_game.cheat_create_rack_word(rack_word, player_to_move_id)
 
-        move_location_set = set(location for _, location in move)
-        word_set = scrabble_game.get_word_set(new_game.board, move_location_set)
+        player_words_notation_list = (
+            word_notation_list_list[player_to_move_id]
+        )
 
-        new_game.next_player_move(move)
         notation_word_list = []
+        new_game.next_player_move(move)
+        word_set = scrabble_game.get_word_set(new_game.board, move_location_set)
         for word_location_set in word_set:
             if word_location_set:
                 move_word = ''
@@ -229,7 +231,7 @@ def get_move_set_notation(move_set):
 
     return word_notation_list_list
 
-reference_game = read_input_file('sample_input16.json')
+reference_game = read_input_file('sample_input7.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]

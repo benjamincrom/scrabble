@@ -122,8 +122,6 @@ def get_legal_move_set(new_game, reference_game):
                 (scrabble_game.score_move(move_set, temp_board), move_set)
             )
 
-            del temp_board
-
     return legal_move_set
 
 def get_best_move(game):
@@ -180,7 +178,6 @@ def get_move_set_generator(new_game, reference_game, move_list):
             if boards_are_equivalent(reference_game.board, new_game_copy.board):
                 yield move_list_copy
 
-            del new_game_copy
         else:
             yield from get_move_set_generator(new_game_copy,
                                               reference_game,

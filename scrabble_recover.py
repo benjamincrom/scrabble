@@ -47,17 +47,24 @@ def get_all_board_tiles(game):
                for square_tuple in game.board.board_square_dict.items()
                if square_tuple[1].tile)
 
-def get_best_move(player_letter_list, board):
+def get_best_move(game):
+    player_to_move_id = game.move_number % len(game.player_rack_list)
+    player_rack = game.player_rack_list[player_to_move_id]
+    player_letter_list = [tile.letter for tile in player_rack]
+
     word_list = get_combinations(player_letter_list)
     high_score = 0
     best_move = None
-    for location in board.board_square_dict:
+    for location in game.board.board_square_dict:
         for word in word_list:
             for is_vertical in [True, False]:
-                temp_game = scrabble_game.ScrabbleGame(1)
-                temp_game.board = copy_board(board)
+                temp_game = copy_game(game)
                 temp_game.place_word(word, location, is_vertical)
-                if temp_game.player_score_list_list[0][0] > high_score:
+                word_score = (
+                    temp_game.player_score_list_list[player_to_move_id][-1]
+                )
+
+                if word_score > high_score:
                     best_move = (location, word, is_vertical)
                     high_score = temp_game.player_score_list_list[0][0]
 
@@ -222,9 +229,11 @@ def get_move_set_notation(move_set):
     return word_notation_list_list
 
 reference_game = read_input_file('sample_input7.json')
-new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
-move_set_generator = get_move_set_generator(new_game, reference_game, [])
-move_set_list = [this_set for this_set in move_set_generator]
-for move_set in move_set_list:
-    print(get_move_set_notation(move_set))
-    print()
+print(get_best_move(reference_game))
+
+# new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
+# move_set_generator = get_move_set_generator(new_game, reference_game, [])
+# move_set_list = [this_set for this_set in move_set_generator]
+# for move_set in move_set_list:
+#    print(get_move_set_notation(move_set))
+#    print()

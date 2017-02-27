@@ -204,7 +204,7 @@ def get_move_set_notation(move_set):
         player_words_notation_list.append(notation_word_list)
 
     return word_notation_list_list
-
+'''
 reference_game = read_input_file('sample_input7.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
@@ -212,3 +212,4 @@ move_set_list = [this_set for this_set in move_set_generator]
 
 for move_set in move_set_list:
    print(get_move_set_notation(move_set))
+'''

@@ -391,7 +391,7 @@ class ScrabbleGame(object):
         if is_legal_move:
             if move_successfully_challenged():
                 letter_location_set = set()
-                
+
             for move_letter, board_location in letter_location_set:
                 tile_index = get_rack_tile_index(player_rack, move_letter)
                 tile_obj = player_rack.pop(tile_index)

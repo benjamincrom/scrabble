@@ -47,6 +47,22 @@ def get_all_board_tiles(game):
                for square_tuple in game.board.board_square_dict.items()
                if square_tuple[1].tile)
 
+def get_best_move(player_letter_list, board):
+    word_list = get_combinations(player_letter_list)
+    high_score = 0
+    best_move = None
+    for location in board.board_square_dict:
+        for word in word_list:
+            for is_vertical in [True, False]:
+                temp_game = scrabble_game.ScrabbleGame(1)
+                temp_game.board = copy_board(board)
+                temp_game.place_word(word, location, is_vertical)
+                if temp_game.player_score_list_list[0][0] > high_score:
+                    best_move = (location, word, is_vertical)
+                    high_score = temp_game.player_score_list_list[0][0]
+
+    return best_move, high_score
+
 def move_is_board_subset(move_set, board):
     for tile, location in move_set:
         move_letter = tile.letter
@@ -209,6 +225,6 @@ reference_game = read_input_file('sample_input7.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]
-print(len(move_set_list))
-print(move_set_list)
-print(get_move_set_notation(move_set_list[0]))
+for move_set in move_set_list:
+    print(get_move_set_notation(move_set))
+    print()

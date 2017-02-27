@@ -122,6 +122,8 @@ def get_legal_move_set(new_game, reference_game):
                 (scrabble_game.score_move(move_set, temp_board), move_set)
             )
 
+            del temp_board
+
     return legal_move_set
 
 def get_best_move(game):
@@ -177,6 +179,8 @@ def get_move_set_generator(new_game, reference_game, move_list):
         if new_game_copy.move_number == reference_game.move_number:
             if boards_are_equivalent(reference_game.board, new_game_copy.board):
                 yield move_list_copy
+
+            del new_game_copy
         else:
             yield from get_move_set_generator(new_game_copy,
                                               reference_game,
@@ -231,7 +235,7 @@ def get_move_set_notation(move_set):
 
     return word_notation_list_list
 
-reference_game = read_input_file('sample_input7.json')
+reference_game = read_input_file('sample_input18.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 move_set_list = [this_set for this_set in move_set_generator]

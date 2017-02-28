@@ -1,5 +1,6 @@
 import itertools
 import json
+import multiprocessing
 
 import config
 import scrabble_board
@@ -7,20 +8,30 @@ import scrabble_game
 
 scrabble_game.input = lambda x: 'N'
 
-def get_combinations(input_iterable):
-    combination_set = set([])
-    for i in range(config.PLAYER_RACK_SIZE):
-        for this_set in itertools.combinations(input_iterable, i):
-            if len(this_set) > 1:
-                location_set = set(location for _, location in this_set)
-                if (scrabble_game.move_does_not_misalign_tiles(location_set) and
-                        scrabble_game.move_is_not_out_of_bounds(location_set)):
-                    combination_set.add(this_set)
+def get_combinations_given_size(input_tuple):
+    input_iterable, set_size = input_tuple
 
-            else:
+    combination_set = set()
+    for this_set in itertools.combinations(input_iterable, set_size):
+        if len(this_set) > 1:
+            location_set = set(location for _, location in this_set)
+            if (scrabble_game.move_does_not_misalign_tiles(location_set) and
+                    scrabble_game.move_is_not_out_of_bounds(location_set)):
                 combination_set.add(this_set)
 
+        else:
+            combination_set.add(this_set)
+
     return combination_set
+
+def get_combinations(input_iterable):
+    pool = multiprocessing.Pool(processes=7)
+    tuple_list = [
+        (input_iterable, i) for i in range(1, config.PLAYER_RACK_SIZE + 1)
+    ]
+
+    combination_set_list = pool.map(get_combinations_given_size, tuple_list)
+    return set.union(*combination_set_list)
 
 def load_file(input_filename):
     with open(input_filename, 'r') as filehandle:
@@ -243,7 +254,7 @@ def get_move_set_notation(move_set):
 
     return word_notation_list_list
 
-reference_game = read_input_file('sample_input14.json')
+reference_game = read_input_file('sample_input7.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 

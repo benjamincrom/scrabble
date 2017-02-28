@@ -243,7 +243,7 @@ def get_move_set_notation(move_set):
 
     return word_notation_list_list
 
-reference_game = read_input_file('sample_input7.json')
+reference_game = read_input_file('sample_input30.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
 

@@ -1,6 +1,6 @@
 [[[(('h', 8), '*OWDY')]], [[(('d', 11), 'FAME(D)')]]]
 
-         36609 function calls (36467 primitive calls) in 0.021 seconds
+         36589 function calls (36447 primitive calls) in 0.021 seconds
 
    Ordered by: cumulative time
 
@@ -9,11 +9,11 @@
         1    0.000    0.000    0.021    0.021 scrabble_recover.py:1(<module>)
       4/2    0.000    0.000    0.012    0.006 scrabble_recover.py:160(get_move_set_generator)
         2    0.000    0.000    0.009    0.005 scrabble_recover.py:116(get_legal_move_set)
-       16    0.000    0.000    0.006    0.000 scrabble_board.py:58(__init__)
-       16    0.004    0.000    0.006    0.000 scrabble_board.py:10(initialize_new_board_square_dict)
      13/4    0.000    0.000    0.006    0.001 <frozen importlib._bootstrap>:2234(_find_and_load)
      13/4    0.000    0.000    0.006    0.001 <frozen importlib._bootstrap>:2207(_find_and_load_unlocked)
-     13/4    0.000    0.000    0.005    0.001 <frozen importlib._bootstrap>:1186(_load_unlocked)
+       16    0.000    0.000    0.006    0.000 scrabble_board.py:58(__init__)
+       16    0.004    0.000    0.006    0.000 scrabble_board.py:10(initialize_new_board_square_dict)
+     13/4    0.000    0.000    0.006    0.001 <frozen importlib._bootstrap>:1186(_load_unlocked)
       9/4    0.000    0.000    0.005    0.001 <frozen importlib._bootstrap>:1122(_exec)
       9/4    0.000    0.000    0.005    0.001 <frozen importlib._bootstrap>:1465(exec_module)
      14/4    0.000    0.000    0.005    0.001 <frozen importlib._bootstrap>:313(_call_with_frames_removed)
@@ -28,37 +28,37 @@
        80    0.000    0.000    0.002    0.000 scrabble_game.py:87(move_is_legal)
         2    0.000    0.000    0.002    0.001 scrabble_recover.py:105(copy_game)
         1    0.000    0.000    0.002    0.002 hashlib.py:53(<module>)
+     3600    0.002    0.000    0.002    0.000 scrabble_board.py:45(__init__)
         4    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:1156(_load_backward_compatible)
        11    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:534(_check_name_wrapper)
-        2    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap>:1708(load_module)
        15    0.000    0.000    0.001    0.000 scrabble_game.py:289(get_word_set)
+        2    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap>:1708(load_module)
         2    0.001    0.001    0.001    0.001 {built-in method load_dynamic}
       119    0.000    0.000    0.001    0.000 scrabble_game.py:291(<genexpr>)
-      104    0.001    0.000    0.001    0.000 scrabble_game.py:267(get_word_location_set)
        13    0.000    0.000    0.001    0.000 scrabble_game.py:41(score_move)
+      104    0.001    0.000    0.001    0.000 scrabble_game.py:267(get_word_location_set)
         1    0.000    0.000    0.001    0.001 decoder.py:2(<module>)
-        1    0.000    0.000    0.001    0.001 scrabble_recover.py:196(get_move_set_notation)
        13    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:2147(_find_spec)
-        4    0.000    0.000    0.001    0.000 scrabble_game.py:380(next_player_move)
+        1    0.000    0.000    0.001    0.001 scrabble_recover.py:196(get_move_set_notation)
         6    0.000    0.000    0.001    0.000 re.py:221(compile)
+        4    0.000    0.000    0.001    0.000 scrabble_game.py:380(next_player_move)
         6    0.000    0.000    0.001    0.000 re.py:277(_compile)
        11    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:1934(find_spec)
        11    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:1902(_get_spec)
         6    0.000    0.000    0.001    0.000 sre_compile.py:563(compile)
-     3600    0.001    0.000    0.001    0.000 scrabble_board.py:45(__init__)
     15/14    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:2264(_handle_fromlist)
         1    0.000    0.000    0.001    0.001 {built-in method __import__}
-     8434    0.001    0.000    0.001    0.000 {method 'get' of 'dict' objects}
+     8422    0.001    0.000    0.001    0.000 {method 'get' of 'dict' objects}
        30    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:2016(find_spec)
         1    0.000    0.000    0.001    0.001 scrabble_recover.py:34(read_input_file)
+        1    0.000    0.000    0.001    0.001 scanner.py:2(<module>)
         9    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:1534(get_code)
         1    0.000    0.000    0.001    0.001 scrabble_recover.py:68(boards_are_equivalent)
         2    0.000    0.000    0.001    0.000 scrabble_board.py:74(__repr__)
-        1    0.000    0.000    0.001    0.001 scanner.py:2(<module>)
        80    0.000    0.000    0.001    0.000 scrabble_game.py:141(all_move_tiles_connected)
         6    0.000    0.000    0.001    0.000 sre_parse.py:770(parse)
+     1196    0.000    0.000    0.001    0.000 scrabble_board.py:68(__getitem__)
         5    0.000    0.000    0.000    0.000 scrabble_game.py:239(get_new_tile_bag)
-     1208    0.000    0.000    0.000    0.000 scrabble_board.py:68(__getitem__)
         5    0.000    0.000    0.000    0.000 scrabble_game.py:240(<listcomp>)
      13/6    0.000    0.000    0.000    0.000 sre_parse.py:370(_parse_sub)
      15/6    0.000    0.000    0.000    0.000 sre_parse.py:448(_parse)
@@ -66,258 +66,258 @@
         6    0.000    0.000    0.000    0.000 sre_compile.py:548(_code)
         9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:654(_compile_bytecode)
         9    0.000    0.000    0.000    0.000 {built-in method loads}
-     3034    0.000    0.000    0.000    0.000 scrabble_game.py:174(<genexpr>)
      3034    0.000    0.000    0.000    0.000 scrabble_game.py:175(<genexpr>)
-      450    0.000    0.000    0.000    0.000 {built-in method next}
+     3034    0.000    0.000    0.000    0.000 scrabble_game.py:174(<genexpr>)
       180    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:50(_path_join)
+      450    0.000    0.000    0.000    0.000 {built-in method next}
       707    0.000    0.000    0.000    0.000 scrabble_game.py:215(location_is_out_of_bounds)
        43    0.000    0.000    0.000    0.000 scrabble_game.py:108(move_touches_tile)
      26/6    0.000    0.000    0.000    0.000 sre_compile.py:70(_compile)
-     2745    0.000    0.000    0.000    0.000 scrabble_recover.py:15(<genexpr>)
-        6    0.000    0.000    0.000    0.000 {built-in method sorted}
         5    0.000    0.000    0.000    0.000 scrabble_game.py:425(_get_new_player_rack_list)
+        6    0.000    0.000    0.000    0.000 {built-in method sorted}
+     2745    0.000    0.000    0.000    0.000 scrabble_recover.py:15(<genexpr>)
        28    0.000    0.000    0.000    0.000 scrabble_game.py:224(location_touches_tile)
-      452    0.000    0.000    0.000    0.000 scrabble_board.py:76(<genexpr>)
+      552    0.000    0.000    0.000    0.000 scrabble_board.py:36(__init__)
         1    0.000    0.000    0.000    0.000 random.py:84(__init__)
         1    0.000    0.000    0.000    0.000 random.py:93(seed)
-      552    0.000    0.000    0.000    0.000 scrabble_board.py:36(__init__)
         8    0.000    0.000    0.000    0.000 {built-in method __build_class__}
+      452    0.000    0.000    0.000    0.000 scrabble_board.py:76(<genexpr>)
         9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1099(create)
         4    0.000    0.000    0.000    0.000 scrabble_game.py:120(move_is_sublist)
        70    0.000    0.000    0.000    0.000 scrabble_game.py:438(_draw_random_tile)
-2558/2543    0.000    0.000    0.000    0.000 {built-in method len}
         1    0.000    0.000    0.000    0.000 {built-in method urandom}
-        8    0.000    0.000    0.000    0.000 __init__.py:448(__init__)
        76    0.000    0.000    0.000    0.000 scrabble_recover.py:59(move_is_board_subset)
+        8    0.000    0.000    0.000    0.000 __init__.py:448(__init__)
         9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1019(init_module_attrs)
        55    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:68(_path_stat)
-      170    0.000    0.000    0.000    0.000 {built-in method isinstance}
-        8    0.000    0.000    0.000    0.000 __init__.py:517(update)
-       14    0.000    0.000    0.000    0.000 sre_compile.py:227(_compile_charset)
-       80    0.000    0.000    0.000    0.000 scrabble_game.py:197(move_is_not_out_of_bounds)
-       28    0.000    0.000    0.000    0.000 scrabble_game.py:254(get_adjacent_location_set)
       180    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:52(<listcomp>)
+2558/2543    0.000    0.000    0.000    0.000 {built-in method len}
+        8    0.000    0.000    0.000    0.000 __init__.py:517(update)
+      170    0.000    0.000    0.000    0.000 {built-in method isinstance}
+       14    0.000    0.000    0.000    0.000 sre_compile.py:227(_compile_charset)
+       28    0.000    0.000    0.000    0.000 scrabble_game.py:254(get_adjacent_location_set)
+       80    0.000    0.000    0.000    0.000 scrabble_game.py:197(move_is_not_out_of_bounds)
        55    0.000    0.000    0.000    0.000 {built-in method stat}
-        1    0.000    0.000    0.000    0.000 scrabble_recover.py:24(load_file)
-        6    0.000    0.000    0.000    0.000 sre_compile.py:444(_compile_info)
         9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1621(get_data)
+        6    0.000    0.000    0.000    0.000 sre_compile.py:444(_compile_info)
         1    0.000    0.000    0.000    0.000 scrabble_board.py:4(<module>)
+        1    0.000    0.000    0.000    0.000 scrabble_recover.py:24(load_file)
        70    0.000    0.000    0.000    0.000 random.py:170(randrange)
-        8    0.000    0.000    0.000    0.000 abc.py:178(__instancecheck__)
        14    0.000    0.000    0.000    0.000 sre_compile.py:255(_optimize_charset)
+        8    0.000    0.000    0.000    0.000 abc.py:178(__instancecheck__)
        13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:261(__enter__)
        18    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:437(cache_from_source)
       114    0.000    0.000    0.000    0.000 sre_parse.py:197(__next)
+        1    0.000    0.000    0.000    0.000 config.py:1(<module>)
       7/1    0.000    0.000    0.000    0.000 abc.py:194(__subclasscheck__)
-       82    0.000    0.000    0.000    0.000 sre_parse.py:222(get)
-      102    0.000    0.000    0.000    0.000 scrabble_game.py:250(<lambda>)
-        4    0.000    0.000    0.000    0.000 scrabble_recover.py:54(get_all_board_tiles)
-        1    0.000    0.000    0.000    0.000 scrabble_board.py:35(ScrabbleTile)
        18    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:824(cached)
+       82    0.000    0.000    0.000    0.000 sre_parse.py:222(get)
+        1    0.000    0.000    0.000    0.000 scrabble_board.py:35(ScrabbleTile)
+        4    0.000    0.000    0.000    0.000 scrabble_recover.py:54(get_all_board_tiles)
+      102    0.000    0.000    0.000    0.000 scrabble_game.py:250(<lambda>)
        43    0.000    0.000    0.000    0.000 scrabble_game.py:130(move_does_not_cover_tiles)
+      512    0.000    0.000    0.000    0.000 {built-in method chr}
        27    0.000    0.000    0.000    0.000 scrabble_recover.py:55(<genexpr>)
-       30    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1870(_path_importer_cache)
-      498    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
-      8/2    0.000    0.000    0.000    0.000 {built-in method issubclass}
        70    0.000    0.000    0.000    0.000 random.py:220(_randbelow)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:546(_requires_builtin_wrapper)
        28    0.000    0.000    0.000    0.000 scrabble_game.py:262(<genexpr>)
+       80    0.000    0.000    0.000    0.000 scrabble_game.py:252(<lambda>)
+        1    0.000    0.000    0.000    0.000 config.py:141(<dictcomp>)
+      8/2    0.000    0.000    0.000    0.000 {built-in method issubclass}
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:599(_validate_bytecode_header)
         1    0.000    0.000    0.000    0.000 {built-in method open}
     35/15    0.000    0.000    0.000    0.000 sre_parse.py:154(getwidth)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:599(_validate_bytecode_header)
-      450    0.000    0.000    0.000    0.000 scrabble_board.py:50(__repr__)
        15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:274(_get_module_lock)
-      130    0.000    0.000    0.000    0.000 scrabble_game.py:53(increment_letter)
-       80    0.000    0.000    0.000    0.000 scrabble_game.py:252(<lambda>)
        15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:87(_path_isfile)
+      450    0.000    0.000    0.000    0.000 scrabble_board.py:50(__repr__)
+       30    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1870(_path_importer_cache)
+      130    0.000    0.000    0.000    0.000 scrabble_game.py:53(increment_letter)
        11    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2011(_get_spec)
-      512    0.000    0.000    0.000    0.000 {built-in method chr}
-        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:546(_requires_builtin_wrapper)
-       16    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:78(_path_is_mode_type)
        91    0.000    0.000    0.000    0.000 sre_parse.py:144(__getitem__)
-        1    0.000    0.000    0.000    0.000 config.py:1(<module>)
+       16    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:78(_path_is_mode_type)
         2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1287(load_module)
-      236    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
-      415    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
-      108    0.000    0.000    0.000    0.000 scrabble_game.py:50(decrement_letter)
-      189    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
-        9    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
-      185    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:518(_verbose_message)
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:268(__exit__)
-      378    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1266(find_spec)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:739(__exit__)
-       80    0.000    0.000    0.000    0.000 sre_parse.py:216(match)
       208    0.000    0.000    0.000    0.000 scrabble_game.py:244(get_next_location_function)
-      289    0.000    0.000    0.000    0.000 scrabble_game.py:89(<genexpr>)
-       80    0.000    0.000    0.000    0.000 scrabble_game.py:190(move_is_rack_size_or_less)
-       72    0.000    0.000    0.000    0.000 {built-in method hasattr}
-       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:192(acquire)
-       32    0.000    0.000    0.000    0.000 scrabble_board.py:86(<genexpr>)
-       11    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:884(spec_from_file_location)
-       16    0.000    0.000    0.000    0.000 sre_parse.py:267(_class_escape)
+      189    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+      236    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1266(find_spec)
+      185    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:518(_verbose_message)
       137    0.000    0.000    0.000    0.000 {built-in method min}
-       13    0.000    0.000    0.000    0.000 scrabble_game.py:296(get_word_set_total_score)
+        9    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
+      498    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:268(__exit__)
+      108    0.000    0.000    0.000    0.000 scrabble_game.py:50(decrement_letter)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:739(__exit__)
+      415    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+       80    0.000    0.000    0.000    0.000 scrabble_game.py:190(move_is_rack_size_or_less)
+      378    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
+       72    0.000    0.000    0.000    0.000 {built-in method hasattr}
        15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:217(release)
-        2    0.000    0.000    0.000    0.000 {built-in method init_builtin}
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:192(acquire)
         9    0.000    0.000    0.000    0.000 {method 'read' of '_io.FileIO' objects}
-        9    0.000    0.000    0.000    0.000 _weakrefset.py:58(__iter__)
-       80    0.000    0.000    0.000    0.000 scrabble_game.py:142(<listcomp>)
-       15    0.000    0.000    0.000    0.000 {built-in method any}
-        1    0.000    0.000    0.000    0.000 __init__.py:271(loads)
+       32    0.000    0.000    0.000    0.000 scrabble_board.py:86(<genexpr>)
+        2    0.000    0.000    0.000    0.000 {built-in method init_builtin}
+       16    0.000    0.000    0.000    0.000 sre_parse.py:267(_class_escape)
+      289    0.000    0.000    0.000    0.000 scrabble_game.py:89(<genexpr>)
         9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1631(path_stats)
-       70    0.000    0.000    0.000    0.000 {built-in method getattr}
-       85    0.000    0.000    0.000    0.000 {built-in method max}
-        1    0.000    0.000    0.000    0.000 config.py:141(<dictcomp>)
+       11    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:884(spec_from_file_location)
+       15    0.000    0.000    0.000    0.000 {built-in method any}
+        9    0.000    0.000    0.000    0.000 _weakrefset.py:58(__iter__)
+       13    0.000    0.000    0.000    0.000 scrabble_game.py:296(get_word_set_total_score)
+        1    0.000    0.000    0.000    0.000 __init__.py:271(loads)
+       80    0.000    0.000    0.000    0.000 sre_parse.py:216(match)
         4    0.000    0.000    0.000    0.000 sre_compile.py:406(_mk_bitmap)
-        4    0.000    0.000    0.000    0.000 scrabble_game.py:419(cheat_create_rack_word)
        20    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:56(_path_split)
         1    0.000    0.000    0.000    0.000 decoder.py:338(decode)
+       80    0.000    0.000    0.000    0.000 scrabble_game.py:88(<listcomp>)
+        4    0.000    0.000    0.000    0.000 scrabble_game.py:419(cheat_create_rack_word)
        43    0.000    0.000    0.000    0.000 scrabble_game.py:183(move_does_not_stack_tiles)
+       85    0.000    0.000    0.000    0.000 {built-in method max}
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:172(__init__)
        80    0.000    0.000    0.000    0.000 scrabble_game.py:143(<listcomp>)
         1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1853(_path_hooks)
-       80    0.000    0.000    0.000    0.000 scrabble_game.py:88(<listcomp>)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2061(_fill_cache)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:129(_new_module)
+       70    0.000    0.000    0.000    0.000 {built-in method getattr}
         6    0.000    0.000    0.000    0.000 sre_parse.py:192(__init__)
+       80    0.000    0.000    0.000    0.000 scrabble_game.py:142(<listcomp>)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:129(_new_module)
        35    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2120(__enter__)
-        1    0.000    0.000    0.000    0.000 {method 'read' of '_io.TextIOWrapper' objects}
-       35    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2124(__exit__)
-       94    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
-       30    0.000    0.000    0.000    0.000 scrabble_board.py:86(<listcomp>)
-      102    0.000    0.000    0.000    0.000 scrabble_game.py:248(<lambda>)
-       18    0.000    0.000    0.000    0.000 scrabble_game.py:232(get_rack_tile_index)
-      102    0.000    0.000    0.000    0.000 scrabble_game.py:246(<lambda>)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2102(path_hook_for_FileFinder)
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:172(__init__)
-       52    0.000    0.000    0.000    0.000 scrabble_board.py:71(__setitem__)
-        1    0.000    0.000    0.000    0.000 decoder.py:349(raw_decode)
-        1    0.000    0.000    0.000    0.000 {built-in method listdir}
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:859(spec_from_loader)
-       13    0.000    0.000    0.000    0.000 {built-in method getcwd}
-        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:147(__exit__)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2061(_fill_cache)
+        2    0.000    0.000    0.000    0.000 {built-in method print}
        10    0.000    0.000    0.000    0.000 {built-in method is_builtin}
-        4    0.000    0.000    0.000    0.000 sre_compile.py:408(<listcomp>)
-       25    0.000    0.000    0.000    0.000 sre_parse.py:152(append)
-        6    0.000    0.000    0.000    0.000 hashlib.py:98(__get_openssl_constructor)
-       41    0.000    0.000    0.000    0.000 sre_parse.py:140(__len__)
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1726(is_package)
-        2    0.000    0.000    0.000    0.000 scrabble_board.py:106(<listcomp>)
+       18    0.000    0.000    0.000    0.000 scrabble_game.py:232(get_rack_tile_index)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:859(spec_from_loader)
+        1    0.000    0.000    0.000    0.000 {method 'read' of '_io.TextIOWrapper' objects}
+      105    0.000    0.000    0.000    0.000 {method 'getrandbits' of '_random.Random' objects}
+       30    0.000    0.000    0.000    0.000 scrabble_board.py:86(<listcomp>)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2102(path_hook_for_FileFinder)
+      102    0.000    0.000    0.000    0.000 scrabble_game.py:246(<lambda>)
+        1    0.000    0.000    0.000    0.000 decoder.py:349(raw_decode)
+       35    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:2124(__exit__)
+       13    0.000    0.000    0.000    0.000 {built-in method getcwd}
+       88    0.000    0.000    0.000    0.000 {method 'pop' of 'list' objects}
+        9    0.000    0.000    0.000    0.000 sre_compile.py:418(_simple)
         2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:293(_lock_unlock_module)
        18    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:45(_r_long)
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:790(__init__)
-       19    0.000    0.000    0.000    0.000 {built-in method from_bytes}
-       88    0.000    0.000    0.000    0.000 {method 'pop' of 'list' objects}
+        6    0.000    0.000    0.000    0.000 hashlib.py:98(__get_openssl_constructor)
+       94    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method listdir}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:147(__exit__)
         4    0.000    0.000    0.000    0.000 sre_parse.py:226(getwhile)
-        9    0.000    0.000    0.000    0.000 sre_compile.py:418(_simple)
-        1    0.000    0.000    0.000    0.000 {function Random.seed at 0x7fd662193840}
-       48    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
-       11    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1336(find_spec)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1979(__init__)
-        4    0.000    0.000    0.000    0.000 scrabble_game.py:205(move_successfully_challenged)
-        7    0.000    0.000    0.000    0.000 _weakrefset.py:26(__exit__)
-        8    0.000    0.000    0.000    0.000 {built-in method _count_elements}
-      101    0.000    0.000    0.000    0.000 {method 'getrandbits' of '_random.Random' objects}
-        4    0.000    0.000    0.000    0.000 scrabble_recover.py:169(<genexpr>)
-       27    0.000    0.000    0.000    0.000 _weakrefset.py:70(__contains__)
-       26    0.000    0.000    0.000    0.000 sre_parse.py:92(__init__)
-        2    0.000    0.000    0.000    0.000 {built-in method print}
-        1    0.000    0.000    0.000    0.000 random.py:68(Random)
-       30    0.000    0.000    0.000    0.000 {built-in method get_ident}
-       36    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:742(<genexpr>)
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1000(__init__)
-        6    0.000    0.000    0.000    0.000 {built-in method compile}
-       56    0.000    0.000    0.000    0.000 scrabble_game.py:42(<genexpr>)
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:257(__init__)
-       50    0.000    0.000    0.000    0.000 {built-in method release_lock}
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:842(parent)
-        7    0.000    0.000    0.000    0.000 _weakrefset.py:20(__enter__)
-       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:288(cb)
        35    0.000    0.000    0.000    0.000 {built-in method acquire_lock}
-       32    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
-        6    0.000    0.000    0.000    0.000 sre_parse.py:74(opengroup)
-        4    0.000    0.000    0.000    0.000 scrabble_game.py:452(_cancel_bonus_squares)
-        1    0.000    0.000    0.000    0.000 _bootlocale.py:23(getpreferredencoding)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1591(__init__)
-        6    0.000    0.000    0.000    0.000 sre_parse.py:67(__init__)
-        7    0.000    0.000    0.000    0.000 _weakrefset.py:81(add)
-        1    0.000    0.000    0.000    0.000 decoder.py:287(__init__)
-        6    0.000    0.000    0.000    0.000 sre_parse.py:85(closegroup)
-        4    0.000    0.000    0.000    0.000 sre_parse.py:309(_escape)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:732(__enter__)
-        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:92(_path_isdir)
-        1    0.000    0.000    0.000    0.000 codecs.py:316(decode)
-        4    0.000    0.000    0.000    0.000 scrabble_game.py:102(<listcomp>)
-       10    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1729(<genexpr>)
-        6    0.000    0.000    0.000    0.000 sre_parse.py:758(fix_flags)
-        9    0.000    0.000    0.000    0.000 {built-in method _fix_co_filename}
-        2    0.000    0.000    0.000    0.000 _weakrefset.py:36(__init__)
-        1    0.000    0.000    0.000    0.000 {built-in method exp}
-       18    0.000    0.000    0.000    0.000 scrabble_board.py:40(__repr__)
         1    0.000    0.000    0.000    0.000 config.py:147(<dictcomp>)
-       16    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:148(<genexpr>)
-       11    0.000    0.000    0.000    0.000 {built-in method is_frozen}
+        4    0.000    0.000    0.000    0.000 sre_compile.py:408(<listcomp>)
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:790(__init__)
+      102    0.000    0.000    0.000    0.000 scrabble_game.py:248(<lambda>)
+       19    0.000    0.000    0.000    0.000 {built-in method from_bytes}
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1726(is_package)
+       56    0.000    0.000    0.000    0.000 scrabble_game.py:42(<genexpr>)
+        2    0.000    0.000    0.000    0.000 scrabble_board.py:106(<listcomp>)
+       52    0.000    0.000    0.000    0.000 scrabble_board.py:71(__setitem__)
+        1    0.000    0.000    0.000    0.000 {function Random.seed at 0x7f96113f3840}
+        8    0.000    0.000    0.000    0.000 {built-in method _count_elements}
+       11    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1336(find_spec)
+       48    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
+        4    0.000    0.000    0.000    0.000 scrabble_game.py:205(move_successfully_challenged)
+       41    0.000    0.000    0.000    0.000 sre_parse.py:140(__len__)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1979(__init__)
+        7    0.000    0.000    0.000    0.000 _weakrefset.py:26(__exit__)
+       27    0.000    0.000    0.000    0.000 _weakrefset.py:70(__contains__)
+        4    0.000    0.000    0.000    0.000 sre_parse.py:309(_escape)
+        1    0.000    0.000    0.000    0.000 random.py:68(Random)
+       26    0.000    0.000    0.000    0.000 sre_parse.py:92(__init__)
+       25    0.000    0.000    0.000    0.000 sre_parse.py:152(append)
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:257(__init__)
+        4    0.000    0.000    0.000    0.000 scrabble_recover.py:169(<genexpr>)
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1000(__init__)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:732(__enter__)
+       32    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
+        4    0.000    0.000    0.000    0.000 scrabble_game.py:452(_cancel_bonus_squares)
        30    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:34(_relax_case)
-        1    0.000    0.000    0.000    0.000 {built-in method sum}
-        1    0.000    0.000    0.000    0.000 codecs.py:306(__init__)
-       27    0.000    0.000    0.000    0.000 {built-in method ord}
-        1    0.000    0.000    0.000    0.000 {built-in method nl_langinfo}
-        7    0.000    0.000    0.000    0.000 _weakrefset.py:16(__init__)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:850(has_location)
-       12    0.000    0.000    0.000    0.000 sre_compile.py:545(isstring)
-        8    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
-        2    0.000    0.000    0.000    0.000 {method 'match' of '_sre.SRE_Pattern' objects}
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:728(__init__)
-       32    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
-        3    0.000    0.000    0.000    0.000 {built-in method setattr}
-        4    0.000    0.000    0.000    0.000 scrabble_game.py:444(_refill_player_rack)
-       70    0.000    0.000    0.000    0.000 {method 'bit_length' of 'int' objects}
-        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1697(__init__)
-        1    0.000    0.000    0.000    0.000 {method 'union' of 'set' objects}
-        1    0.000    0.000    0.000    0.000 {built-in method utf_8_decode}
-        5    0.000    0.000    0.000    0.000 scrabble_game.py:323(<listcomp>)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1985(<genexpr>)
-        1    0.000    0.000    0.000    0.000 scrabble_game.py:318(ScrabbleGame)
-        2    0.000    0.000    0.000    0.000 {built-in method log}
-        7    0.000    0.000    0.000    0.000 _weakrefset.py:52(_commit_removals)
-        7    0.000    0.000    0.000    0.000 {method '__subclasses__' of 'type' objects}
-        7    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
-        6    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
-        4    0.000    0.000    0.000    0.000 {method 'translate' of 'bytearray' objects}
-        9    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
-       11    0.000    0.000    0.000    0.000 scrabble_recover.py:204(<genexpr>)
-        7    0.000    0.000    0.000    0.000 _collections_abc.py:135(__subclasshook__)
-       26    0.000    0.000    0.000    0.000 {built-in method allocate_lock}
-        1    0.000    0.000    0.000    0.000 {built-in method sqrt}
-        1    0.000    0.000    0.000    0.000 encoder.py:98(__init__)
-        3    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
-        2    0.000    0.000    0.000    0.000 scrabble_recover.py:110(<listcomp>)
-        1    0.000    0.000    0.000    0.000 encoder.py:67(JSONEncoder)
-        1    0.000    0.000    0.000    0.000 codecs.py:257(__init__)
-        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1616(get_filename)
-        1    0.000    0.000    0.000    0.000 scrabble_board.py:44(BoardSquare)
-        2    0.000    0.000    0.000    0.000 scrabble_recover.py:205(<listcomp>)
-        4    0.000    0.000    0.000    0.000 scrabble_game.py:56(get_current_player_data)
-        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha1}
-        1    0.000    0.000    0.000    0.000 random.py:639(SystemRandom)
-        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha384}
-        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:144(__enter__)
-        2    0.000    0.000    0.000    0.000 {method 'end' of '_sre.SRE_Match' objects}
-        1    0.000    0.000    0.000    0.000 scrabble_board.py:57(ScrabbleBoard)
-        1    0.000    0.000    0.000    0.000 scrabble_recover.py:40(<listcomp>)
-        1    0.000    0.000    0.000    0.000 {built-in method openssl_md5}
-        1    0.000    0.000    0.000    0.000 decoder.py:257(JSONDecoder)
-        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:141(__init__)
-        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha256}
+        6    0.000    0.000    0.000    0.000 {built-in method compile}
+       50    0.000    0.000    0.000    0.000 {built-in method release_lock}
+        1    0.000    0.000    0.000    0.000 decoder.py:287(__init__)
+       30    0.000    0.000    0.000    0.000 {built-in method get_ident}
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1591(__init__)
         9    0.000    0.000    0.000    0.000 sre_parse.py:148(__setitem__)
-        4    0.000    0.000    0.000    0.000 scrabble_recover.py:8(<lambda>)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:842(parent)
+        7    0.000    0.000    0.000    0.000 _weakrefset.py:16(__init__)
+        1    0.000    0.000    0.000    0.000 _bootlocale.py:23(getpreferredencoding)
+       70    0.000    0.000    0.000    0.000 {method 'bit_length' of 'int' objects}
+        9    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+        9    0.000    0.000    0.000    0.000 {built-in method _fix_co_filename}
+        6    0.000    0.000    0.000    0.000 sre_parse.py:758(fix_flags)
+       11    0.000    0.000    0.000    0.000 {built-in method is_frozen}
+        7    0.000    0.000    0.000    0.000 _weakrefset.py:81(add)
+        1    0.000    0.000    0.000    0.000 codecs.py:316(decode)
+        7    0.000    0.000    0.000    0.000 _weakrefset.py:52(_commit_removals)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:728(__init__)
+        6    0.000    0.000    0.000    0.000 sre_parse.py:74(opengroup)
+       36    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:742(<genexpr>)
+        5    0.000    0.000    0.000    0.000 scrabble_game.py:323(<listcomp>)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1616(get_filename)
+       16    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:148(<genexpr>)
+        1    0.000    0.000    0.000    0.000 {built-in method exp}
+        4    0.000    0.000    0.000    0.000 scrabble_game.py:102(<listcomp>)
+        2    0.000    0.000    0.000    0.000 _weakrefset.py:36(__init__)
+        4    0.000    0.000    0.000    0.000 scrabble_game.py:56(get_current_player_data)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:92(_path_isdir)
+        7    0.000    0.000    0.000    0.000 _weakrefset.py:20(__enter__)
+        6    0.000    0.000    0.000    0.000 sre_parse.py:67(__init__)
+       32    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'union' of 'set' objects}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:141(__init__)
+        2    0.000    0.000    0.000    0.000 {method 'match' of '_sre.SRE_Pattern' objects}
+       13    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:288(cb)
+        1    0.000    0.000    0.000    0.000 codecs.py:306(__init__)
+       10    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1729(<genexpr>)
+       27    0.000    0.000    0.000    0.000 {built-in method ord}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:144(__enter__)
+       11    0.000    0.000    0.000    0.000 scrabble_recover.py:204(<genexpr>)
+        1    0.000    0.000    0.000    0.000 {built-in method nl_langinfo}
+        6    0.000    0.000    0.000    0.000 sre_parse.py:85(closegroup)
+       26    0.000    0.000    0.000    0.000 {built-in method allocate_lock}
+        4    0.000    0.000    0.000    0.000 scrabble_game.py:444(_refill_player_rack)
+        1    0.000    0.000    0.000    0.000 encoder.py:98(__init__)
+        7    0.000    0.000    0.000    0.000 {method '__subclasses__' of 'type' objects}
+       12    0.000    0.000    0.000    0.000 sre_compile.py:545(isstring)
+        7    0.000    0.000    0.000    0.000 _collections_abc.py:135(__subclasshook__)
+        1    0.000    0.000    0.000    0.000 {built-in method sum}
+        1    0.000    0.000    0.000    0.000 scrabble_game.py:318(ScrabbleGame)
+        3    0.000    0.000    0.000    0.000 {built-in method setattr}
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1697(__init__)
+        1    0.000    0.000    0.000    0.000 random.py:639(SystemRandom)
+        4    0.000    0.000    0.000    0.000 {method 'translate' of 'bytearray' objects}
+        2    0.000    0.000    0.000    0.000 {built-in method log}
+        1    0.000    0.000    0.000    0.000 {built-in method utf_8_decode}
+        2    0.000    0.000    0.000    0.000 scrabble_recover.py:110(<listcomp>)
+        1    0.000    0.000    0.000    0.000 codecs.py:257(__init__)
+        6    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
         3    0.000    0.000    0.000    0.000 scrabble_recover.py:42(<genexpr>)
-        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha512}
-       11    0.000    0.000    0.000    0.000 scrabble_recover.py:182(<genexpr>)
+        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha1}
+       18    0.000    0.000    0.000    0.000 scrabble_board.py:40(__repr__)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1985(<genexpr>)
+        1    0.000    0.000    0.000    0.000 {built-in method sqrt}
+        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha384}
+        1    0.000    0.000    0.000    0.000 {built-in method openssl_md5}
         2    0.000    0.000    0.000    0.000 {method 'keys' of 'dict' objects}
-        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha224}
+        1    0.000    0.000    0.000    0.000 scrabble_board.py:57(ScrabbleBoard)
+        4    0.000    0.000    0.000    0.000 scrabble_recover.py:8(<lambda>)
+        7    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
+        2    0.000    0.000    0.000    0.000 scrabble_recover.py:205(<listcomp>)
+        1    0.000    0.000    0.000    0.000 encoder.py:67(JSONEncoder)
+        2    0.000    0.000    0.000    0.000 {method 'end' of '_sre.SRE_Match' objects}
+        1    0.000    0.000    0.000    0.000 decoder.py:257(JSONDecoder)
+        9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:850(has_location)
+        8    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+       11    0.000    0.000    0.000    0.000 scrabble_recover.py:182(<genexpr>)
+        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha512}
         2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1311(is_package)
         1    0.000    0.000    0.000    0.000 scrabble_recover.py:199(<listcomp>)
         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha224}
+        3    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method openssl_sha256}
         6    0.000    0.000    0.000    0.000 {built-in method globals}
+        1    0.000    0.000    0.000    0.000 scrabble_board.py:44(BoardSquare)
+        1    0.000    0.000    0.000    0.000 scrabble_recover.py:40(<listcomp>)
 
 

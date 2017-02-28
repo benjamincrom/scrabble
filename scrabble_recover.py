@@ -9,7 +9,7 @@ scrabble_game.input = lambda x: 'N'
 
 def get_combinations(input_iterable):
     combination_set = set([])
-    for i in range(config.PLAYER_RACK_SIZE):
+    for i in range(1, config.PLAYER_RACK_SIZE + 1):
         for this_set in itertools.combinations(input_iterable, i):
             if len(this_set) > 1:
                 location_set = set(location for _, location in this_set)

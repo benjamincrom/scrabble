@@ -13,10 +13,10 @@ def get_combinations(input_iterable):
         for this_set in itertools.combinations(input_iterable, i):
             if len(this_set) > 1:
                 location_set = set(location for _, location in this_set)
-                column_set = set(column for column, _ in location_set)
-                row_set = set(row for _, row in location_set)
-                if len(column_set) == 1 or len(row_set) == 1:
+                if (scrabble_game.move_does_not_misalign_tiles(location_set) and
+                        scrabble_game.move_is_not_out_of_bounds(location_set)):
                     combination_set.add(this_set)
+
             else:
                 combination_set.add(this_set)
 

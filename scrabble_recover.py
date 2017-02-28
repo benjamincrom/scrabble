@@ -8,9 +8,19 @@ import scrabble_game
 scrabble_game.input = lambda x: 'N'
 
 def get_combinations(input_iterable):
-    return set(this_set
-               for i in range(config.PLAYER_RACK_SIZE)
-               for this_set in itertools.combinations(input_iterable, i))
+    combination_set = set([])
+    for i in range(config.PLAYER_RACK_SIZE):
+        for this_set in itertools.combinations(input_iterable, i):
+            if len(this_set) > 1:
+                location_set = set(location for _, location in this_set)
+                column_set = set(column for column, _ in location_set)
+                row_set = set(row for _, row in location_set)
+                if len(column_set) == 1 or len(row_set) == 1:
+                    combination_set.add(this_set)
+            else:
+                combination_set.add(this_set)
+
+    return combination_set
 
 def load_file(input_filename):
     with open(input_filename, 'r') as filehandle:
@@ -165,6 +175,7 @@ def get_move_set_generator(new_game, reference_game, move_list):
     for next_move in next_move_set:
         new_game_copy = copy_game(new_game)
         move_list_copy = move_list[:]
+
         player_to_move_id = (
             new_game_copy.move_number % len(new_game_copy.player_rack_list)
         )
@@ -235,8 +246,7 @@ def get_move_set_notation(move_set):
 reference_game = read_input_file('sample_input7.json')
 new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
 move_set_generator = get_move_set_generator(new_game, reference_game, [])
-move_set_list = [this_set for this_set in move_set_generator]
 
-for move_set in move_set_list:
+for move_set in move_set_generator:
    print(get_move_set_notation(move_set))
    print()

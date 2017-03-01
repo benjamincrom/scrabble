@@ -18,15 +18,24 @@ import scrabble_game
 scrabble_game.input = lambda x: 'N'
 
 def get_combinations(input_iterable):
-    combination_set = set([])
-    for i in range(1, config.PLAYER_RACK_SIZE + 1):
-        for this_set in itertools.combinations(input_iterable, i):
-            if len(this_set) > 1:
-                location_set = set(location for _, location in this_set)
-                if (scrabble_game.move_does_not_misalign_tiles(location_set)):
-                    combination_set.add(this_set)
+    combination_set = set()
 
-            else:
+    for column_letter in config.BOARD_CODE_DICT:
+        column_tile_set = frozenset((tile, location)
+                                    for tile, location in input_iterable
+                                    if location[0] == column_letter)
+
+        for i in range(1, config.PLAYER_RACK_SIZE + 1):
+            for this_set in itertools.combinations(column_tile_set, i):
+                combination_set.add(this_set)
+
+    for row_number in range(1, config.BOARD_NUM_ROWS + 1):
+        row_tile_set = frozenset((tile, location)
+                                 for tile, location in input_iterable
+                                 if location[1] == row_number)
+
+        for i in range(1, config.PLAYER_RACK_SIZE + 1):
+            for this_set in itertools.combinations(row_tile_set, i):
                 combination_set.add(this_set)
 
     return combination_set

@@ -4,4 +4,4 @@ final board and the list of player scores for each move.
 Usage:
     $ ./scrabble_recover [INPUT_FILENAME]
 
-    See sample_input_files/ for examples of correctly formatted input files
+See sample_input_files/ for examples of correctly formatted input files

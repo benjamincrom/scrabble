@@ -17,12 +17,12 @@ def conclude_game(player_score_list_list):
         key=operator.itemgetter(1)
     )
 
-    # print(
-    #     'Game Over! Player {} wins with a score of {}'.format(
-    #         winning_player_id + 1,
-    #         winning_player_score
-    #     )
-    # )
+    print(
+        'Game Over! Player {} wins with a score of {}'.format(
+            winning_player_id + 1,
+            winning_player_score
+        )
+    )
 
 def score_end_of_game(player_rack_list, empty_rack_id=None):
     final_move_score_list = [0 for _ in range(len(player_rack_list))]
@@ -114,7 +114,6 @@ def move_touches_tile(move_number, board, location_set):
             if location_touches_tile(board, this_location):
                 return True
 
-    # print('Move does not touch any existing tiles.')
     return False
 
 def move_is_sublist(letter_list_1, letter_list_2):
@@ -122,7 +121,6 @@ def move_is_sublist(letter_list_1, letter_list_2):
     letter_counter_2 = collections.Counter(letter_list_2)
     for letter, cardinality in letter_counter_1.items():
         if cardinality > letter_counter_2[letter]:
-            # print('Not enough {} tiles in rack.'.format(letter))
             return False
 
     return True
@@ -130,10 +128,6 @@ def move_is_sublist(letter_list_1, letter_list_2):
 def move_does_not_cover_tiles(board, location_set):
     for location in location_set:
         if board[location]:
-            # print(
-            #     'Move covers existing tiles at location {}'.format(location)
-            # )
-
             return False
 
     return True
@@ -148,9 +142,6 @@ def all_move_tiles_connected(board, location_set):
         for this_row in range(min(row_list), max(row_list) + 1):
             this_tile = board[(this_column, this_row)]
             if not (this_tile or (this_column, this_row) in location_set):
-                # print('Not all tiles in vertical move are connected: '
-                #       'location {} is empty'.format((this_column, this_row)))
-
                 return False
     else:
         column_range = range(
@@ -163,9 +154,6 @@ def all_move_tiles_connected(board, location_set):
             this_column = chr(this_column_num)
             this_tile = board[(this_column, this_row)]
             if not (this_tile or (this_column, this_row) in location_set):
-                # print('Not all tiles in horizontal move are connected: '
-                #       'location {} is empty'.format((this_column, this_row)))
-
                 return False
 
     return True
@@ -175,29 +163,16 @@ def move_does_not_misalign_tiles(location_set):
     row_set = set(row for _, row in location_set)
 
     return len(column_set) == 1 or len(row_set) == 1
-    #    return True
-    # else:
-        # print('Move is not limited to one column or row.')
-    #     return False
 
 def move_does_not_stack_tiles(letter_list, location_set):
     return len(letter_list) == len(location_set)
-    #     return True
-    # else:
-        # print('Move stacks tiles.')
-    #     return False
 
 def move_is_rack_size_or_less(location_set):
     return len(location_set) <= config.PLAYER_RACK_SIZE
-        # print('Move places greater than seven tiles.')
-    #     return False
-    # else:
-    #     return True
 
 def move_is_not_out_of_bounds(location_set):
     for location in location_set:
         if location_is_out_of_bounds(location):
-            # print('Move location {} is out of bounds'.format(location))
             return False
 
     return True
@@ -209,7 +184,6 @@ def move_successfully_challenged():
     elif response.upper() == 'N':
         return False
     else:
-        # print('You must enter Y or N')
         return move_successfully_challenged()
 
 def location_is_out_of_bounds(location):

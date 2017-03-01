@@ -183,7 +183,10 @@ def get_best_move(game):
     for i in range(1, config.PLAYER_RACK_SIZE + 1):
         for this_list in itertools.permutations(player_letter_list, i):
             this_word = ''.join(this_list)
-            word_list.append(this_word)
+            for dictionary_word in english_dictionary_set:
+                if this_word.lower() in dictionary_word:
+                    word_list.append(this_word)
+                    break
 
     high_score = 0
     best_move = None

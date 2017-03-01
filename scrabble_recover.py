@@ -17,7 +17,10 @@ import config
 import scrabble_board
 import scrabble_game
 
-english_dictionary = enchant.Dict("en_US")
+with open(config.DICTIONARY_FILENAME) as filehandle:
+    english_dictionary_set = set(word.strip()
+                                 for word in filehandle.readlines())
+
 scrabble_game.input = lambda x: 'N'
 
 def get_combinations(input_iterable):
@@ -157,7 +160,7 @@ def get_legal_move_set(new_game, reference_game):
 
 def all_created_words_are_english(board, letter_location_set):
     word_set = scrabble_game.get_word_set(board, letter_location_set)
-    import pdb; pdb.set_trace()  # breakpoint 90f01404 //
+
     for word_location_set in word_set:
         if word_location_set:
             this_word_str = ''
@@ -166,8 +169,7 @@ def all_created_words_are_english(board, letter_location_set):
                 square = board.board_square_dict[location]
                 this_word_str += square.tile.letter
 
-            import pdb; pdb.set_trace()  # breakpoint 67993e0f //
-            if not english_dictionary.check(this_word_str):
+            if this_word_str not in english_dictionary_set:
                 return False
 
     return True
@@ -175,9 +177,13 @@ def all_created_words_are_english(board, letter_location_set):
 def get_best_move(game):
     player_to_move_id = game.move_number % len(game.player_rack_list)
     player_rack = game.player_rack_list[player_to_move_id]
-
     player_letter_list = [tile.letter for tile in player_rack]
-    word_list = get_combinations(player_letter_list)
+
+    word_list = []
+    for i in range(1, config.PLAYER_RACK_SIZE + 1):
+        for this_list in itertools.permutations(player_letter_list, i):
+            this_word = ''.join(this_list)
+            word_list.append(this_word)
 
     high_score = 0
     best_move = None
@@ -185,26 +191,26 @@ def get_best_move(game):
         for word in word_list:
             for is_vertical in [True, False]:
                 temp_game = copy_game(game)
-                temp_game.place_word(word, location, is_vertical)
-
-                letter_location_set = get_word_letter_location_set(
-                    word,
-                    location,
-                    is_vertical_move
-                )
-
-                location_set = set(location
-                                   for _, location in letter_location_set)
-
-                if all_created_words_are_english(temp_game.board,
-                                                 letter_location_set):
-                    word_score = (
-                        temp_game.player_score_list_list[player_to_move_id][-1]
+                if temp_game.place_word(word, location, is_vertical):
+                    letter_location_set = (
+                        scrabble_game.get_word_letter_location_set(word,
+                                                                   location,
+                                                                   is_vertical)
                     )
 
-                    if word_score > high_score:
-                        best_move = (location, word, is_vertical)
-                        high_score = word_score
+                    location_set = set(location
+                                       for _, location in letter_location_set)
+
+                    if all_created_words_are_english(temp_game.board,
+                                                     location_set):
+                        player_score_list = (
+                            temp_game.player_score_list_list[player_to_move_id]
+                        )
+
+                        word_score = player_score_list[-1]
+                        if word_score > high_score:
+                            best_move = (location, word, is_vertical)
+                            high_score = word_score
 
     return best_move, high_score
 

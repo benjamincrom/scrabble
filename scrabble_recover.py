@@ -11,8 +11,6 @@ import itertools
 import json
 import sys
 
-import enchant
-
 import config
 import scrabble_board
 import scrabble_game

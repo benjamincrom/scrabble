@@ -201,7 +201,7 @@ def get_move_set_generator(new_game, reference_game, move_list):
                                               reference_game,
                                               move_list_copy)
 
-def get_move_set_notation(move_set):
+def get_move_set_notation(move_set, reference_game):
     new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
     word_notation_list_list = [
         [] for _ in range(len(reference_game.player_rack_list))
@@ -262,7 +262,7 @@ def main():
                                                     [])
 
         for move_set in move_set_generator:
-            print(move_set)
+            print(get_move_set_notation(move_set, reference_game))
             print()
     else:
         print('Usage: ./scrabble_recover [INPUT_FILENAME]')

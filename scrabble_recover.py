@@ -1,9 +1,13 @@
 '''
 scrabble_recover.py -- contains functions that recover a game's moves given
                        final board and score list
+
+Usage:
+    $ ./scrabble_recover [INPUT_FILENAME]
 '''
 import itertools
 import json
+import sys
 
 import config
 import scrabble_board
@@ -246,10 +250,22 @@ def get_move_set_notation(move_set):
 
     return word_notation_list_list
 
-reference_game = read_input_file('sample_input7.json')
-new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
-move_set_generator = get_move_set_generator(new_game, reference_game, [])
+def main():
+    if len(sys.argv) == 2:
+        reference_game = read_input_file(sys.argv[1])
+        new_game = scrabble_game.ScrabbleGame(
+            len(reference_game.player_rack_list)
+        )
 
-for move_set in move_set_generator:
-   print(get_move_set_notation(move_set))
-   print()
+        move_set_generator = get_move_set_generator(new_game,
+                                                    reference_game,
+                                                    [])
+
+        for move_set in move_set_generator:
+            print(move_set)
+            print()
+    else:
+        print('Usage: ./scrabble_recover [INPUT_FILENAME]')
+
+if __name__ == '__main__':
+    main()

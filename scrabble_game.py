@@ -274,11 +274,13 @@ def get_word_set_total_score(board, word_set, num_move_locations):
     for word_location_set in word_set:
         word_score = 0
         word_multiplier = 1
+        this_word_str = ''
 
         for location in word_location_set:
             square = board.board_square_dict[location]
             word_multiplier *= square.word_multiplier
             word_score += square.tile.point_value * square.letter_multiplier
+            this_word_str += square.tile.letter
 
         word_score *= word_multiplier
         total_score += word_score

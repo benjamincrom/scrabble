@@ -11,10 +11,13 @@ import itertools
 import json
 import sys
 
+import enchant
+
 import config
 import scrabble_board
 import scrabble_game
 
+english_dictionary = enchant.Dict("en_US")
 scrabble_game.input = lambda x: 'N'
 
 def get_combinations(input_iterable):
@@ -152,6 +155,23 @@ def get_legal_move_set(new_game, reference_game):
 
     return legal_move_set
 
+def all_created_words_are_english(board, letter_location_set):
+    word_set = scrabble_game.get_word_set(board, letter_location_set)
+    import pdb; pdb.set_trace()  # breakpoint 90f01404 //
+    for word_location_set in word_set:
+        if word_location_set:
+            this_word_str = ''
+
+            for location in word_location_set:
+                square = board.board_square_dict[location]
+                this_word_str += square.tile.letter
+
+            import pdb; pdb.set_trace()  # breakpoint 67993e0f //
+            if not english_dictionary.check(this_word_str):
+                return False
+
+    return True
+
 def get_best_move(game):
     player_to_move_id = game.move_number % len(game.player_rack_list)
     player_rack = game.player_rack_list[player_to_move_id]
@@ -166,13 +186,25 @@ def get_best_move(game):
             for is_vertical in [True, False]:
                 temp_game = copy_game(game)
                 temp_game.place_word(word, location, is_vertical)
-                word_score = (
-                    temp_game.player_score_list_list[player_to_move_id][-1]
+
+                letter_location_set = get_word_letter_location_set(
+                    word,
+                    location,
+                    is_vertical_move
                 )
 
-                if word_score > high_score:
-                    best_move = (location, word, is_vertical)
-                    high_score = word_score
+                location_set = set(location
+                                   for _, location in letter_location_set)
+
+                if all_created_words_are_english(temp_game.board,
+                                                 letter_location_set):
+                    word_score = (
+                        temp_game.player_score_list_list[player_to_move_id][-1]
+                    )
+
+                    if word_score > high_score:
+                        best_move = (location, word, is_vertical)
+                        high_score = word_score
 
     return best_move, high_score
 

@@ -3,9 +3,6 @@ scrabble_board.py -- contain classes that model scrabble board
 '''
 import config
 
-def get_board_final_column():
-    return config.UPPER_COLUMN_LETTER_BOUND
-
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
     for column in config.BOARD_CODE_DICT:

@@ -1,3 +1,6 @@
+'''
+test_scrabble_game.py -- contains py.test functions that test scrabble_game.py
+'''
 import scrabble_game
 
 def test_decrement_letter():

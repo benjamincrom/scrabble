@@ -1,4 +1,3 @@
-#!/usr/bin/python
 '''
 scrabble_board.py -- contain classes that model scrabble board
 '''

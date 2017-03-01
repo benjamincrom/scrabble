@@ -1,3 +1,7 @@
+'''
+scrabble_recover.py -- contains functions that recover a game's moves given
+                       final board and score list
+'''
 import itertools
 import json
 

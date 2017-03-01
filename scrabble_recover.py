@@ -3,7 +3,7 @@ scrabble_recover.py -- contains functions that recover a game's moves given
                        final board and score list
 
 Usage:
-    $ ./scrabble_recover [INPUT_FILENAME]
+    ./scrabble_recover [INPUT_FILENAME]
 
     See sample_input_files/ for examples of correctly formatted input files
 '''

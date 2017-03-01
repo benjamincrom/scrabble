@@ -53,10 +53,6 @@ def test_board_moves_score():
     game.place_word('(C)ODING', ('i', 8), True)
     game.place_word('PILE', ('g', 5), True)
 
-    import scrabble_recover
-    print(scrabble_recover.get_best_move(game))
-    exit(1)
-
     assert game.player_score_list_list == [[24], [13], [17], []]
     assert game.move_number == 3
     assert len(game.tile_bag) == 72

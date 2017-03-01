@@ -6,6 +6,8 @@ BINGO_SCORE = 50
 START_SQUARE_CHARACTER = '★'
 BLANK_SQUARE_CHARACTER = '_'
 
+LOWER_COLUMN_INT_BOUND = ord('a')
+
 WORD_SCORE_MULT_LOCATION_DICT = {
     ('b', 2): 2,
     ('b', 14): 2,
@@ -73,7 +75,7 @@ LETTER_SCORE_MULT_LOCATION_DICT = {
     ('n', 10): 3
 }
 
-# Captial letters are used to distinguish letter glyphs from locations
+# Captial letters are used to distinguish tile letter symbols from locations
 LETTER_POINT_VALUES_DICT = {
     '*': 0,
     'A': 1,
@@ -134,7 +136,7 @@ LETTER_DISTRIBUTION_DICT = {
     'Z': 1
 }
 
-LOWER_COLUMN_INT_BOUND = ord('a')
+# Derived constants
 UPPER_COLUMN_INT_BOUND = LOWER_COLUMN_INT_BOUND + BOARD_NUM_COLUMNS - 1
 
 LETTER_CODE_DICT = {
@@ -148,6 +150,3 @@ BOARD_CODE_DICT = {
     for code_point in range(LOWER_COLUMN_INT_BOUND,
                             UPPER_COLUMN_INT_BOUND + 1)
 }
-
-UPPER_COLUMN_LETTER_BOUND = max(LETTER_CODE_DICT)
-LOWER_COLUMN_LETTER_BOUND = min(LETTER_CODE_DICT)

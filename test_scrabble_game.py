@@ -274,6 +274,9 @@ def test_out_of_tiles():
     game.cheat_create_rack_word('BAKERS', 0)
     game.place_word('BAKERS', ('h', 8), False)
 
+    assert len(game.player_rack_list[0]) == 4
+    assert len(game.tile_bag) == 0
+
 def test_out_of_bounds():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
@@ -291,28 +294,44 @@ def test_misalign_tiles():
     game = scrabble_game.ScrabbleGame(3)
     game.cheat_create_rack_word('EAI', 0)
 
-    game.next_player_move([('E', ('h', 6)), ('A', ('i', 9)), ('I', ('h', 7))])
+    success = game.next_player_move(
+        [('E', ('h', 6)), ('A', ('i', 9)), ('I', ('h', 7))]
+    )
+
+    assert success is False
 
 def test_disconnect_tiles_horizontal():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     game.cheat_create_rack_word('EAI', 0)
 
-    game.next_player_move([('E', ('h', 8)), ('A', ('h', 9)), ('I', ('h', 11))])
+    success = game.next_player_move(
+        [('E', ('h', 8)), ('A', ('h', 9)), ('I', ('h', 11))]
+    )
+
+    assert success is False
 
 def test_vertical_tiles_horizontal():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     game.cheat_create_rack_word('EAI', 0)
 
-    game.next_player_move([('E', ('h', 8)), ('A', ('i', 8)), ('I', ('k', 8))])
+    success = game.next_player_move(
+        [('E', ('h', 8)), ('A', ('i', 8)), ('I', ('k', 8))]
+    )
+
+    assert success is False
 
 def test_stack_tiles():
     scrabble_game.input = lambda x: 'N'
     game = scrabble_game.ScrabbleGame(3)
     game.cheat_create_rack_word('EAI', 0)
 
-    game.next_player_move([('E', ('h', 6)), ('A', ('h', 6)), ('I', ('h', 7))])
+    success = game.next_player_move(
+        [('E', ('h', 6)), ('A', ('h', 6)), ('I', ('h', 7))]
+    )
+
+    assert success is False
 
 def test_letters_not_in_rack():
     scrabble_game.input = lambda x: 'N'

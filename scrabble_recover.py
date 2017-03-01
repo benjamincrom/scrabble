@@ -4,6 +4,8 @@ scrabble_recover.py -- contains functions that recover a game's moves given
 
 Usage:
     $ ./scrabble_recover [INPUT_FILENAME]
+
+    See sample_input_files/ for examples of correctly formatted input files
 '''
 import itertools
 import json

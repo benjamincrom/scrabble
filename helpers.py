@@ -18,7 +18,6 @@ with open(config.DICTIONARY_FILENAME) as filehandle:
                                  for word in filehandle.readlines())
 
 def recover_game(input_filename):
-    input = lambda x: 'N'
     if len(sys.argv) == 2:
         reference_game = read_input_file(sys.argv[1])
         new_game = scrabble_game.ScrabbleGame(

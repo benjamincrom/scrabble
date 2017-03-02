@@ -2,17 +2,15 @@ import scrabble_game
 import helpers
 
 def test_get_best_move():
-    helpers.input = lambda x: 'N'
-
     game = scrabble_game.ScrabbleGame(4)
 
     game.cheat_create_rack_word('SCRABBL', 0)
     game.cheat_create_rack_word('ODING', 1)
     game.cheat_create_rack_word('PILE', 2)
 
-    game.place_word('SCRAB', ('h', 8), False)
-    game.place_word('(C)ODING', ('i', 8), True)
-    game.place_word('PILE', ('g', 5), True)
+    game.place_word('SCRAB', ('h', 8), False, False)
+    game.place_word('(C)ODING', ('i', 8), True, False)
+    game.place_word('PILE', ('g', 5), True, False)
 
     print(game)
     print(helpers.get_best_move(game))

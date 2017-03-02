@@ -180,12 +180,10 @@ def get_location_best_move(game, location, word_list):
 
     high_score = 0
     best_move = None
-    print(str(location) + '\t \t \t' + str(datetime.datetime.now()))
     for word in word_list:
         for is_vertical in [True, False]:
             temp_game = copy_game(game)
             if temp_game.place_word(word, location, is_vertical):
-                print('\t' + str(word) + ' \t \t' + str(datetime.datetime.now()))
                 letter_location_set = (
                     scrabble_game.get_word_letter_location_set(word,
                                                                location,

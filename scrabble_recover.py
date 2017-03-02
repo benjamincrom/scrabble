@@ -7,8 +7,11 @@ Usage:
 
     See sample_input_files/ for examples of correctly formatted input files
 '''
+import datetime
+
 import itertools
 import json
+import multiprocessing
 import sys
 
 import config
@@ -167,10 +170,46 @@ def all_created_words_are_english(board, letter_location_set):
                 square = board.board_square_dict[location]
                 this_word_str += square.tile.letter
 
-            if this_word_str not in english_dictionary_set:
+            if this_word_str.lower() not in english_dictionary_set:
                 return False
 
     return True
+
+def get_location_best_move(game, location, word_list):
+    player_to_move_id = game.move_number % len(game.player_rack_list)
+
+    high_score = 0
+    best_move = None
+    print(str(location) + '\t \t \t' + str(datetime.datetime.now()))
+    for word in word_list:
+        for is_vertical in [True, False]:
+            temp_game = copy_game(game)
+            if temp_game.place_word(word, location, is_vertical):
+                print('\t' + str(word) + ' \t \t' + str(datetime.datetime.now()))
+                letter_location_set = (
+                    scrabble_game.get_word_letter_location_set(word,
+                                                               location,
+                                                               is_vertical)
+                )
+
+                location_set = set(location
+                                   for _, location in letter_location_set)
+
+                if all_created_words_are_english(temp_game.board,
+                                                 location_set):
+                    player_score_list = (
+                        temp_game.player_score_list_list[player_to_move_id]
+                    )
+
+                    word_score = player_score_list[-1]
+                    if word_score > high_score:
+                        best_move = (location, word, is_vertical)
+                        high_score = word_score
+
+    return high_score, best_move
+
+def get_location_best_move_helper(argument_list):
+    return get_location_best_move(*argument_list)
 
 def get_best_move(game):
     player_to_move_id = game.move_number % len(game.player_rack_list)
@@ -181,39 +220,24 @@ def get_best_move(game):
     for i in range(1, config.PLAYER_RACK_SIZE + 1):
         for this_list in itertools.permutations(player_letter_list, i):
             this_word = ''.join(this_list)
-            for dictionary_word in english_dictionary_set:
-                if this_word.lower() in dictionary_word:
-                    word_list.append(this_word)
-                    break
+            word_list.append(this_word)
 
-    high_score = 0
-    best_move = None
-    for location in game.board.board_square_dict:
-        for word in word_list:
-            for is_vertical in [True, False]:
-                temp_game = copy_game(game)
-                if temp_game.place_word(word, location, is_vertical):
-                    letter_location_set = (
-                        scrabble_game.get_word_letter_location_set(word,
-                                                                   location,
-                                                                   is_vertical)
-                    )
+    input_arguments_list = [
+        (game, location, word_list)
+        for location in sorted(game.board.board_square_dict)
+    ]
 
-                    location_set = set(location
-                                       for _, location in letter_location_set)
+    input_arguments_list = input_arguments_list[116:121]
 
-                    if all_created_words_are_english(temp_game.board,
-                                                     location_set):
-                        player_score_list = (
-                            temp_game.player_score_list_list[player_to_move_id]
-                        )
+    process_pool = multiprocessing.Pool(4)
+    result_list = [get_location_best_move(*arguments)
+                   for arguments in input_arguments_list]
 
-                        word_score = player_score_list[-1]
-                        if word_score > high_score:
-                            best_move = (location, word, is_vertical)
-                            high_score = word_score
+    # process_pool.map(get_location_best_move_helper,
+    #                               input_arguments_list)
 
-    return best_move, high_score
+    import pdb; pdb.set_trace()  # breakpoint e84793bc //
+    return results_dict
 
 def get_move_set_generator(new_game, reference_game, move_list):
     legal_move_set = get_legal_move_set(new_game, reference_game)

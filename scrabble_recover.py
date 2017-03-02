@@ -226,8 +226,6 @@ def get_best_move(game):
         for location in sorted(game.board.board_square_dict)
     ]
 
-    input_arguments_list = input_arguments_list[116:121]
-
     process_pool = multiprocessing.Pool(4)
     result_list = process_pool.map(get_location_best_move_helper,
                                    input_arguments_list)

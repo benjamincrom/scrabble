@@ -1,5 +1,5 @@
 """
-helper.py -- contains all side-effect free functions used by classes
+helper.py -- contains all side-effect free functions which are used by classes
              in scrabble_game.py
 """
 import collections

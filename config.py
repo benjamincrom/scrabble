@@ -4,13 +4,13 @@ PLAYER_RACK_SIZE = 7
 BINGO_SCORE = 50
 
 START_SQUARE_CHARACTER = '★'
-BLANK_SQUARE_CHARACTER = '_'
+BLANK_SQUAE_CHARACTER = '_'
+LOWEST_COLUMN_CHARACTER = 'a'
 
-LOWER_COLUMN_INT_BOUND = ord('a')
 DICTIONARY_FILENAME = 'dictionary.csv'
 
-WORD_SCORE_MULT_LOCATION_DICT = {
-    ('b', 2): 2,
+WORD_SCORE_MULT_LOCATION_DICT = {  # Lowercase letters are used to distinguish
+    ('b', 2): 2,                   # locations from tile letter symbols
     ('b', 14): 2,
     ('c', 3): 2,
     ('c', 13): 2,
@@ -76,9 +76,8 @@ LETTER_SCORE_MULT_LOCATION_DICT = {
     ('n', 10): 3
 }
 
-# Captial letters are used to distinguish tile letter symbols from locations
-LETTER_POINT_VALUES_DICT = {
-    '*': 0,
+LETTER_POINT_VALUES_DICT = {  # Captial letters are used to distinguish tile
+    '*': 0,                   # letter symbols from locations
     'A': 1,
     'B': 3,
     'C': 3,
@@ -138,6 +137,7 @@ LETTER_DISTRIBUTION_DICT = {
 }
 
 # Derived constants
+LOWER_COLUMN_INT_BOUND = ord(LOWEST_COLUMN_CHARACTER)
 UPPER_COLUMN_INT_BOUND = LOWER_COLUMN_INT_BOUND + BOARD_NUM_COLUMNS - 1
 
 LETTER_CODE_DICT = {

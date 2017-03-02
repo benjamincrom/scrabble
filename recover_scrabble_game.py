@@ -20,7 +20,7 @@ def main():
             print(helpers.get_move_set_notation(move_set, reference_game))
             print()
     else:
-        print('Usage: ./scrabble_recover [INPUT_FILENAME]')
+        print('Usage: ./recover_scrabble_game [INPUT_FILENAME]')
 
 if __name__ == '__main__':
     main()

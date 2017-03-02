@@ -448,7 +448,9 @@ def test_recover_game():
         ]
     ]
 
-    notated_move_set_list = helpers.recover_game('sample_input30.json')
+    notated_move_set_list = helpers.recover_game(
+        'sample_input_files/sample_input30.json'
+    )
 
     assert expected_notated_move_set_list == notated_move_set_list
 

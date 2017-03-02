@@ -162,6 +162,16 @@ def copy_game(input_game):
         for input_player_score_list in input_game.player_score_list_list
     ]
 
+    new_player_rack_list = []
+    for player_rack in input_game.player_rack_list:
+        new_rack = []
+        for tile in player_rack:
+            new_rack.append(scrabble_game.ScrabbleTile(tile.letter))
+
+        new_player_rack_list.append(new_rack)
+
+    new_game.player_rack_list = new_player_rack_list
+
     return new_game
 
 def get_legal_move_set(new_game, reference_game):
@@ -213,6 +223,7 @@ def get_location_best_move(game, location, word_list):
                 location_set = set(location
                                    for _, location in letter_location_set)
 
+                last_score = temp_game.player_score_list_list[player_to_move_id][-1]
                 if all_created_words_are_english(temp_game.board,
                                                  location_set):
                     player_score_list = (
@@ -245,9 +256,12 @@ def get_best_move(game):
         for location in sorted(game.board.board_square_dict)
     ]
 
+    input_arguments_list = input_arguments_list[173:174]
+
     process_pool = multiprocessing.Pool(config.NUM_PROCESSING_CORES)
-    result_list = process_pool.map(get_location_best_move_helper,
-                                   input_arguments_list)
+    # result_list = process_pool.map(get_location_best_move_helper,
+    #                                input_arguments_list)
+    result_list = [get_location_best_move(*x) for x in input_arguments_list]
 
     return max(result_list)
 

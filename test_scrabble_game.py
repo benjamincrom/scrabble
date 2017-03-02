@@ -484,3 +484,5 @@ def test_get_best_move():
     score, move_tuple = helpers.get_best_move(game)
 
     assert (score, move_tuple) == (12, (('f', 5), 'OS', True))
+
+test_get_best_move()

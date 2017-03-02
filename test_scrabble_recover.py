@@ -2,7 +2,8 @@ import scrabble_game
 import helpers
 
 def test_get_best_move():
-    scrabble_game.input = lambda x: 'N'
+    helpers.input = lambda x: 'N'
+
     game = scrabble_game.ScrabbleGame(4)
 
     game.cheat_create_rack_word('SCRABBL', 0)

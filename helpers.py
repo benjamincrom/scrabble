@@ -17,6 +17,20 @@ with open(config.DICTIONARY_FILENAME) as filehandle:
     english_dictionary_set = set(word.strip()
                                  for word in filehandle.readlines())
 
+def recover_game(input_filename):
+    input = lambda x: 'N'
+    if len(sys.argv) == 2:
+        reference_game = read_input_file(sys.argv[1])
+        new_game = scrabble_game.ScrabbleGame(
+            len(reference_game.player_rack_list)
+        )
+
+        move_set_generator = get_move_set_generator(new_game,
+                                                    reference_game,
+                                                    [])
+
+        return list(move_set_generator)
+
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
     for column in config.BOARD_CODE_DICT:

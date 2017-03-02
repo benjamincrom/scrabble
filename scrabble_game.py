@@ -141,16 +141,17 @@ class ScrabbleGame(object):
             else:
                 return False
 
-    def place_word(self, word, start_location, is_vertical_move):
+    def place_word(self, word, start_location, is_vertical_move,
+                   allow_challenge=True):
         letter_location_set = helpers.get_word_letter_location_set(
             word,
             start_location,
             is_vertical_move
         )
 
-        return self.next_player_move(letter_location_set)
+        return self.next_player_move(letter_location_set, allow_challenge)
 
-    def next_player_move(self, letter_location_set):
+    def next_player_move(self, letter_location_set, allow_challenge=True):
         player_to_move_id, player_rack = helpers.get_current_player_data(
             self.move_number,
             self.player_rack_list
@@ -162,7 +163,7 @@ class ScrabbleGame(object):
                                               player_rack)
 
         if is_legal_move:
-            if helpers.move_successfully_challenged():
+            if allow_challenge and helpers.move_successfully_challenged():
                 letter_location_set = set()
 
             for move_letter, board_location in letter_location_set:

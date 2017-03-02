@@ -23,8 +23,6 @@ with open(config.DICTIONARY_FILENAME) as filehandle:
     english_dictionary_set = set(word.strip()
                                  for word in filehandle.readlines())
 
-scrabble_game.input = lambda x: 'N'
-
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
     for column in config.BOARD_CODE_DICT:
@@ -171,21 +169,19 @@ def get_legal_move_set(new_game, reference_game):
     legal_move_set = set()
     for move_set in all_possible_moves_set:
         if (move_is_board_subset(move_set, reference_game.board) and
-                scrabble_game.move_is_legal(new_game.board,
-                                            new_game.move_number,
-                                            move_set)):
+                move_is_legal(new_game.board, new_game.move_number, move_set)):
             temp_board = copy_board(new_game.board)
             for tile, location in move_set:
                 temp_board[location] = tile
 
             legal_move_set.add(
-                (scrabble_game.score_move(move_set, temp_board), move_set)
+                (score_move(move_set, temp_board), move_set)
             )
 
     return legal_move_set
 
 def all_created_words_are_english(board, letter_location_set):
-    word_set = scrabble_game.get_word_set(board, letter_location_set)
+    word_set = get_word_set(board, letter_location_set)
 
     for word_location_set in word_set:
         if word_location_set:
@@ -210,9 +206,7 @@ def get_location_best_move(game, location, word_list):
             temp_game = copy_game(game)
             if temp_game.place_word(word, location, is_vertical):
                 letter_location_set = (
-                    scrabble_game.get_word_letter_location_set(word,
-                                                               location,
-                                                               is_vertical)
+                    get_word_letter_location_set(word, location, is_vertical)
                 )
 
                 location_set = set(location
@@ -310,7 +304,7 @@ def get_move_set_notation(move_set, reference_game):
 
         notation_word_list = []
         new_game.next_player_move(move)
-        word_set = scrabble_game.get_word_set(new_game.board, move_location_set)
+        word_set = get_word_set(new_game.board, move_location_set)
         for word_location_set in word_set:
             if word_location_set:
                 move_word = ''

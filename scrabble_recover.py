@@ -4,6 +4,8 @@ import helpers
 import scrabble_game
 
 def main():
+    helpers.input = lambda x: 'N'
+
     if len(sys.argv) == 2:
         reference_game = helpers.read_input_file(sys.argv[1])
         new_game = scrabble_game.ScrabbleGame(

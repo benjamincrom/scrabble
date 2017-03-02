@@ -18,17 +18,16 @@ with open(config.DICTIONARY_FILENAME) as filehandle:
                                  for word in filehandle.readlines())
 
 def recover_game(input_filename):
-    if len(sys.argv) == 2:
-        reference_game = read_input_file(sys.argv[1])
-        new_game = scrabble_game.ScrabbleGame(
-            len(reference_game.player_rack_list)
-        )
+    reference_game = read_input_file(input_filename)
+    new_game = scrabble_game.ScrabbleGame(
+        len(reference_game.player_rack_list)
+    )
 
-        move_set_generator = get_move_set_generator(new_game,
-                                                    reference_game,
-                                                    [])
+    move_set_generator = get_move_set_generator(new_game,
+                                                reference_game,
+                                                [])
 
-        return list(move_set_generator)
+    return list(move_set_generator)
 
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
@@ -211,7 +210,7 @@ def get_location_best_move(game, location, word_list):
     for word in word_list:
         for is_vertical in [True, False]:
             temp_game = copy_game(game)
-            if temp_game.place_word(word, location, is_vertical):
+            if temp_game.place_word(word, location, is_vertical, False):
                 letter_location_set = (
                     get_word_letter_location_set(word, location, is_vertical)
                 )
@@ -281,7 +280,7 @@ def get_move_set_generator(new_game, reference_game, move_list):
 
         next_move_str = ''.join(letter for letter, location in next_move)
         new_game_copy.cheat_create_rack_word(next_move_str, player_to_move_id)
-        new_game_copy.next_player_move(next_move)
+        new_game_copy.next_player_move(next_move, False)
         move_list_copy.append(next_move)
 
         if new_game_copy.move_number == reference_game.move_number:
@@ -310,7 +309,7 @@ def get_move_set_notation(move_set, reference_game):
         )
 
         notation_word_list = []
-        new_game.next_player_move(move)
+        new_game.next_player_move(move, False)
         word_set = get_word_set(new_game.board, move_location_set)
         for word_location_set in word_set:
             if word_location_set:

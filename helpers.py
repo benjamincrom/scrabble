@@ -259,9 +259,8 @@ def get_best_move(game):
     input_arguments_list = input_arguments_list[173:174]
 
     process_pool = multiprocessing.Pool(config.NUM_PROCESSING_CORES)
-    # result_list = process_pool.map(get_location_best_move_helper,
-    #                                input_arguments_list)
-    result_list = [get_location_best_move(*x) for x in input_arguments_list]
+    result_list = process_pool.map(get_location_best_move_helper,
+                                   input_arguments_list)
 
     return max(result_list)
 

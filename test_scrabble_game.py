@@ -399,7 +399,7 @@ def test_challenge_neither():
     assert success
     assert game.player_score_list_list == [[0], [], [], []]
 
-def test_recover_game()
+def test_recover_game():
     expected_notated_move_set_list = [
         [  
             [
@@ -463,6 +463,6 @@ def test_get_best_move():
     game.place_word('(C)ODING', ('i', 8), True, False)
     game.place_word('PILE', ('g', 5), True, False)
 
-    score, move_tuple = helpers.get_best_move(game)
+    score, _ = helpers.get_best_move(game)
 
     assert score > 0

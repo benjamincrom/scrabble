@@ -230,14 +230,10 @@ def get_best_move(game):
     input_arguments_list = input_arguments_list[116:121]
 
     process_pool = multiprocessing.Pool(4)
-    result_list = [get_location_best_move(*arguments)
-                   for arguments in input_arguments_list]
+    result_list = process_pool.map(get_location_best_move_helper,
+                                   input_arguments_list)
 
-    # process_pool.map(get_location_best_move_helper,
-    #                               input_arguments_list)
-
-    import pdb; pdb.set_trace()  # breakpoint e84793bc //
-    return results_dict
+    return max(result_list)
 
 def get_move_set_generator(new_game, reference_game, move_list):
     legal_move_set = get_legal_move_set(new_game, reference_game)

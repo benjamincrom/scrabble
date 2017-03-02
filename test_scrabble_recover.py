@@ -13,6 +13,7 @@ def test_get_best_move():
     game.place_word('(C)ODING', ('i', 8), True)
     game.place_word('PILE', ('g', 5), True)
 
+    print(game)
     print(scrabble_recover.get_best_move(game))
 
 test_get_best_move()

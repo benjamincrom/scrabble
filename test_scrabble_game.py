@@ -449,12 +449,23 @@ def test_recover_game():
         ]
     ]
 
+    frozen_expected_notated_move_set_list = [
+      frozenset(move) for notated_move_set in expected_notated_move_set_list
+                      for move_set in notated_move_set
+                      for move in move_set
+    ]
+
     notated_move_set_list = helpers.recover_game(
         'sample_input_files/sample_input30.json'
     )
 
-    import pdb; pdb.set_trace()  # breakpoint 3b64e0b4 //
-    assert expected_notated_move_set_list == notated_move_set_list
+    frozen_notated_move_set_list = [
+        frozenset(move) for notated_move_set in notated_move_set_list
+                        for move_set in notated_move_set
+                        for move in move_set
+    ]
+
+    assert frozen_expected_notated_move_set_list == frozen_notated_move_set_list
 
 def test_get_best_move():
     game = scrabble_game.ScrabbleGame(4)

@@ -398,3 +398,71 @@ def test_challenge_neither():
 
     assert success
     assert game.player_score_list_list == [[0], [], [], []]
+
+def test_recover_game()
+    expected_notated_move_set_list = [
+        [  
+            [
+                [(('h', 8), '*OWDY')],
+                [(('e', 10), 'R(A)ZE')],
+                [(('h', 12), '(Y)IP')],
+                [(('b', 13), 'MOV(E)')],
+                [(('c', 6), 'GU(Y)')],
+                [(('l', 10), '(D)OTE')],
+                [(('e', 3), '(G)UILE')],
+                [(('i', 2), 'B(E)ER')],
+                [(('i', 5), '(R)IP')],
+                [(('g', 2), 'H(I)NT')],
+                [(('l', 2), '(D)UNE')],
+                [(('j', 12), '(PI)TA')],
+                [(('h', 9), '(O)R*')],
+                [(('o', 13), 'LI(T)')],
+                [(('e', 15), 'BANAN(A)')]
+            ], [
+                [(('d', 11), 'FAME(D)')],
+                [(('d', 8), 'CRIE(*)')],
+                [
+                    (('i', 12), '(I)T'),
+                    (('j', 12), '(P)I'),
+                    (('i', 13), 'TIGHT')
+                ],
+                [(('e', 3), 'GRAYE(R)')],
+                [(('l', 10), 'DAS(H)')],
+                [(('o', 8), 'OV(E)N')],
+                [(('c', 4), 'JA(R)')],
+                [(('c', 4), '(J)I(G)')],
+                [(('b', 10), 'LOO(M)S')],
+                [
+                    (('l', 2), 'DOWEL'),
+                    (('i', 5), '(RIP)E')
+                ],
+                [(('o', 1), 'R(E)ASON')],
+                [(('m', 13), '(T)AX')],
+                [(('l', 15), 'E(X)IT')],
+                [
+                    (('a', 14), 'I(S)'),
+                    (('a', 14), 'ID')
+                ],
+                [(('j', 7), 'SE(*)K')]
+            ]
+        ]
+    ]
+
+    notated_move_set_list = helpers.recover_game('sample_input30.json')
+
+    assert expected_notated_move_set_list == notated_move_set_list
+
+def test_get_best_move():
+    game = scrabble_game.ScrabbleGame(4)
+
+    game.cheat_create_rack_word('SCRABBL', 0)
+    game.cheat_create_rack_word('ODING', 1)
+    game.cheat_create_rack_word('PILE', 2)
+
+    game.place_word('SCRAB', ('h', 8), False, False)
+    game.place_word('(C)ODING', ('i', 8), True, False)
+    game.place_word('PILE', ('g', 5), True, False)
+
+    score, move_tuple = helpers.get_best_move(game)
+
+    assert score > 0

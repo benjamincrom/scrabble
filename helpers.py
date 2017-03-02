@@ -27,7 +27,12 @@ def recover_game(input_filename):
 
     move_set_list = list(move_set_generator)
 
-    return get_move_set_notation(move_set_list, reference_game)
+    notated_move_set_list = [
+        get_move_set_notation(move_set, reference_game)
+        for move_set in move_set_list
+    ]
+
+    return notated_move_set_list
 
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}
@@ -283,7 +288,7 @@ def get_move_set_generator(new_game, reference_game, move_list):
                                               reference_game,
                                               move_list_copy)
 
-def get_move_word(word_location_set, game):
+def get_move_word(word_location_set, move_location_set, game):
     move_word = ''
     word_location_list = sorted(word_location_set)
     notation_location = word_location_list[0]
@@ -315,7 +320,10 @@ def get_move_set_notation(move_set, reference_game):
     ]
 
     for move in move_set:
-        player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
+        player_to_move_id = (
+            new_game.move_number % len(new_game.player_rack_list)
+        )
+
         move_location_set = set(location for _, location in move)
         rack_word = ''.join([letter for letter, _ in move])
         new_game.cheat_create_rack_word(rack_word, player_to_move_id)
@@ -330,7 +338,9 @@ def get_move_set_notation(move_set, reference_game):
         for word_location_set in word_set:
             if word_location_set:
                 notation_word_list.append(
-                    get_move_word(word_location_set, new_game)
+                    get_move_word(word_location_set,
+                                  move_location_set,
+                                  new_game)
                 )
 
         player_words_notation_list.append(notation_word_list)

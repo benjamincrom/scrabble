@@ -9,7 +9,7 @@ import helpers
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        for move_list in helpers.recover_game(sys.argv[1]):
-            print('{}\n\n'.format(move_list))
+        for move_set in helpers.recover_game(sys.argv[1]):
+            print('{}\n\n'.format(move_set))
     else:
-        print('Usage: ./recover_scrabble_game [INPUT_FILENAME]')
+        print('Usage: python3 recover_scrabble_game.py [INPUT_FILENAME]')

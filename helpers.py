@@ -109,15 +109,6 @@ def get_all_board_tiles(game):
                for square_tuple in game.board.board_square_dict.items()
                if square_tuple[1].tile)
 
-def move_is_board_subset(move_set, board):
-    for tile, location in move_set:
-        move_letter = tile.letter
-        board_tile = board[location]
-        if not board_tile or board_tile.letter != move_letter:
-            return False
-
-    return True
-
 def boards_are_equivalent(board_1, board_2):
     return str(board_1) == str(board_2)
 
@@ -290,6 +281,31 @@ def get_move_set_generator(new_game, reference_game, move_list):
                                               reference_game,
                                               move_list_copy)
 
+def get_move_word(word_location_set, game):
+    move_word = ''
+    word_location_list = sorted(word_location_set)
+    notation_location = word_location_list[0]
+    parens_flag = False
+
+    for location in word_location_list:
+        tile = game.board[location]
+        if tile:
+            if location not in move_location_set:
+                if not parens_flag:
+                    move_word += '('
+                    parens_flag = True
+            else:
+                if parens_flag:
+                    move_word += ')'
+                    parens_flag = False
+
+            move_word += tile.letter
+
+    if parens_flag:
+        move_word += ')'
+
+    return notation_location, move_word
+
 def get_move_set_notation(move_set, reference_game):
     new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
     word_notation_list_list = [
@@ -311,29 +327,9 @@ def get_move_set_notation(move_set, reference_game):
         word_set = get_word_set(new_game.board, move_location_set)
         for word_location_set in word_set:
             if word_location_set:
-                move_word = ''
-                word_location_list = sorted(word_location_set)
-                notation_location = word_location_list[0]
-                parens_flag = False
-
-                for location in word_location_list:
-                    tile = new_game.board[location]
-                    if tile:
-                        if location not in move_location_set:
-                            if not parens_flag:
-                                move_word += '('
-                                parens_flag = True
-                        else:
-                            if parens_flag:
-                                move_word += ')'
-                                parens_flag = False
-
-                        move_word += tile.letter
-
-                if parens_flag:
-                    move_word += ')'
-
-                notation_word_list.append((notation_location, move_word))
+                notation_word_list.append(
+                    get_move_word(word_location_set, new_game)
+                )
 
         player_words_notation_list.append(notation_word_list)
 
@@ -435,6 +431,15 @@ def move_is_legal(board, move_number, letter_location_set, player_rack=None):
                                                       player_rack_letter_list)
 
     return return_bool
+
+def move_is_board_subset(move_set, board):
+    for tile, location in move_set:
+        move_letter = tile.letter
+        board_tile = board[location]
+        if not board_tile or board_tile.letter != move_letter:
+            return False
+
+    return True
 
 def move_touches_tile(move_number, board, location_set):
     if move_number == 0:

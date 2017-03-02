@@ -1,5 +1,5 @@
 import scrabble_game
-import scrabble_recover
+import helpers
 
 def test_get_best_move():
     scrabble_game.input = lambda x: 'N'
@@ -14,6 +14,6 @@ def test_get_best_move():
     game.place_word('PILE', ('g', 5), True)
 
     print(game)
-    print(scrabble_recover.get_best_move(game))
+    print(helpers.get_best_move(game))
 
 test_get_best_move()

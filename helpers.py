@@ -25,7 +25,9 @@ def recover_game(input_filename):
                                                 reference_game,
                                                 [])
 
-    return list(move_set_generator)
+    move_set_list = list(move_set_generator)
+
+    return get_move_set_notation(move_set_list, reference_game)
 
 def initialize_new_board_square_dict():
     initial_board_square_dict = {}

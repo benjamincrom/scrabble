@@ -247,7 +247,7 @@ def get_best_move(game):
         for location in sorted(game.board.board_square_dict)
     ]
 
-    process_pool = multiprocessing.Pool(8)
+    process_pool = multiprocessing.Pool(config.NUM_PROCESSING_CORES)
     result_list = process_pool.map(get_location_best_move_helper,
                                    input_arguments_list)
 

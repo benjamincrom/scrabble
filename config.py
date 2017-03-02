@@ -12,6 +12,8 @@ LOWEST_COLUMN_CHARACTER = 'a'
 
 DICTIONARY_FILENAME = 'dictionary.csv'
 
+NUM_PROCESSING_CORES = 8
+
 WORD_SCORE_MULT_LOCATION_DICT = {  # Lowercase letters are used to distinguish
     ('b', 2): 2,                   # locations from tile letter symbols
     ('b', 14): 2,

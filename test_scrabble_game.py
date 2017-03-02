@@ -453,6 +453,7 @@ def test_recover_game():
         'sample_input_files/sample_input30.json'
     )
 
+    import pdb; pdb.set_trace()  # breakpoint 3b64e0b4 //
     assert expected_notated_move_set_list == notated_move_set_list
 
 def test_get_best_move():
@@ -466,6 +467,10 @@ def test_get_best_move():
     game.place_word('(C)ODING', ('i', 8), True, False)
     game.place_word('PILE', ('g', 5), True, False)
 
-    score, _ = helpers.get_best_move(game)
+    game.player_rack_list[3] = []
+    game.cheat_create_rack_word('ADPOSTN', 3)
+
+    import pdb; pdb.set_trace()  # breakpoint 6b000f4f //
+    score, move_tuple = helpers.get_best_move(game)
 
     assert score > 0

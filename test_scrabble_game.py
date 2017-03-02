@@ -481,7 +481,7 @@ def test_get_best_move():
     game.player_rack_list[3] = []
     game.cheat_create_rack_word('ADPOSTN', 3)
 
-    import pdb; pdb.set_trace()  # breakpoint 6b000f4f //
     score, move_tuple = helpers.get_best_move(game)
 
-    assert score > 0
+    assert (score, move_tuple) == (12, (('f', 5), 'OS', True))
+

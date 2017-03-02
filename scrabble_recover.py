@@ -165,10 +165,9 @@ def all_created_words_are_english(board, letter_location_set):
     for word_location_set in word_set:
         if word_location_set:
             this_word_str = ''
-
-            for location in word_location_set:
+            for location in sorted(word_location_set):
                 square = board.board_square_dict[location]
-                this_word_str += square.tile.letter
+                this_word_str += str(square.tile.letter)
 
             if this_word_str.lower() not in english_dictionary_set:
                 return False
@@ -226,7 +225,7 @@ def get_best_move(game):
         for location in sorted(game.board.board_square_dict)
     ]
 
-    process_pool = multiprocessing.Pool(4)
+    process_pool = multiprocessing.Pool(8)
     result_list = process_pool.map(get_location_best_move_helper,
                                    input_arguments_list)
 

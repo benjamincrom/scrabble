@@ -1,12 +1,6 @@
-'''
-scrabble_recover.py -- contains functions that recover a game's moves given
-                       final board and score list
-
-Usage:
-    ./scrabble_recover [INPUT_FILENAME]
-
-    See sample_input_files/ for examples of correctly formatted input files
-'''
+"""helper.py -- contains all side-effect free functions used by classes
+                in scrabble_game.py
+"""
 import collections
 import datetime
 import itertools

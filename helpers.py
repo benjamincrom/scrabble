@@ -7,8 +7,6 @@ import itertools
 import json
 import multiprocessing
 import operator
-import random
-import sys
 
 import config
 import scrabble_game

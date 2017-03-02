@@ -203,7 +203,6 @@ def get_location_best_move(game, location, word_list):
 
     high_score = 0
     best_move = None
-    print(str(location) + '\t \t \t' + str(datetime.datetime.now()))
     for word in word_list:
         for is_vertical in [True, False]:
             temp_game = copy_game(game)

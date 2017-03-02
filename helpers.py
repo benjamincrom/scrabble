@@ -1,5 +1,6 @@
-"""helper.py -- contains all side-effect free functions used by classes
-                in scrabble_game.py
+"""
+helper.py -- contains all side-effect free functions used by classes
+             in scrabble_game.py
 """
 import collections
 import datetime

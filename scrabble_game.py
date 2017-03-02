@@ -1,4 +1,6 @@
-"""scrabble_game.py -- contains classes that model scrabble game"""
+"""
+scrabble_game.py -- contains classes that model scrabble game
+"""
 import random
 
 import config

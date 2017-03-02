@@ -1,5 +1,6 @@
-"""test_scrabble_game.py -- contains py.test functions that test
-                            scrabble_game.py
+"""
+test_scrabble_game.py -- contains py.test functions that test
+                         scrabble_game.py
 """
 import helpers
 import scrabble_game

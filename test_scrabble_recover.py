@@ -12,10 +12,8 @@ def test_get_best_move():
     game.place_word('(C)ODING', ('i', 8), True, False)
     game.place_word('PILE', ('g', 5), True, False)
 
-    best_move_tuple = helpers.get_best_move(game)
-    print(game)
-    print(best_move_tuple)
-    print(best_move_tuple[0])
-    assert best_move_tuple[0] > 0
+    score, move_tuple = helpers.get_best_move(game)
+
+    assert score > 0
 
 test_get_best_move()

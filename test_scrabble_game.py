@@ -402,7 +402,7 @@ def test_challenge_neither():
 
 def test_recover_game():
     expected_notated_move_set_list = [
-        [  
+        [
             [
                 [(('h', 8), '*OWDY')],
                 [(('e', 10), 'R(A)ZE')],
@@ -450,9 +450,9 @@ def test_recover_game():
     ]
 
     frozen_expected_notated_move_set_list = [
-      frozenset(move) for notated_move_set in expected_notated_move_set_list
-                      for move_set in notated_move_set
-                      for move in move_set
+        frozenset(move) for notated_move_set in expected_notated_move_set_list
+                        for move_set in notated_move_set
+                        for move in move_set
     ]
 
     notated_move_set_list = helpers.recover_game(
@@ -484,4 +484,3 @@ def test_get_best_move():
     score, move_tuple = helpers.get_best_move(game)
 
     assert (score, move_tuple) == (12, (('f', 5), 'OS', True))
-

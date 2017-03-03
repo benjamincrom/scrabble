@@ -180,8 +180,7 @@ def get_legal_move_set(new_game, reference_game):
 
     legal_move_set = set()
     for move_set in all_possible_moves_set:
-        if (move_is_board_subset(move_set, reference_game.board) and
-                move_is_legal(new_game.board, new_game.move_number, move_set)):
+        if move_is_legal(new_game.board, new_game.move_number, move_set):
             temp_board = copy_board(new_game.board)
             for tile, location in move_set:
                 temp_board[location] = tile
@@ -453,15 +452,6 @@ def move_is_legal(board, move_number, letter_location_set, player_rack=None):
                                                       player_rack_letter_list)
 
     return return_bool
-
-def move_is_board_subset(move_set, board):
-    for tile, location in move_set:
-        move_letter = tile.letter
-        board_tile = board[location]
-        if not board_tile or board_tile.letter != move_letter:
-            return False
-
-    return True
 
 def move_touches_tile(move_number, board, location_set):
     if move_number == 0:

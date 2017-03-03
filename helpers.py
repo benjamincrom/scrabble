@@ -222,7 +222,6 @@ def get_location_best_move(game, location, word_list):
                 location_set = set(location
                                    for _, location in letter_location_set)
 
-                last_score = temp_game.player_score_list_list[player_to_move_id][-1]
                 if all_created_words_are_english(temp_game.board,
                                                  location_set):
                     player_score_list = (

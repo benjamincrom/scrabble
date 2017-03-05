@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(name='scrabble',
       version='0.4',
-      description='Scrabble Game with move recovery and best move analysis',
+      description='Scrabble game with move recovery and best move analysis',
       url='https://github.com/benjamincrom/scrabble',
       author='Benjamin B. Crom',
       author_email='benjamincrom@gmail.com',

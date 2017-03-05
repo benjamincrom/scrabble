@@ -1,6 +1,8 @@
 """
 test_scrabble.py -- contains py.test functions that test scrabble library
 """
+import os
+
 import scrabble
 
 def test_decrement_letter():
@@ -454,8 +456,10 @@ def test_recover_game():
                         for move in move_set
     ]
 
+    current_directory = os.path.dirname(__file__)
     notated_move_set_list = scrabble.main.recover_game(
-        'scrabble/tests/sample_input_files/sample_input30.json'
+        os.path.join(current_directory,
+                     'sample_input_files/sample_input30.json')
     )
 
     frozen_notated_move_set_list = [

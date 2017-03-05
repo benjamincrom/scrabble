@@ -84,9 +84,11 @@ Player 4: 0
 ### Make Move
 * __scrabble.main.ScrabbleGame.place\_word(__*word, start_location, is_vertical_move*__)__
 
-Place a word from the rack of the next player onto the board.  You will be
-prompted as to whether or not the move was successfully challenged.  If the
-move is successful the method will return `True`.
+Place a word from the rack of the next player onto the board.  If the
+move is legal you will be prompted as to whether or not the move was
+successfully challenged.  If the move goe through through then the method will
+return `True`.  If the move is illegal you will not receive a challenge prompt
+and the method will return `False`.
 ```
 >>> game.place_word(word='GATE', start_location=('h', 8), is_vertical_move=False)
 Challenge successful (Y/N)N

@@ -1,4 +1,4 @@
-# Scrabble Recover
+# Recover Scrabble Game
 Recover the moves of a Scrabble game given only the 
 final board and the list of player scores for each move.
 
@@ -9,7 +9,7 @@ python3 recover_scrabble_game.py [INPUT_FILENAME]
 
 See `sample_input_files/` for examples of correctly formatted input files
 
-# Scrabble Game
+# Create Scrabble Game Object
 Model a Scrabble game 
 ```
 >>> import scrabble_game
@@ -40,6 +40,7 @@ Player 2: 0
 Player 3: 0
 Player 4: 0
 
+# Make Move
 >>> game.place_word(word='GATE', start_location=('h', 8), is_vertical_move=False)
 Challenge successful (Y/N)N
 True
@@ -71,7 +72,7 @@ Player 3: 0
 Player 4: 0
 ```
 
-# Find Best Move
+# Find Best Move (Brute Force)
 Find the best move via brute-force search
 ```
 >>> import helpers

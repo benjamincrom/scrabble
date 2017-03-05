@@ -49,7 +49,7 @@ for examples of correctly formatted input files
 ## Play Scrabble Game
 ### Create a new Scrabble game object
 
-* __*ScrabbleGame(num_players)*__
+* __ScrabbleGame(__*num_players*__)__
 
 ```
 >>> from scrabble.main import ScrabbleGame
@@ -82,7 +82,7 @@ Player 4: 0
 ```
 
 ### Make Move
-* __ScrabbleGame.place\_word__*(word, start_location, is_vertical_move)*
+* __ScrabbleGame.place\_word(__*word, start_location, is_vertical_move*__)__
 
 Place a word from the rack of the next player onto the board.  You will be
 prompted as to whether or not the move was successfully challenged.  If the
@@ -130,7 +130,7 @@ Find the best move via brute-force search
 ```
 
 ### Exchange Tiles
-* __ScrabbleGame.exchange__*(letter_list)*
+* __ScrabbleGame.exchange(__*letter_list*__)__
 
 Exchange up to all a player's rack tiles as long as the bag has at least
 one entire rack of tiles remaining.
@@ -166,7 +166,7 @@ Player 4: 0
 ```
 
 ### Conclude Game
-* __ScrabbleGame.conclude\_game__*(empty_rack_player_number=None)*
+* __ScrabbleGame.conclude\_game(__*empty_rack_player_number=None*__)__
 
 Calculates final scores and declares a winner.  This method will automatically
 be called and bonuses automatically awared if one player has an empty rack

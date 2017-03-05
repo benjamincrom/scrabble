@@ -81,14 +81,18 @@ def get_location_best_move(game, location, word_list):
             temp_game = copy_game(game)
             if temp_game.place_word(word, location, is_vertical, False):
                 letter_location_set = (
-                    get_word_letter_location_set(word, location, is_vertical)
+                    helpers.get_word_letter_location_set(
+                        word,
+                        location,
+                        is_vertical
+                    )
                 )
 
                 location_set = set(location
                                    for _, location in letter_location_set)
 
-                if all_created_words_are_english(temp_game.board,
-                                                 location_set):
+                if helpers.all_created_words_are_english(temp_game.board,
+                                                         location_set):
                     player_score_list = (
                         temp_game.player_score_list_list[player_to_move_id]
                     )

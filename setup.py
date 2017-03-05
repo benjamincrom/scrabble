@@ -10,6 +10,6 @@ setup(name='scrabble',
       license='MIT',
       packages=['scrabble'],
       setup_requires=['pytest-runner'],
-      scripts=['bin/recover_scrabble_game']
+      scripts=['bin/recover_scrabble_game'],
       tests_require=['pytest'],
       zip_safe=False)

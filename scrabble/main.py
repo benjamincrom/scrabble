@@ -1,10 +1,158 @@
 """
 main.py -- contains classes that model scrabble game
 """
+import itertools
+import multiprocessing
 import random
 
 from . import config
 from . import helpers
+
+def get_move_set_generator(new_game, reference_game, move_list):
+    legal_move_set = get_legal_move_set(new_game, reference_game)
+
+    player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
+    player_score_list = reference_game.player_score_list_list[player_to_move_id]
+    player_move_number = new_game.move_number // len(new_game.player_rack_list)
+    target_score = player_score_list[player_move_number]
+
+    next_move_set = set(
+        frozenset((tile.letter, location) for tile, location in move_set)
+        for score, move_set in legal_move_set
+        if score == target_score
+    )
+
+    for next_move in next_move_set:
+        new_game_copy = copy_game(new_game)
+        move_list_copy = move_list[:]
+
+        player_to_move_id = (
+            new_game_copy.move_number % len(new_game_copy.player_rack_list)
+        )
+
+        next_move_str = ''.join(letter for letter, location in next_move)
+        new_game_copy.cheat_create_rack_word(next_move_str, player_to_move_id)
+        new_game_copy.next_player_move(next_move, False)
+        move_list_copy.append(next_move)
+
+        if new_game_copy.move_number == reference_game.move_number:
+            if boards_are_equivalent(reference_game.board, new_game_copy.board):
+                yield move_list_copy
+
+        else:
+            yield from get_move_set_generator(new_game_copy,
+                                              reference_game,
+                                              move_list_copy)
+
+def get_best_move(game):
+    player_to_move_id = game.move_number % len(game.player_rack_list)
+    player_rack = game.player_rack_list[player_to_move_id]
+    player_letter_list = [tile.letter for tile in player_rack]
+
+    word_list = []
+    for i in range(1, config.PLAYER_RACK_SIZE + 1):
+        for this_list in itertools.permutations(player_letter_list, i):
+            this_word = ''.join(this_list)
+            word_list.append(this_word)
+
+    input_arguments_list = [
+        (game, location, word_list)
+        for location in sorted(game.board.board_square_dict)
+    ]
+
+    process_pool = multiprocessing.Pool(config.NUM_PROCESSING_CORES)
+    result_list = process_pool.map(get_location_best_move_helper,
+                                   input_arguments_list)
+
+    return max(result_list)
+
+
+def get_location_best_move_helper(argument_list):
+    return get_location_best_move(*argument_list)
+
+def get_location_best_move(game, location, word_list):
+    player_to_move_id = game.move_number % len(game.player_rack_list)
+
+    high_score = 0
+    best_move = None
+    for word in word_list:
+        for is_vertical in [True, False]:
+            temp_game = copy_game(game)
+            if temp_game.place_word(word, location, is_vertical, False):
+                letter_location_set = (
+                    get_word_letter_location_set(word, location, is_vertical)
+                )
+
+                location_set = set(location
+                                   for _, location in letter_location_set)
+
+                if all_created_words_are_english(temp_game.board,
+                                                 location_set):
+                    player_score_list = (
+                        temp_game.player_score_list_list[player_to_move_id]
+                    )
+
+                    word_score = player_score_list[-1]
+                    if word_score > high_score:
+                        best_move = (location, word, is_vertical)
+                        high_score = word_score
+
+    return high_score, best_move
+
+def get_legal_move_set(new_game, reference_game):
+    all_possible_moves_set = helpers.get_all_possible_moves_set(new_game,
+                                                                reference_game)
+
+    legal_move_set = set()
+    for move_set in all_possible_moves_set:
+        if helpers.move_is_legal(new_game.board, new_game.move_number, move_set):
+            temp_board = copy_board(new_game.board)
+            for tile, location in move_set:
+                temp_board[location] = tile
+
+            legal_move_set.add(
+                (helpers.score_move(move_set, temp_board), move_set)
+            )
+
+    return legal_move_set
+
+def copy_board(input_board):
+    input_square_dict = input_board.board_square_dict
+
+    new_board = ScrabbleBoard()
+    new_square_dict = new_board.board_square_dict
+
+    for location, square in input_square_dict.items():
+        if square.tile:
+            new_board_square = new_square_dict[location]
+            new_board_square.letter_multiplier = square.letter_multiplier
+            new_board_square.word_multiplier = square.word_multiplier
+            new_board_square.tile = ScrabbleTile(
+                square.tile.letter
+            )
+
+    return new_board
+
+def copy_game(input_game):
+    new_game = ScrabbleGame(len(input_game.player_rack_list))
+    new_game.board = copy_board(input_game.board)
+    new_game.move_number = input_game.move_number
+    new_game.player_score_list_list = [
+        input_player_score_list[:]
+        for input_player_score_list in input_game.player_score_list_list
+    ]
+
+    new_player_rack_list = []
+    for player_rack in input_game.player_rack_list:
+        new_rack = []
+        for tile in player_rack:
+            new_rack.append(ScrabbleTile(tile.letter))
+
+        new_player_rack_list.append(new_rack)
+
+    new_game.player_rack_list = new_player_rack_list
+
+    return new_game
 
 def get_move_set_notation(move_set, reference_game):
     new_game = ScrabbleGame(len(reference_game.player_rack_list))
@@ -45,46 +193,10 @@ def get_new_tile_bag():
             for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
             for _ in range(magnitude)]
 
-def copy_board(input_board):
-    input_square_dict = input_board.board_square_dict
-
-    new_board = ScrabbleBoard()
-    new_square_dict = new_board.board_square_dict
-
-    for location, square in input_square_dict.items():
-        if square.tile:
-            new_board_square = new_square_dict[location]
-            new_board_square.letter_multiplier = square.letter_multiplier
-            new_board_square.word_multiplier = square.word_multiplier
-            new_board_square.tile = ScrabbleTile(
-                square.tile.letter
-            )
-
-    return new_board
-
-def copy_game(input_game):
-    new_game = ScrabbleGame(len(input_game.player_rack_list))
-    new_game.board = copy_board(input_game.board)
-    new_game.move_number = input_game.move_number
-    new_game.player_score_list_list = [
-        input_player_score_list[:]
-        for input_player_score_list in input_game.player_score_list_list
-    ]
-
-    new_player_rack_list = []
-    for player_rack in input_game.player_rack_list:
-        new_rack = []
-        for tile in player_rack:
-            new_rack.append(ScrabbleTile(tile.letter))
-
-        new_player_rack_list.append(new_rack)
-
-    new_game.player_rack_list = new_player_rack_list
-
-    return new_game
-
 def read_input_file(input_filename):
-    board_character_array, player_score_list_list = load_file(input_filename)
+    board_character_array, player_score_list_list = helpers.load_file(
+        input_filename
+    )
 
     num_players = len(player_score_list_list)
     game = ScrabbleGame(num_players)
@@ -133,9 +245,9 @@ def recover_game(input_filename):
         len(reference_game.player_rack_list)
     )
 
-    move_set_generator = helpers.get_move_set_generator(new_game,
-                                                        reference_game,
-                                                        [])
+    move_set_generator = get_move_set_generator(new_game,
+                                                reference_game,
+                                                [])
 
     move_set_list = list(move_set_generator)
 

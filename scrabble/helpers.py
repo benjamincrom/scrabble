@@ -5,7 +5,6 @@ helper.py -- contains all side-effect free functions which are used by classes
 import collections
 import itertools
 import json
-import multiprocessing
 import operator
 
 from . import config
@@ -13,6 +12,28 @@ from . import config
 with open(config.DICTIONARY_FILENAME) as filehandle:
     english_dictionary_set = set(word.strip()
                                  for word in filehandle.readlines())
+
+def get_all_possible_moves_set(new_game, reference_game):
+    game_tile_location_set = get_all_board_tiles(new_game)
+    reference_tile_location_set = get_all_board_tiles(reference_game)
+
+    search_set = set()
+    for reference_tile, reference_location in reference_tile_location_set:
+        flag = True
+        for game_tile, game_location in game_tile_location_set:
+            if (game_tile.letter == reference_tile.letter and
+                    game_location == reference_location):
+                flag = False
+
+        if flag:
+            search_set.add((reference_tile, reference_location))
+
+    return get_combinations(search_set)
+
+def get_all_board_tiles(game):
+    return set((square_tuple[1].tile, square_tuple[0])  # tile then location
+               for square_tuple in game.board.board_square_dict.items()
+               if square_tuple[1].tile)
 
 def get_combinations(input_iterable):
     combination_set = set()
@@ -47,47 +68,8 @@ def load_file(input_filename):
 
     return board_character_array, player_score_list_list
 
-def get_all_board_tiles(game):
-    return set((square_tuple[1].tile, square_tuple[0])  # tile then location
-               for square_tuple in game.board.board_square_dict.items()
-               if square_tuple[1].tile)
-
 def boards_are_equivalent(board_1, board_2):
     return str(board_1) == str(board_2)
-
-def get_all_possible_moves_set(new_game, reference_game):
-    game_tile_location_set = get_all_board_tiles(new_game)
-    reference_tile_location_set = get_all_board_tiles(reference_game)
-
-    search_set = set()
-    for reference_tile, reference_location in reference_tile_location_set:
-        flag = True
-        for game_tile, game_location in game_tile_location_set:
-            if (game_tile.letter == reference_tile.letter and
-                    game_location == reference_location):
-                flag = False
-
-        if flag:
-            search_set.add((reference_tile, reference_location))
-
-    return get_combinations(search_set)
-
-def get_legal_move_set(new_game, reference_game):
-    all_possible_moves_set = get_all_possible_moves_set(new_game,
-                                                        reference_game)
-
-    legal_move_set = set()
-    for move_set in all_possible_moves_set:
-        if move_is_legal(new_game.board, new_game.move_number, move_set):
-            temp_board = copy_board(new_game.board)
-            for tile, location in move_set:
-                temp_board[location] = tile
-
-            legal_move_set.add(
-                (score_move(move_set, temp_board), move_set)
-            )
-
-    return legal_move_set
 
 def all_created_words_are_english(board, letter_location_set):
     word_set = get_word_set(board, letter_location_set)
@@ -103,96 +85,6 @@ def all_created_words_are_english(board, letter_location_set):
                 return False
 
     return True
-
-def get_location_best_move(game, location, word_list):
-    player_to_move_id = game.move_number % len(game.player_rack_list)
-
-    high_score = 0
-    best_move = None
-    for word in word_list:
-        for is_vertical in [True, False]:
-            temp_game = copy_game(game)
-            if temp_game.place_word(word, location, is_vertical, False):
-                letter_location_set = (
-                    get_word_letter_location_set(word, location, is_vertical)
-                )
-
-                location_set = set(location
-                                   for _, location in letter_location_set)
-
-                if all_created_words_are_english(temp_game.board,
-                                                 location_set):
-                    player_score_list = (
-                        temp_game.player_score_list_list[player_to_move_id]
-                    )
-
-                    word_score = player_score_list[-1]
-                    if word_score > high_score:
-                        best_move = (location, word, is_vertical)
-                        high_score = word_score
-
-    return high_score, best_move
-
-def get_location_best_move_helper(argument_list):
-    return get_location_best_move(*argument_list)
-
-def get_best_move(game):
-    player_to_move_id = game.move_number % len(game.player_rack_list)
-    player_rack = game.player_rack_list[player_to_move_id]
-    player_letter_list = [tile.letter for tile in player_rack]
-
-    word_list = []
-    for i in range(1, config.PLAYER_RACK_SIZE + 1):
-        for this_list in itertools.permutations(player_letter_list, i):
-            this_word = ''.join(this_list)
-            word_list.append(this_word)
-
-    input_arguments_list = [
-        (game, location, word_list)
-        for location in sorted(game.board.board_square_dict)
-    ]
-
-    process_pool = multiprocessing.Pool(config.NUM_PROCESSING_CORES)
-    result_list = process_pool.map(get_location_best_move_helper,
-                                   input_arguments_list)
-
-    return max(result_list)
-
-def get_move_set_generator(new_game, reference_game, move_list):
-    legal_move_set = get_legal_move_set(new_game, reference_game)
-
-    player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-    player_score_list = reference_game.player_score_list_list[player_to_move_id]
-    player_move_number = new_game.move_number // len(new_game.player_rack_list)
-    target_score = player_score_list[player_move_number]
-
-    next_move_set = set(
-        frozenset((tile.letter, location) for tile, location in move_set)
-        for score, move_set in legal_move_set
-        if score == target_score
-    )
-
-    for next_move in next_move_set:
-        new_game_copy = copy_game(new_game)
-        move_list_copy = move_list[:]
-
-        player_to_move_id = (
-            new_game_copy.move_number % len(new_game_copy.player_rack_list)
-        )
-
-        next_move_str = ''.join(letter for letter, location in next_move)
-        new_game_copy.cheat_create_rack_word(next_move_str, player_to_move_id)
-        new_game_copy.next_player_move(next_move, False)
-        move_list_copy.append(next_move)
-
-        if new_game_copy.move_number == reference_game.move_number:
-            if boards_are_equivalent(reference_game.board, new_game_copy.board):
-                yield move_list_copy
-
-        else:
-            yield from get_move_set_generator(new_game_copy,
-                                              reference_game,
-                                              move_list_copy)
 
 def get_move_word(word_location_set, move_location_set, game):
     move_word = ''

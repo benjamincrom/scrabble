@@ -10,12 +10,13 @@ from . import helpers
 
 def get_move_set_generator(new_game, reference_game, move_list):
     legal_move_set = get_legal_move_set(new_game, reference_game)
-
     player_to_move_id = new_game.move_number % len(new_game.player_rack_list)
-    player_score_list = reference_game.player_score_list_list[player_to_move_id]
+    player_score_list = reference_game.player_score_list_list[
+        player_to_move_id
+    ]
+
     player_move_number = new_game.move_number // len(new_game.player_rack_list)
     target_score = player_score_list[player_move_number]
-
     next_move_set = set(
         frozenset((tile.letter, location) for tile, location in move_set)
         for score, move_set in legal_move_set

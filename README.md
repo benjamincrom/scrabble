@@ -86,7 +86,7 @@ Player 4: 0
 
 Place a word from the rack of the next player onto the board.  If the
 move is legal you will be prompted as to whether or not the move was
-successfully challenged.  If the move goe through through then the method will
+successfully challenged.  If the move goes through through then the method will
 return `True`.  If the move is illegal you will not receive a challenge prompt
 and the method will return `False`.
 ```

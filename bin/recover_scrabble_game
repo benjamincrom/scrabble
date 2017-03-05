@@ -8,11 +8,11 @@ Usage:
 """
 import sys
 
-from scrabble.helpers import recover_game
+from scrabble.main import recover_game
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        for move_list in scrabble.helpers.recover_game(sys.argv[1]):
+        for move_list in recover_game(sys.argv[1]):
             print('{}\n\n'.format(move_list))
     else:
         print('Usage: ./recover_scrabble_game [INPUT_FILENAME]')

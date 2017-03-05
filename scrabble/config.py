@@ -1,10 +1,15 @@
 """
 config.py -- contains all constants needed by scrabble module
 """
+import json
+import os
+
 BOARD_NUM_COLUMNS = 15
 BOARD_NUM_ROWS = 15
 PLAYER_RACK_SIZE = 7
 BINGO_SCORE = 50
+DICTIONARY_FILENAME = 'dictionary.json'
+RESOURCE_PACKAGE = 'scrabble'
 
 START_SQUARE_CHARACTER = '★'
 BLANK_SQUARE_CHARACTER = '_'
@@ -140,6 +145,14 @@ LETTER_DISTRIBUTION_DICT = {
 }
 
 # Derived constants
+CONTAINING_FOLDER = os.path.dirname(__file__)
+FULL_DICTIONARY_PATH = os.path.join(CONTAINING_FOLDER, DICTIONARY_FILENAME)
+
+with open(FULL_DICTIONARY_PATH) as filehandle:
+    FULL_DICTIONARY_STR = filehandle.read()
+
+ENGLISH_DICTIONARY_SET = set(json.loads(FULL_DICTIONARY_STR))
+
 LOWER_COLUMN_INT_BOUND = ord(LOWEST_COLUMN_CHARACTER)
 UPPER_COLUMN_INT_BOUND = LOWER_COLUMN_INT_BOUND + BOARD_NUM_COLUMNS - 1
 

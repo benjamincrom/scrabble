@@ -5,10 +5,8 @@ helpers.py -- contains all side-effect free functions which are used by classes
 import collections
 import itertools
 import json
-import operator
 
 from . import config
-from . import dictionary
 
 def get_all_possible_moves_set(new_game, reference_game):
     game_tile_location_set = get_all_board_tiles(new_game)
@@ -78,7 +76,7 @@ def all_created_words_are_english(board, letter_location_set):
                 square = board.board_square_dict[location]
                 this_word_str += str(square.tile.letter)
 
-            if this_word_str.lower() not in dictionary.english_dictionary_set:
+            if this_word_str.lower() not in config.ENGLISH_DICTIONARY_SET:
                 return False
 
     return True

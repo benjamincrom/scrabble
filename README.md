@@ -7,7 +7,7 @@ Usage:
 python3 recover_scrabble_game.py [INPUT_FILENAME]
 ```
 
-See `sample_input_files/` for examples of correctly formatted input files
+See `tests/sample_input_files/` for examples of correctly formatted input files
 
 # Create Scrabble Game Object
 Create a new Scrabble game 

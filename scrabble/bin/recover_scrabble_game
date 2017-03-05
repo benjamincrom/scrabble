@@ -3,7 +3,8 @@
 Usage:
     $ ./recover_scrabble_game [INPUT_FILENAME]
 
-    See sample_input_files/ for examples of correctly formatted input files
+    See tests/sample_input_files/ for examples of correctly formatted input
+    files
 """
 import sys
 import scrabble
@@ -13,4 +14,4 @@ if __name__ == '__main__':
         for move_list in scrabble.helpers.recover_game(sys.argv[1]):
             print('{}\n\n'.format(move_list))
     else:
-        print('Usage: ./recovver_scrabble_game [INPUT_FILENAME]')
+        print('Usage: ./recover_scrabble_game [INPUT_FILENAME]')

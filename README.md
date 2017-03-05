@@ -118,7 +118,7 @@ Find the best move via brute-force search
 __*ScrabbleGame.exchange(letter_list)*__
 
 Exchange up to all a player's rack tiles as long as the bag has at least
-one entire rack of tile remaining.
+one entire rack of tiles remaining.
 ```
 >>> game.exchange(letter_list=['E', 'I', 'S', 'O'])
 True

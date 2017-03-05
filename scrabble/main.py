@@ -36,7 +36,8 @@ def get_move_set_generator(new_game, reference_game, move_list):
         move_list_copy.append(next_move)
 
         if new_game_copy.move_number == reference_game.move_number:
-            if boards_are_equivalent(reference_game.board, new_game_copy.board):
+            if helpers.boards_are_equivalent(reference_game.board,
+                                             new_game_copy.board):
                 yield move_list_copy
 
         else:

@@ -82,7 +82,7 @@ Player 4: 0
 ```
 
 ### Make Move
-ScrabbleGame.*place_word*__(word, start_location, is_vertical_move)__
+__ScrabbleGame.place\_word__*(word, start_location, is_vertical_move)*
 
 Place a word from the rack of the next player onto the board.  You will be
 prompted as to whether or not the move was successfully challenged.  If the
@@ -120,7 +120,7 @@ Player 4: 0
 ```
 
 ### Find Best Move (Brute Force)
-ScrabbleGame.*get_best_move()*
+**ScrabbleGame.get_best_move()**
 
 Find the best move via brute-force search
 ```
@@ -130,7 +130,7 @@ Find the best move via brute-force search
 ```
 
 ### Exchange Tiles
-**ScrabbleGame.exchange**_(letter_list)_
+__ScrabbleGame.exchange__*(letter_list)*
 
 Exchange up to all a player's rack tiles as long as the bag has at least
 one entire rack of tiles remaining.
@@ -166,7 +166,7 @@ Player 4: 0
 ```
 
 ### Conclude Game
-`__ScrabbleGame.conclude\_game__*(empty_rack_player_number=None)*`
+__ScrabbleGame.conclude\_game__*(empty_rack_player_number=None)*
 
 Calculates final scores and declares a winner.  This method will automatically
 be called and bonuses automatically awared if one player has an empty rack

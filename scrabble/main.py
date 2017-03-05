@@ -47,29 +47,6 @@ def get_move_set_generator(new_game, reference_game, move_list):
                                               reference_game,
                                               move_list_copy)
 
-def get_best_move(game):
-    player_to_move_id = game.move_number % len(game.player_rack_list)
-    player_rack = game.player_rack_list[player_to_move_id]
-    player_letter_list = [tile.letter for tile in player_rack]
-
-    word_list = []
-    for i in range(1, config.PLAYER_RACK_SIZE + 1):
-        for this_list in itertools.permutations(player_letter_list, i):
-            this_word = ''.join(this_list)
-            word_list.append(this_word)
-
-    input_arguments_list = [
-        (game, location, word_list)
-        for location in sorted(game.board.board_square_dict)
-    ]
-
-    process_pool = multiprocessing.Pool(config.NUM_PROCESSING_CORES)
-    result_list = process_pool.map(get_location_best_move_helper,
-                                   input_arguments_list)
-
-    return max(result_list)
-
-
 def get_location_best_move_helper(argument_list):
     return get_location_best_move(*argument_list)
 
@@ -485,6 +462,28 @@ class ScrabbleGame(object):
                 winning_player_score
             )
         )
+
+    def get_best_move(self):
+        player_to_move_id = self.move_number % len(self.player_rack_list)
+        player_rack = self.player_rack_list[player_to_move_id]
+        player_letter_list = [tile.letter for tile in player_rack]
+
+        word_list = []
+        for i in range(1, config.PLAYER_RACK_SIZE + 1):
+            for this_list in itertools.permutations(player_letter_list, i):
+                this_word = ''.join(this_list)
+                word_list.append(this_word)
+
+        input_arguments_list = [
+            (self, location, word_list)
+            for location in sorted(self.board.board_square_dict)
+        ]
+
+        process_pool = multiprocessing.Pool(config.NUM_PROCESSING_CORES)
+        result_list = process_pool.map(get_location_best_move_helper,
+                                       input_arguments_list)
+
+        return max(result_list)
 
     def _get_new_player_rack_list(self, num_players):
         player_rack_list = []

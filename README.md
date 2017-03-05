@@ -7,7 +7,6 @@ Scrabble game.
 ```
 pip3 install scrabble
 ```
-
 ## Installing from source
 ```
 git clone git@github.com:benjamincrom/scrabble.git
@@ -106,12 +105,11 @@ Player 4: 0
 ```
 
 ### Find Best Move (Brute Force)
-__*helpers.get_best_move(game=game)*__
+__*ScrabbleGame.get_best_move()*__
 
 Find the best move via brute-force search
 ```
->>> import helpers
->>> helpers.get_best_move(game=game)
+>>> game.get_best_move()
 
 (27, (('l', 4), 'EGOISM', True))
 ```

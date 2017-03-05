@@ -1,19 +1,25 @@
+# Installation
+```
+python3 setup.py install
+```
+
 # Recover Scrabble Game
 Recover the moves of a Scrabble game given only the 
 final board and the list of player scores for each move.
 
 Usage:
 ```shell
-python3 recover_scrabble_game.py [INPUT_FILENAME]
+./bin/recover_scrabble_game [INPUT_FILENAME]
 ```
 
 See `tests/sample_input_files/` for examples of correctly formatted input files
 
-# Create Scrabble Game Object
-Create a new Scrabble game 
+# Play Scrabble Game
+### Create a new Scrabble game object
+`ScrabbleGame(num_players)`
 ```
->>> import scrabble_game
->>> game = scrabble_game.ScrabbleGame(num_players=4)
+>>> from scrabble.main import ScrabbleGame
+>>> game = ScrabbleGame(num_players=4)
 >>> game
   abcdefghijklmno
 1 _______________
@@ -41,8 +47,11 @@ Player 3: 0
 Player 4: 0
 ```
 
-# Make Move
-Place a word from the rack of the player-to-move onto the board
+### Make Move
+`ScrabbleGame.place_word(word, start_location, is_vertical_move)`
+Place a word from the rack of the next player onto the board.  You will be
+prompted as to whether or not the move was successfully challenged.  If the
+move is successful the method will return `True`.
 ```
 >>> game.place_word(word='GATE', start_location=('h', 8), is_vertical_move=False)
 Challenge successful (Y/N)N
@@ -75,11 +84,81 @@ Player 3: 0
 Player 4: 0
 ```
 
-# Find Best Move (Brute Force)
+### Find Best Move (Brute Force)
 Find the best move via brute-force search
 ```
 >>> import helpers
 >>> helpers.get_best_move(game)
 
 (27, (('l', 4), 'EGOISM', True))
+```
+
+### Exchange Tiles
+`ScrabbleGame.exchange(letter_list)`
+Exchange up to all a player's rack tiles as long as the bag has at least
+one entire rack of tile remaining.
+```
+>>> game
+  abcdefghijklmno
+1 _______________
+2 _______________
+3 _______________
+4 _______________
+5 _______________
+6 _______________
+7 _______________
+8 _______★_______
+9 _______________
+10_______________
+11_______________
+12_______________
+13_______________
+14_______________
+15_______________
+[[P, E, C, V, U, R, N], [O, L, S, N, T, N, O], [L, N, N, R, G, F, T], [U, Q, R, I, E, E, W]]
+Moves played: 0
+Player 1's move
+72 tiles remain in bag
+Player 1: 0
+Player 2: 0
+Player 3: 0
+Player 4: 0
+
+>>> game.exchange(letter_list=['P', 'E', 'C', 'V'])
+True
+
+>>> game
+  abcdefghijklmno
+1 _______________
+2 _______________
+3 _______________
+4 _______________
+5 _______________
+6 _______________
+7 _______________
+8 _______★_______
+9 _______________
+10_______________
+11_______________
+12_______________
+13_______________
+14_______________
+15_______________
+[[U, R, N, H, E, D, E], [O, L, S, N, T, N, O], [L, N, N, R, G, F, T], [U, Q, R, I, E, E, W]]
+Moves played: 1
+Player 2's move
+72 tiles remain in bag
+Player 1: 0
+Player 2: 0
+Player 3: 0
+Player 4: 0
+```
+
+### Conclude Game
+`ScrabbleGame.conclude_game(empty_rack_player_number=None)`
+Calculates final scores and winner.  Awards bonuses and penalties if one player
+has an empty rack (plays out) at the end of the game.
+```
+>>> game.conclude_game(empty_rack_player_number=1)
+Game Over! Player 1 wins with a score of 39
 ```

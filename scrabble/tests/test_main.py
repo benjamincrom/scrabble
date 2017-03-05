@@ -464,7 +464,9 @@ def test_recover_game():
                         for move in move_set
     ]
 
-    assert frozen_expected_notated_move_set_list == frozen_notated_move_set_list
+    assert (
+        frozen_expected_notated_move_set_list == frozen_notated_move_set_list
+    )
 
 def test_get_best_move():
     game = main.ScrabbleGame(4)

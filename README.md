@@ -1,6 +1,7 @@
 # Scrabble
 This package implements the game of Scrabble and also adds features that
-recover previous moves as well as determine the best next move.
+recover previous moves as well as determine the best next move for a given
+Scrabble game.
 
 ## Installation
 ```

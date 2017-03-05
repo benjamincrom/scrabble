@@ -1,3 +1,17 @@
+**Table of Contents**
+
+- [Scrabble](#)
+    - [Installing from pypi](#)
+    - [Installing from source](#)
+    - [Testing](#)
+    - [Recover Scrabble Game](#)
+    - [Play Scrabble Game](#)
+        - [Create a new Scrabble game object](#)
+        - [Make Move](#)
+        - [Find Best Move (Brute Force)](#)
+        - [Exchange Tiles](#)
+        - [Conclude Game](#)
+
 # Scrabble
 This package implements the game of Scrabble and also adds features that
 recover previous moves as well as determine the best next move for a given

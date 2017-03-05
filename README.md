@@ -12,7 +12,7 @@ Usage:
 ./bin/recover_scrabble_game [INPUT_FILENAME]
 ```
 
-See `tests/sample_input_files/` for examples of correctly formatted input files
+See `scrabble/tests/sample_input_files/` for examples of correctly formatted input files
 
 # Play Scrabble Game
 ### Create a new Scrabble game object

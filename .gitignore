@@ -1,5 +1,6 @@
-*.pyc
 *.cprof
+*.pyc
+
 .cache
 .coverage
 __pycache__

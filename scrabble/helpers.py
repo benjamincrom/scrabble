@@ -8,7 +8,7 @@ import json
 import multiprocessing
 import operator
 
-import config
+from . import config
 
 with open(config.DICTIONARY_FILENAME) as filehandle:
     english_dictionary_set = set(word.strip()

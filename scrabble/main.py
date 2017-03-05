@@ -3,8 +3,8 @@ main.py -- contains classes that model scrabble game
 """
 import random
 
-import config
-import helpers
+from . import config
+from . import helpers
 
 def get_move_set_notation(move_set, reference_game):
     new_game = ScrabbleGame(len(reference_game.player_rack_list))

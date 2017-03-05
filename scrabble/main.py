@@ -3,6 +3,7 @@ main.py -- contains classes that model scrabble game
 """
 import itertools
 import multiprocessing
+import operator
 import random
 
 from . import config
@@ -441,15 +442,7 @@ class ScrabbleGame(object):
             self._cancel_bonus_squares(letter_location_set)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:  # Final move
-                last_move_score_list = helpers.score_end_of_game(
-                    self.player_rack_list,
-                    player_to_move_id
-                )
-
-                for i, last_move_score in enumerate(last_move_score_list):
-                    self.player_score_list_list[i].append(last_move_score)
-
-                helpers.conclude_game(self.player_score_list_list)
+                self.conclude_game(empty_rack_id=player_to_move_id)
 
             self.move_number += 1
             return True
@@ -461,6 +454,33 @@ class ScrabbleGame(object):
         for character in word:
             tile = ScrabbleTile(letter=character)
             player_rack.append(tile)
+
+    def conclude_game(self, empty_rack_id=None):
+        if empty_rack_id:
+            last_move_score_list = helpers.score_playing_out(
+                self.player_rack_list,
+                empty_rack_id
+            )
+
+            for i, last_move_score in enumerate(last_move_score_list):
+                self.player_score_list_list[i].append(last_move_score)
+
+        player_score_total_list = [
+            sum(player_score_list)
+            for player_score_list in self.player_score_list_list
+        ]
+
+        winning_player_id, winning_player_score = max(
+            enumerate(player_score_total_list),
+            key=operator.itemgetter(1)
+        )
+
+        print(
+            'Game Over! Player {} wins with a score of {}'.format(
+                winning_player_id + 1,
+                winning_player_score
+            )
+        )
 
     def _get_new_player_rack_list(self, num_players):
         player_rack_list = []

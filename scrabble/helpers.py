@@ -1,6 +1,6 @@
 """
-helper.py -- contains all side-effect free functions which are used by classes
-             in main.py
+helpers.py -- contains all side-effect free functions which are used by classes
+              in main.py
 """
 import collections
 import itertools
@@ -111,23 +111,7 @@ def get_move_word(word_location_set, move_location_set, game):
 
     return notation_location, move_word
 
-def conclude_game(player_score_list_list):
-    player_score_total_list = [sum(player_score_list)
-                               for player_score_list in player_score_list_list]
-
-    winning_player_id, winning_player_score = max(
-        enumerate(player_score_total_list),
-        key=operator.itemgetter(1)
-    )
-
-    print(
-        'Game Over! Player {} wins with a score of {}'.format(
-            winning_player_id + 1,
-            winning_player_score
-        )
-    )
-
-def score_end_of_game(player_rack_list, empty_rack_id=None):
+def score_playing_out(player_rack_list, empty_rack_id):
     final_move_score_list = [0 for _ in range(len(player_rack_list))]
     all_rack_points = 0
 
@@ -136,8 +120,7 @@ def score_end_of_game(player_rack_list, empty_rack_id=None):
         final_move_score_list[i] += (-1 * rack_point_total)
         all_rack_points += rack_point_total
 
-    if empty_rack_id:  # Empty rack player gets all other racks' points
-        final_move_score_list[empty_rack_id] += all_rack_points
+    final_move_score_list[empty_rack_id] += all_rack_points
 
     return final_move_score_list
 

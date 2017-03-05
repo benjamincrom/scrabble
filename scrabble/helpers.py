@@ -360,7 +360,7 @@ def get_word_location_set(board, initial_location, use_vertical_words):
 
 def get_word_set(board, move_location_set):
     return set(
-        get_word_location_set(board, location, use_vertical_words=vertical_bool)
+        get_word_location_set(board, location, vertical_bool)
         for vertical_bool in [True, False]  # Search for vertical words created
         for location in move_location_set   # then for horizontal words
     )

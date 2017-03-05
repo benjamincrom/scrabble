@@ -419,9 +419,7 @@ class ScrabbleGame(object):
             self._cancel_bonus_squares(letter_location_set)
 
             if len(player_rack) == 0 and len(self.tile_bag) == 0:  # Final move
-                self.conclude_game(
-                    empty_rack_player_number=player_to_move_id + 1
-                )
+                self.conclude_game(empty_rack_id=player_to_move_id)
 
             self.move_number += 1
             return True
@@ -434,10 +432,8 @@ class ScrabbleGame(object):
             tile = ScrabbleTile(letter=character)
             player_rack.append(tile)
 
-    def conclude_game(self, empty_rack_player_number=None):
-        if empty_rack_player_number:
-            empty_rack_id = empty_rack_player_number - 1
-
+    def conclude_game(self, empty_rack_id=None):
+        if empty_rack_id:
             last_move_score_list = helpers.score_playing_out(
                 self.player_rack_list,
                 empty_rack_id

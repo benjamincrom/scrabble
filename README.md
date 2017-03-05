@@ -1,9 +1,13 @@
-# Installation
+# Scrabble
+This package implements the game of Scrabble and also adds features that
+recover previous moves as well as determine the best next move.
+
+## Installation
 ```
 python3 setup.py install
 ```
 
-# Recover Scrabble Game
+## Recover Scrabble Game
 Recover the moves of a Scrabble game given only the 
 final board and the list of player scores for each move.
 
@@ -12,9 +16,10 @@ Usage:
 ./bin/recover_scrabble_game [INPUT_FILENAME]
 ```
 
-See `scrabble/tests/sample_input_files/` for examples of correctly formatted input files
+See `scrabble/tests/sample_input_files/` for examples of correctly formatted
+input files
 
-# Play Scrabble Game
+## Play Scrabble Game
 ### Create a new Scrabble game object
 __*ScrabbleGame(num_players)*__
 

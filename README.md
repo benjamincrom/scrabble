@@ -13,7 +13,7 @@ See `sample_input_files/` for examples of correctly formatted input files
 Model a Scrabble game 
 ```
 >>> import scrabble_game
->>> game = scrabble_game.ScrabbleGame(4)
+>>> game = scrabble_game.ScrabbleGame(num_players=4)
 >>> game
   abcdefghijklmno
 1 _______________

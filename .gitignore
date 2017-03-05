@@ -1,4 +1,5 @@
 *.cprof
+*.egg-info
 *.pyc
 
 .cache

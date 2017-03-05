@@ -122,7 +122,8 @@ Player 4: 0
 ### Find Best Move (Brute Force)
 * **scrabble.main.ScrabbleGame.get_best_move()**
 
-Find the best move via brute-force search
+Find the best move via brute-force search.  Returns the move score and move
+tuple of the form *(location, word, is_vertical_move)*.
 ```
 >>> game.get_best_move()
 

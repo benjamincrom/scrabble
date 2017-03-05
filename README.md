@@ -4,7 +4,7 @@ final board and the list of player scores for each move.
 
 Usage:
 ```shell
-python3 recover\_scrabble\_game.py [INPUT\_FILENAME]
+python3 recover_scrabble_game.py [INPUT_FILENAME]
 ```
 
 See `sample_input_files/` for examples of correctly formatted input files
@@ -13,7 +13,7 @@ See `sample_input_files/` for examples of correctly formatted input files
 Create a new Scrabble game 
 ```
 >>> import scrabble_game
->>> game = scrabble\_game.ScrabbleGame(num\_players=4)
+>>> game = scrabble_game.ScrabbleGame(num_players=4)
 >>> game
   abcdefghijklmno
 1 _______________
@@ -44,7 +44,7 @@ Player 4: 0
 # Make Move
 Place a word from the rack of the player-to-move onto the board
 ```
->>> game.place\_word(word='GATE', start\_location=('h', 8), is\_vertical\_move=False)
+>>> game.place_word(word='GATE', start_location=('h', 8), is_vertical_move=False)
 Challenge successful (Y/N)N
 True
 
@@ -79,7 +79,7 @@ Player 4: 0
 Find the best move via brute-force search
 ```
 >>> import helpers
->>> helpers.get\_best\_move(game)
+>>> helpers.get_best_move(game)
 
 (27, (('l', 4), 'EGOISM', True))
 ```

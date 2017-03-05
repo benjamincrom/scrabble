@@ -3,8 +3,15 @@ This package implements the game of Scrabble and also adds features that
 recover previous moves as well as determine the best next move for a given
 Scrabble game.
 
-## Installation
+## Installing from pypi
 ```
+pip3 install scrabble
+```
+
+## Installing from source
+```
+git clone git@github.com:benjamincrom/scrabble.git
+cd scrabble/
 python3 setup.py install
 ```
 

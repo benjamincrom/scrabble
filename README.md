@@ -13,7 +13,9 @@ See `sample_input_files/` for examples of correctly formatted input files
 Model a Scrabble game 
 ```
 >>> import scrabble_game
+
 >>> game = scrabble_game.ScrabbleGame(num_players=4)
+
 >>> game
   abcdefghijklmno
 1 _______________
@@ -75,5 +77,6 @@ Player 4: 0
 Find the best move via brute-force search
 ```
 >>> import helpers
+
 >>> helpers.get_best_move(game)
 ```

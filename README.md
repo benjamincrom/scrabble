@@ -10,7 +10,7 @@ python3 recover_scrabble_game.py [INPUT_FILENAME]
 See `sample_input_files/` for examples of correctly formatted input files
 
 # Create Scrabble Game Object
-Model a Scrabble game 
+Create a new Scrabble game 
 ```
 >>> import scrabble_game
 >>> game = scrabble_game.ScrabbleGame(num_players=4)
@@ -39,8 +39,11 @@ Player 1: 0
 Player 2: 0
 Player 3: 0
 Player 4: 0
+```
 
 # Make Move
+Place a word from the rack of the player-to-move onto the board
+```
 >>> game.place_word(word='GATE', start_location=('h', 8), is_vertical_move=False)
 Challenge successful (Y/N)N
 True

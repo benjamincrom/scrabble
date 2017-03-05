@@ -1,6 +1,6 @@
 """
 helper.py -- contains all side-effect free functions which are used by classes
-             in scrabble_game.py
+             in main.py
 """
 import collections
 import itertools
@@ -9,7 +9,7 @@ import multiprocessing
 import operator
 
 import config
-import scrabble_game
+import main
 
 with open(config.DICTIONARY_FILENAME) as filehandle:
     english_dictionary_set = set(word.strip()
@@ -17,7 +17,7 @@ with open(config.DICTIONARY_FILENAME) as filehandle:
 
 def recover_game(input_filename):
     reference_game = read_input_file(input_filename)
-    new_game = scrabble_game.ScrabbleGame(
+    new_game = main.ScrabbleGame(
         len(reference_game.player_rack_list)
     )
 
@@ -50,7 +50,7 @@ def initialize_new_board_square_dict():
                 1
             )
 
-            initial_board_square_dict[location] = scrabble_game.BoardSquare(
+            initial_board_square_dict[location] = main.BoardSquare(
                 tile=None,
                 word_multiplier=word_multiplier,
                 letter_multiplier=letter_multiplier
@@ -95,7 +95,7 @@ def read_input_file(input_filename):
     board_character_array, player_score_list_list = load_file(input_filename)
 
     num_players = len(player_score_list_list)
-    game = scrabble_game.ScrabbleGame(num_players)
+    game = main.ScrabbleGame(num_players)
     game.player_score_list_list = player_score_list_list
     game.player_rack_list = [[] for _ in range(num_players)]
     game.tile_bag = []
@@ -107,7 +107,7 @@ def read_input_file(input_filename):
             if letter:
                 column_letter = chr(ord('a') + column_number)
                 this_location = (column_letter, row_number + 1)
-                game.board[this_location] = scrabble_game.ScrabbleTile(letter)
+                game.board[this_location] = main.ScrabbleTile(letter)
 
     return game
 
@@ -139,7 +139,7 @@ def get_all_possible_moves_set(new_game, reference_game):
 def copy_board(input_board):
     input_square_dict = input_board.board_square_dict
 
-    new_board = scrabble_game.ScrabbleBoard()
+    new_board = main.ScrabbleBoard()
     new_square_dict = new_board.board_square_dict
 
     for location, square in input_square_dict.items():
@@ -147,14 +147,14 @@ def copy_board(input_board):
             new_board_square = new_square_dict[location]
             new_board_square.letter_multiplier = square.letter_multiplier
             new_board_square.word_multiplier = square.word_multiplier
-            new_board_square.tile = scrabble_game.ScrabbleTile(
+            new_board_square.tile = main.ScrabbleTile(
                 square.tile.letter
             )
 
     return new_board
 
 def copy_game(input_game):
-    new_game = scrabble_game.ScrabbleGame(len(input_game.player_rack_list))
+    new_game = main.ScrabbleGame(len(input_game.player_rack_list))
     new_game.board = copy_board(input_game.board)
     new_game.move_number = input_game.move_number
     new_game.player_score_list_list = [
@@ -166,7 +166,7 @@ def copy_game(input_game):
     for player_rack in input_game.player_rack_list:
         new_rack = []
         for tile in player_rack:
-            new_rack.append(scrabble_game.ScrabbleTile(tile.letter))
+            new_rack.append(main.ScrabbleTile(tile.letter))
 
         new_player_rack_list.append(new_rack)
 
@@ -322,7 +322,7 @@ def get_move_word(word_location_set, move_location_set, game):
     return notation_location, move_word
 
 def get_move_set_notation(move_set, reference_game):
-    new_game = scrabble_game.ScrabbleGame(len(reference_game.player_rack_list))
+    new_game = main.ScrabbleGame(len(reference_game.player_rack_list))
     word_notation_list_list = [
         [] for _ in range(len(reference_game.player_rack_list))
     ]
@@ -558,7 +558,7 @@ def get_rack_tile_index(player_rack, move_letter):
     return None
 
 def get_new_tile_bag():
-    return [scrabble_game.ScrabbleTile(letter=letter)
+    return [main.ScrabbleTile(letter=letter)
             for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
             for _ in range(magnitude)]
 

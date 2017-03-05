@@ -1,5 +1,5 @@
 """
-scrabble_game.py -- contains classes that model scrabble game
+main.py -- contains classes that model scrabble game
 """
 import random
 

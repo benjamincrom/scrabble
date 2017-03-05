@@ -74,7 +74,7 @@ def test_board_moves_score():
 
     assert ('Moves played: 3\n'
             'Player 4\'s move\n'
-            '72 tiles rescrabble.main in bag\n'
+            '72 tiles remain in bag\n'
             'Player 1: 24\n'
             'Player 2: 13\n'
             'Player 3: 17\n'
@@ -230,7 +230,8 @@ def test_play_too_many_tiles():
 def test_get_rack_tile_bad():
     game = scrabble.main.ScrabbleGame(3)
     assert (
-        scrabble.helpers.get_rack_tile_index(game.player_rack_list[0], '&') is None
+        scrabble.helpers.get_rack_tile_index(game.player_rack_list[0], '&')
+        is None
     )
 
 def test_player_exchange_bad_choices():

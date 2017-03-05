@@ -43,8 +43,60 @@ Usage:
 ```shell
 ./bin/recover_scrabble_game [INPUT_FILENAME]
 ```
+
 See [scrabble/tests/sample_input_files](scrabble/tests/sample_input_files)
 for examples of correctly formatted input files
+
+Example:
+```
+./bin/recover_scrabble_game ./tests/sample_input_files/sample_input30.json
+
+[
+    [
+        [(('h', 8), '*OWDY')],
+        [(('e', 10), 'R(A)ZE')],
+        [(('h', 12), '(Y)IP')],
+        [(('b', 13), 'MOV(E)')],
+        [(('c', 6), 'GU(Y)')],
+        [(('l', 10), '(D)OTE')],
+        [(('e', 3), '(G)UILE')],
+        [(('i', 2), 'B(E)ER')],
+        [(('i', 5), '(R)IP')],
+        [(('g', 2), 'H(I)NT')],
+        [(('l', 2), '(D)UNE')],
+        [(('j', 12), '(PI)TA')],
+        [(('h', 9), '(O)R*')],
+        [(('o', 13), 'LI(T)')],
+        [(('e', 15), 'BANAN(A)')]
+    ], [
+        [(('d', 11), 'FAME(D)')],
+        [(('d', 8), 'CRIE(*)')],
+        [
+            (('i', 12), '(I)T'),
+            (('j', 12), '(P)I'),
+            (('i', 13), 'TIGHT')
+        ],
+        [(('e', 3), 'GRAYE(R)')],
+        [(('l', 10), 'DAS(H)')],
+        [(('o', 8), 'OV(E)N')],
+        [(('c', 4), 'JA(R)')],
+        [(('c', 4), '(J)I(G)')],
+        [(('b', 10), 'LOO(M)S')],
+        [
+            (('l', 2), 'DOWEL'),
+            (('i', 5), '(RIP)E')
+        ],
+        [(('o', 1), 'R(E)ASON')],
+        [(('m', 13), '(T)AX')],
+        [(('l', 15), 'E(X)IT')],
+        [
+            (('a', 14), 'I(S)'),
+            (('a', 14), 'ID')
+        ],
+        [(('j', 7), 'SE(*)K')]
+    ]
+]
+```
 
 ## Play Scrabble Game
 ### Create a new Scrabble game object

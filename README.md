@@ -130,7 +130,7 @@ Find the best move via brute-force search
 ```
 
 ### Exchange Tiles
-ScrabbleGame.*exchange*__(letter_list)__
+**ScrabbleGame.exchange**_(letter_list)_
 
 Exchange up to all a player's rack tiles as long as the bag has at least
 one entire rack of tiles remaining.
@@ -166,7 +166,7 @@ Player 4: 0
 ```
 
 ### Conclude Game
-`ScrabbleGame.`*conclude_game*__(empty_rack_player_number=None)__
+__ScrabbleGame.conclude\_game__*(empty_rack_player_number=None)*
 
 Calculates final scores and declares a winner.  This method will automatically
 be called and bonuses automatically awared if one player has an empty rack

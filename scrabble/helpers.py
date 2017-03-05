@@ -9,54 +9,10 @@ import multiprocessing
 import operator
 
 import config
-import main
 
 with open(config.DICTIONARY_FILENAME) as filehandle:
     english_dictionary_set = set(word.strip()
                                  for word in filehandle.readlines())
-
-def recover_game(input_filename):
-    reference_game = read_input_file(input_filename)
-    new_game = main.ScrabbleGame(
-        len(reference_game.player_rack_list)
-    )
-
-    move_set_generator = get_move_set_generator(new_game,
-                                                reference_game,
-                                                [])
-
-    move_set_list = list(move_set_generator)
-
-    notated_move_set_list = [
-        get_move_set_notation(move_set, reference_game)
-        for move_set in move_set_list
-    ]
-
-    return notated_move_set_list
-
-def initialize_new_board_square_dict():
-    initial_board_square_dict = {}
-    for column in config.BOARD_CODE_DICT:
-        for row in range(1, config.BOARD_NUM_ROWS + 1):
-            location = (column, row)
-
-            word_multiplier = config.WORD_SCORE_MULT_LOCATION_DICT.get(
-                location,
-                1
-            )
-
-            letter_multiplier = config.LETTER_SCORE_MULT_LOCATION_DICT.get(
-                location,
-                1
-            )
-
-            initial_board_square_dict[location] = main.BoardSquare(
-                tile=None,
-                word_multiplier=word_multiplier,
-                letter_multiplier=letter_multiplier
-            )
-
-    return initial_board_square_dict
 
 def get_combinations(input_iterable):
     combination_set = set()
@@ -91,26 +47,6 @@ def load_file(input_filename):
 
     return board_character_array, player_score_list_list
 
-def read_input_file(input_filename):
-    board_character_array, player_score_list_list = load_file(input_filename)
-
-    num_players = len(player_score_list_list)
-    game = main.ScrabbleGame(num_players)
-    game.player_score_list_list = player_score_list_list
-    game.player_rack_list = [[] for _ in range(num_players)]
-    game.tile_bag = []
-    game.move_number = sum(1 for player_score_list in player_score_list_list
-                             for _ in player_score_list)
-
-    for row_number, row in enumerate(board_character_array):
-        for column_number, letter in enumerate(row):
-            if letter:
-                column_letter = chr(ord('a') + column_number)
-                this_location = (column_letter, row_number + 1)
-                game.board[this_location] = main.ScrabbleTile(letter)
-
-    return game
-
 def get_all_board_tiles(game):
     return set((square_tuple[1].tile, square_tuple[0])  # tile then location
                for square_tuple in game.board.board_square_dict.items()
@@ -135,44 +71,6 @@ def get_all_possible_moves_set(new_game, reference_game):
             search_set.add((reference_tile, reference_location))
 
     return get_combinations(search_set)
-
-def copy_board(input_board):
-    input_square_dict = input_board.board_square_dict
-
-    new_board = main.ScrabbleBoard()
-    new_square_dict = new_board.board_square_dict
-
-    for location, square in input_square_dict.items():
-        if square.tile:
-            new_board_square = new_square_dict[location]
-            new_board_square.letter_multiplier = square.letter_multiplier
-            new_board_square.word_multiplier = square.word_multiplier
-            new_board_square.tile = main.ScrabbleTile(
-                square.tile.letter
-            )
-
-    return new_board
-
-def copy_game(input_game):
-    new_game = main.ScrabbleGame(len(input_game.player_rack_list))
-    new_game.board = copy_board(input_game.board)
-    new_game.move_number = input_game.move_number
-    new_game.player_score_list_list = [
-        input_player_score_list[:]
-        for input_player_score_list in input_game.player_score_list_list
-    ]
-
-    new_player_rack_list = []
-    for player_rack in input_game.player_rack_list:
-        new_rack = []
-        for tile in player_rack:
-            new_rack.append(main.ScrabbleTile(tile.letter))
-
-        new_player_rack_list.append(new_rack)
-
-    new_game.player_rack_list = new_player_rack_list
-
-    return new_game
 
 def get_legal_move_set(new_game, reference_game):
     all_possible_moves_set = get_all_possible_moves_set(new_game,
@@ -320,40 +218,6 @@ def get_move_word(word_location_set, move_location_set, game):
         move_word += ')'
 
     return notation_location, move_word
-
-def get_move_set_notation(move_set, reference_game):
-    new_game = main.ScrabbleGame(len(reference_game.player_rack_list))
-    word_notation_list_list = [
-        [] for _ in range(len(reference_game.player_rack_list))
-    ]
-
-    for move in move_set:
-        player_to_move_id = (
-            new_game.move_number % len(new_game.player_rack_list)
-        )
-
-        move_location_set = set(location for _, location in move)
-        rack_word = ''.join([letter for letter, _ in move])
-        new_game.cheat_create_rack_word(rack_word, player_to_move_id)
-
-        player_words_notation_list = (
-            word_notation_list_list[player_to_move_id]
-        )
-
-        notation_word_list = []
-        new_game.next_player_move(move, False)
-        word_set = get_word_set(new_game.board, move_location_set)
-        for word_location_set in word_set:
-            if word_location_set:
-                notation_word_list.append(
-                    get_move_word(word_location_set,
-                                  move_location_set,
-                                  new_game)
-                )
-
-        player_words_notation_list.append(notation_word_list)
-
-    return word_notation_list_list
 
 def conclude_game(player_score_list_list):
     player_score_total_list = [sum(player_score_list)
@@ -556,11 +420,6 @@ def get_rack_tile_index(player_rack, move_letter):
             return i
 
     return None
-
-def get_new_tile_bag():
-    return [main.ScrabbleTile(letter=letter)
-            for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
-            for _ in range(magnitude)]
 
 def get_next_location_function(use_positive_seek, use_vertical_words):
     if use_vertical_words and use_positive_seek:

@@ -6,6 +6,146 @@ import random
 import config
 import helpers
 
+def get_move_set_notation(move_set, reference_game):
+    new_game = ScrabbleGame(len(reference_game.player_rack_list))
+    word_notation_list_list = [
+        [] for _ in range(len(reference_game.player_rack_list))
+    ]
+
+    for move in move_set:
+        player_to_move_id = (
+            new_game.move_number % len(new_game.player_rack_list)
+        )
+
+        move_location_set = set(location for _, location in move)
+        rack_word = ''.join([letter for letter, _ in move])
+        new_game.cheat_create_rack_word(rack_word, player_to_move_id)
+
+        player_words_notation_list = (
+            word_notation_list_list[player_to_move_id]
+        )
+
+        notation_word_list = []
+        new_game.next_player_move(move, False)
+        word_set = helpers.get_word_set(new_game.board, move_location_set)
+        for word_location_set in word_set:
+            if word_location_set:
+                notation_word_list.append(
+                    helpers.get_move_word(word_location_set,
+                                          move_location_set,
+                                          new_game)
+                )
+
+        player_words_notation_list.append(notation_word_list)
+
+    return word_notation_list_list
+
+def get_new_tile_bag():
+    return [ScrabbleTile(letter=letter)
+            for letter, magnitude in config.LETTER_DISTRIBUTION_DICT.items()
+            for _ in range(magnitude)]
+
+def copy_board(input_board):
+    input_square_dict = input_board.board_square_dict
+
+    new_board = ScrabbleBoard()
+    new_square_dict = new_board.board_square_dict
+
+    for location, square in input_square_dict.items():
+        if square.tile:
+            new_board_square = new_square_dict[location]
+            new_board_square.letter_multiplier = square.letter_multiplier
+            new_board_square.word_multiplier = square.word_multiplier
+            new_board_square.tile = ScrabbleTile(
+                square.tile.letter
+            )
+
+    return new_board
+
+def copy_game(input_game):
+    new_game = ScrabbleGame(len(input_game.player_rack_list))
+    new_game.board = copy_board(input_game.board)
+    new_game.move_number = input_game.move_number
+    new_game.player_score_list_list = [
+        input_player_score_list[:]
+        for input_player_score_list in input_game.player_score_list_list
+    ]
+
+    new_player_rack_list = []
+    for player_rack in input_game.player_rack_list:
+        new_rack = []
+        for tile in player_rack:
+            new_rack.append(ScrabbleTile(tile.letter))
+
+        new_player_rack_list.append(new_rack)
+
+    new_game.player_rack_list = new_player_rack_list
+
+    return new_game
+
+def read_input_file(input_filename):
+    board_character_array, player_score_list_list = load_file(input_filename)
+
+    num_players = len(player_score_list_list)
+    game = ScrabbleGame(num_players)
+    game.player_score_list_list = player_score_list_list
+    game.player_rack_list = [[] for _ in range(num_players)]
+    game.tile_bag = []
+    game.move_number = sum(1 for player_score_list in player_score_list_list
+                             for _ in player_score_list)
+
+    for row_number, row in enumerate(board_character_array):
+        for column_number, letter in enumerate(row):
+            if letter:
+                column_letter = chr(ord('a') + column_number)
+                this_location = (column_letter, row_number + 1)
+                game.board[this_location] = ScrabbleTile(letter)
+
+    return game
+
+def initialize_new_board_square_dict():
+    initial_board_square_dict = {}
+    for column in config.BOARD_CODE_DICT:
+        for row in range(1, config.BOARD_NUM_ROWS + 1):
+            location = (column, row)
+
+            word_multiplier = config.WORD_SCORE_MULT_LOCATION_DICT.get(
+                location,
+                1
+            )
+
+            letter_multiplier = config.LETTER_SCORE_MULT_LOCATION_DICT.get(
+                location,
+                1
+            )
+
+            initial_board_square_dict[location] = BoardSquare(
+                tile=None,
+                word_multiplier=word_multiplier,
+                letter_multiplier=letter_multiplier
+            )
+
+    return initial_board_square_dict
+
+def recover_game(input_filename):
+    reference_game = read_input_file(input_filename)
+    new_game = ScrabbleGame(
+        len(reference_game.player_rack_list)
+    )
+
+    move_set_generator = helpers.get_move_set_generator(new_game,
+                                                        reference_game,
+                                                        [])
+
+    move_set_list = list(move_set_generator)
+
+    notated_move_set_list = [
+        get_move_set_notation(move_set, reference_game)
+        for move_set in move_set_list
+    ]
+
+    return notated_move_set_list
+
 
 class ScrabbleTile(object):
     def __init__(self, letter):
@@ -31,7 +171,7 @@ class BoardSquare(object):
 
 class ScrabbleBoard(object):
     def __init__(self):
-        self.board_square_dict = helpers.initialize_new_board_square_dict()
+        self.board_square_dict = initialize_new_board_square_dict()
 
         center_row = (config.BOARD_NUM_ROWS // 2) + 1
         center_column = chr(
@@ -86,7 +226,7 @@ class ScrabbleBoard(object):
 
 class ScrabbleGame(object):
     def __init__(self, num_players):
-        self.tile_bag = helpers.get_new_tile_bag()
+        self.tile_bag = get_new_tile_bag()
         self.player_rack_list = self._get_new_player_rack_list(num_players)
         self.board = ScrabbleBoard()
         self.player_score_list_list = [[] for _ in range(num_players)]

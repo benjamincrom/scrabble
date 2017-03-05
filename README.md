@@ -23,7 +23,7 @@ Usage:
 ```shell
 ./bin/recover_scrabble_game [INPUT_FILENAME]
 ```
-See [scrabble/tests/sample_input_file/](`scrabble/tests/sample_input_files/)
+See [scrabble/tests/sample_input_files](`scrabble/tests/sample_input_files)
 for examples of correctly formatted input files
 
 ## Play Scrabble Game

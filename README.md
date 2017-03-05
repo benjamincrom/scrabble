@@ -8,6 +8,13 @@ Scrabble game.
 python3 setup.py install
 ```
 
+## Testing
+Tests take about two hours to run on an average machine.
+
+```
+python3 setup.py test
+```
+
 ## Recover Scrabble Game
 Recover the moves of a Scrabble game given only the 
 final board and the list of player scores for each move.

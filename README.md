@@ -16,7 +16,7 @@ See `tests/sample_input_files/` for examples of correctly formatted input files
 
 # Play Scrabble Game
 ### Create a new Scrabble game object
-`ScrabbleGame(num_players)`
+*ScrabbleGame(num_players)*
 ```
 >>> from scrabble.main import ScrabbleGame
 >>> game = ScrabbleGame(num_players=4)
@@ -48,7 +48,7 @@ Player 4: 0
 ```
 
 ### Make Move
-`ScrabbleGame.place_word(word, start_location, is_vertical_move)`
+*ScrabbleGame.place_word(word, start_location, is_vertical_move)*
 Place a word from the rack of the next player onto the board.  You will be
 prompted as to whether or not the move was successfully challenged.  If the
 move is successful the method will return `True`.
@@ -85,16 +85,17 @@ Player 4: 0
 ```
 
 ### Find Best Move (Brute Force)
+*helpers.get_best_move(game=game)*
 Find the best move via brute-force search
 ```
 >>> import helpers
->>> helpers.get_best_move(game)
+>>> helpers.get_best_move(game=game)
 
 (27, (('l', 4), 'EGOISM', True))
 ```
 
 ### Exchange Tiles
-`ScrabbleGame.exchange(letter_list)`
+*ScrabbleGame.exchange(letter_list)*
 Exchange up to all a player's rack tiles as long as the bag has at least
 one entire rack of tile remaining.
 ```
@@ -155,7 +156,7 @@ Player 4: 0
 ```
 
 ### Conclude Game
-`ScrabbleGame.conclude_game(empty_rack_player_number=None)`
+*ScrabbleGame.conclude_game(empty_rack_player_number=None)*
 Calculates final scores and winner.  Awards bonuses and penalties if one player
 has an empty rack (plays out) at the end of the game.
 ```

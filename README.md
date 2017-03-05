@@ -120,33 +120,7 @@ __*ScrabbleGame.exchange(letter_list)*__
 Exchange up to all a player's rack tiles as long as the bag has at least
 one entire rack of tile remaining.
 ```
->>> game
-  abcdefghijklmno
-1 _______________
-2 _______________
-3 _______________
-4 _______________
-5 _______________
-6 _______________
-7 _______________
-8 _______★_______
-9 _______________
-10_______________
-11_______________
-12_______________
-13_______________
-14_______________
-15_______________
-[[P, E, C, V, U, R, N], [O, L, S, N, T, N, O], [L, N, N, R, G, F, T], [U, Q, R, I, E, E, W]]
-Moves played: 0
-Player 1's move
-72 tiles remain in bag
-Player 1: 0
-Player 2: 0
-Player 3: 0
-Player 4: 0
-
->>> game.exchange(letter_list=['P', 'E', 'C', 'V'])
+>>> game.exchange(letter_list=['E', 'I', 'S', 'O'])
 True
 
 >>> game
@@ -158,7 +132,7 @@ True
 5 _______________
 6 _______________
 7 _______________
-8 _______★_______
+8 _______GATE____
 9 _______________
 10_______________
 11_______________
@@ -166,11 +140,11 @@ True
 13_______________
 14_______________
 15_______________
-[[U, R, N, H, E, D, E], [O, L, S, N, T, N, O], [L, N, N, R, G, F, T], [U, Q, R, I, E, E, W]]
+[[D, P, C, O, E, F, N], [A, P, R, M, N, G, M], [M, S, T, U, R, O, J], [E, *, L, A, R, I, A]]
 Moves played: 1
-Player 2's move
-72 tiles remain in bag
-Player 1: 0
+Player 3's move
+68 tiles remain in bag
+Player 1: 10
 Player 2: 0
 Player 3: 0
 Player 4: 0
@@ -179,9 +153,10 @@ Player 4: 0
 ### Conclude Game
 __*ScrabbleGame.conclude_game(empty_rack_player_number=None)*__
 
-Calculates final scores and winner.  Awards bonuses and penalties if one player
-has an empty rack (plays out) at the end of the game.
+Calculates final scores and declares a winner.  This method will automatically
+be called and bonuses automatically awared if one player has an empty rack
+(plays out) when the tile bag is empty.
 ```
->>> game.conclude_game(empty_rack_player_number=1)
-Game Over! Player 1 wins with a score of 39
+>>> game.conclude_game()
+Game Over! Player 1 wins with a score of 10
 ```

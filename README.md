@@ -49,7 +49,7 @@ for examples of correctly formatted input files
 
 Example:
 ```
-./bin/recover_scrabble_game ./tests/sample_input_files/sample_input30.json
+$ ./bin/recover_scrabble_game ./tests/sample_input_files/sample_input30.json
 
 [
     [

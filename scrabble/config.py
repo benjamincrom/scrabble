@@ -10,8 +10,6 @@ START_SQUARE_CHARACTER = '★'
 BLANK_SQUARE_CHARACTER = '_'
 LOWEST_COLUMN_CHARACTER = 'a'
 
-DICTIONARY_FILENAME = 'scrabble/dictionary.csv'
-
 NUM_PROCESSING_CORES = 8
 
 WORD_SCORE_MULT_LOCATION_DICT = {  # Lowercase letters are used to distinguish

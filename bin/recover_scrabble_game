@@ -7,7 +7,8 @@ Usage:
     files
 """
 import sys
-import scrabble
+
+from scrabble.helpers import recover_game
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:

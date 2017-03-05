@@ -8,10 +8,7 @@ import json
 import operator
 
 from . import config
-
-with open(config.DICTIONARY_FILENAME) as filehandle:
-    english_dictionary_set = set(word.strip()
-                                 for word in filehandle.readlines())
+from . import dictionary
 
 def get_all_possible_moves_set(new_game, reference_game):
     game_tile_location_set = get_all_board_tiles(new_game)
@@ -81,7 +78,7 @@ def all_created_words_are_english(board, letter_location_set):
                 square = board.board_square_dict[location]
                 this_word_str += str(square.tile.letter)
 
-            if this_word_str.lower() not in english_dictionary_set:
+            if this_word_str.lower() not in dictionary.english_dictionary_set:
                 return False
 
     return True

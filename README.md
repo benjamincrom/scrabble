@@ -11,7 +11,7 @@ See `sample_input_files/` for examples of correctly formatted input files
 
 # Scrabble Game
 Model a Scrabble game 
-```python
+```
 >>> import scrabble_game
 >>> game = scrabble_game.ScrabbleGame(4)
 >>> game
@@ -39,9 +39,11 @@ Player 1: 0
 Player 2: 0
 Player 3: 0
 Player 4: 0
+
 >>> game.place_word(word='GATE', start_location=('h', 8), is_vertical_move=False)
 Challenge successful (Y/N)N
 True
+
 >>> game
   abcdefghijklmno
 1 _______________
@@ -71,7 +73,7 @@ Player 4: 0
 
 # Find Best Move
 Find the best move via brute-force search
-```python
+```
 >>> import helpers
 >>> helpers.get_best_move(game)
 ```

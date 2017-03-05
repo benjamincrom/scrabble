@@ -166,7 +166,7 @@ Player 4: 0
 ```
 
 ### Conclude Game
-ScrabbleGame.*conclude_game*__(empty_rack_player_number=None)__
+`ScrabbleGame.`*conclude_game*__(empty_rack_player_number=None)__
 
 Calculates final scores and declares a winner.  This method will automatically
 be called and bonuses automatically awared if one player has an empty rack

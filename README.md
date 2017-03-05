@@ -1,16 +1,16 @@
 **Table of Contents**
 
-- [Scrabble](#)
-    - [Installing from pypi](#)
-    - [Installing from source](#)
-    - [Testing](#)
-    - [Recover Scrabble Game](#)
-    - [Play Scrabble Game](#)
-        - [Create a new Scrabble game object](#)
-        - [Make Move](#)
-        - [Find Best Move (Brute Force)](#)
-        - [Exchange Tiles](#)
-        - [Conclude Game](#)
+- [Scrabble](#scrabble)
+    - [Installing from pypi](#installing-from-pypi)
+    - [Installing from source](#installing-from-source)
+    - [Testing](#testing)
+    - [Recover Scrabble Game](#recover-scrabble-game)
+    - [Play Scrabble Game](#play-scrabble-game)
+        - [Create a new Scrabble game object](#create-a-new-scrabble-game-object)
+        - [Make Move](#make-move)
+        - [Find Best Move (Brute Force)](#find-best-move-brute-force)
+        - [Exchange Tiles](#exchange-tiles)
+        - [Conclude Game](#conclude-game)
 
 # Scrabble
 This package implements the game of Scrabble and also adds features that

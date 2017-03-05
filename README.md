@@ -170,7 +170,7 @@ Player 4: 0
 * __scrabble.main.ScrabbleGame.conclude\_game(__*empty_rack_player_number=None*__)__
 
 Calculates final scores and declares a winner.  This method will automatically
-be called and bonuses automatically awared if one player has an empty rack
+be called and bonuses automatically awarded if one player has an empty rack
 (plays out) when the tile bag is empty.
 ```
 >>> game.conclude_game()

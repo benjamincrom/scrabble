@@ -9,9 +9,13 @@ import sys
 
 import scrabble
 
-if __name__ == '__main__':
+@profile
+def main():
     if len(sys.argv) == 2:
         for move_list in scrabble.main.recover_game(sys.argv[1]):
             print('{}\n'.format(move_list))
     else:
         print('Usage: ./recover_scrabble_game [INPUT_FILENAME]')
+
+if __name__ == '__main__':
+    main()

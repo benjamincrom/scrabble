@@ -9,7 +9,6 @@ import sys
 
 import scrabble
 
-@profile
 def main():
     if len(sys.argv) == 2:
         for move_list in scrabble.main.recover_game(sys.argv[1]):

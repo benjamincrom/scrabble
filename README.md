@@ -41,7 +41,7 @@ final board and the list of player scores for each move.
 
 Usage:
 ```shell
-./recover_scrabble_game [INPUT_FILENAME]
+$ recover_scrabble_game [INPUT_FILENAME]
 ```
 
 See [scrabble/tests/sample_input_files](scrabble/tests/sample_input_files)
@@ -49,7 +49,7 @@ for examples of correctly formatted input files
 
 Example:
 ```
-$ ./recover_scrabble_game ./tests/sample_input_files/sample_input30.json
+$ recover_scrabble_game ./tests/sample_input_files/sample_input30.json
 
 [
     [

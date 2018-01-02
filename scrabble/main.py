@@ -192,11 +192,11 @@ def read_input_file(input_filename):
     game.move_number = sum(1 for player_score_list in player_score_list_list
                              for _ in player_score_list)
 
-    for row_number, row in enumerate(board_character_array):
+    for row_number, row in enumerate(board_character_array, 1):
         for column_number, letter in enumerate(row):
             if letter:
                 column_letter = chr(ord('a') + column_number)
-                this_location = (column_letter, row_number + 1)
+                this_location = (column_letter, row_number)
                 game.board[this_location] = ScrabbleTile(letter)
 
     return game
@@ -332,10 +332,10 @@ class ScrabbleGame(object):
 
     def __repr__(self):
         player_score_str_list = []
-        for i, player_score_list in enumerate(self.player_score_list_list):
+        for i, player_score_list in enumerate(self.player_score_list_list, 1):
             player_score_str_list.append(
                 'Player {player_number}: {score}'.format(
-                    player_number=(i + 1),
+                    player_number=i,
                     score=sum(player_score_list)
                 )
             )
@@ -448,13 +448,13 @@ class ScrabbleGame(object):
         ]
 
         winning_player_id, winning_player_score = max(
-            enumerate(player_score_total_list),
+            enumerate(player_score_total_list, 1),
             key=operator.itemgetter(1)
         )
 
         print(
             'Game Over! Player {} wins with a score of {}'.format(
-                winning_player_id + 1,
+                winning_player_id,
                 winning_player_score
             )
         )

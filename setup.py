@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='scrabble',
-      version='1.2',
+      version='1.3',
       description='Scrabble game with move recovery and best move analysis',
       url='https://github.com/benjamincrom/scrabble',
       author='Benjamin B. Crom',

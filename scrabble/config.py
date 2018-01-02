@@ -84,7 +84,7 @@ LETTER_SCORE_MULT_LOCATION_DICT = {
     ('n', 10): 3
 }
 
-LETTER_POINT_VALUES_DICT = {  # Captial letters are used to distinguish tile
+LETTER_POINT_VALUES_DICT = {  # Capital letters are used to distinguish tile
     '*': 0,                   # letter symbols from locations
     'A': 1,
     'B': 3,

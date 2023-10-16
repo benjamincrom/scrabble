@@ -18,11 +18,11 @@ def get_move_set_generator(new_game, reference_game, move_list):
 
     player_move_number = new_game.move_number // len(new_game.player_rack_list)
     target_score = player_score_list[player_move_number]
-    next_move_set = set(
+    next_move_set = {
         frozenset((tile.letter, location) for tile, location in move_set)
         for score, move_set in legal_move_set
         if score == target_score
-    )
+    }
 
     for next_move in next_move_set:
         new_game_copy = copy_game(new_game)
@@ -67,8 +67,7 @@ def get_location_best_move(game, location, word_list):
                     )
                 )
 
-                location_set = set(location
-                                   for _, location in letter_location_set)
+                location_set = {location for _, location in letter_location_set}
 
                 if helpers.all_created_words_are_english(temp_game.board,
                                                          location_set):
@@ -130,10 +129,7 @@ def copy_game(input_game):
 
     new_player_rack_list = []
     for player_rack in input_game.player_rack_list:
-        new_rack = []
-        for tile in player_rack:
-            new_rack.append(ScrabbleTile(tile.letter))
-
+        new_rack = [ScrabbleTile(tile.letter) for tile in player_rack]
         new_player_rack_list.append(new_rack)
 
     new_game.player_rack_list = new_player_rack_list
@@ -151,7 +147,7 @@ def get_move_set_notation(move_set, reference_game):
             new_game.move_number % len(new_game.player_rack_list)
         )
 
-        move_location_set = set(location for _, location in move)
+        move_location_set = {location for _, location in move}
         rack_word = ''.join([letter for letter, _ in move])
         new_game.cheat_create_rack_word(rack_word, player_to_move_id)
 
@@ -159,17 +155,15 @@ def get_move_set_notation(move_set, reference_game):
             word_notation_list_list[player_to_move_id]
         )
 
-        notation_word_list = []
         new_game.next_player_move(move, False)
         word_set = helpers.get_word_set(new_game.board, move_location_set)
-        for word_location_set in word_set:
-            if word_location_set:
-                notation_word_list.append(
-                    helpers.get_move_word(word_location_set,
-                                          move_location_set,
-                                          new_game)
-                )
-
+        notation_word_list = [
+            helpers.get_move_word(
+                word_location_set, move_location_set, new_game
+            )
+            for word_location_set in word_set
+            if word_location_set
+        ]
         player_words_notation_list.append(notation_word_list)
 
     return word_notation_list_list
@@ -237,12 +231,10 @@ def recover_game(input_filename):
 
     move_set_list = list(move_set_generator)
 
-    notated_move_set_list = [
+    return [
         get_move_set_notation(move_set, reference_game)
         for move_set in move_set_list
     ]
-
-    return notated_move_set_list
 
 
 class ScrabbleTile(object):
@@ -261,10 +253,7 @@ class BoardSquare(object):
         self.word_multiplier = word_multiplier
 
     def __repr__(self):
-        if self.tile:
-            return str(self.tile)
-        else:
-            return config.BLANK_SQUARE_CHARACTER
+        return str(self.tile) if self.tile else config.BLANK_SQUARE_CHARACTER
 
 
 class ScrabbleBoard(object):
@@ -310,16 +299,14 @@ class ScrabbleBoard(object):
 
         center_row_num = (config.BOARD_NUM_ROWS // 2) + 1
         center_column_num = (config.BOARD_NUM_COLUMNS // 2) + 1
-        start_char = config.START_SQUARE_CHARACTER
         blank_char = config.BLANK_SQUARE_CHARACTER
 
         if board_array[center_column_num][center_row_num] == blank_char:
+            start_char = config.START_SQUARE_CHARACTER
             board_array[center_column_num][center_row_num] = start_char
 
         return_line_list = [''.join(row) for row in board_array]
-        return_str = '\n'.join(return_line_list)
-
-        return return_str
+        return '\n'.join(return_line_list)
 
 
 class ScrabbleGame(object):
@@ -331,15 +318,12 @@ class ScrabbleGame(object):
         self.move_number = 0
 
     def __repr__(self):
-        player_score_str_list = []
-        for i, player_score_list in enumerate(self.player_score_list_list, 1):
-            player_score_str_list.append(
-                'Player {player_number}: {score}'.format(
-                    player_number=i,
-                    score=sum(player_score_list)
-                )
+        player_score_str_list = [
+            'Player {player_number}: {score}'.format(
+                player_number=i, score=sum(player_score_list)
             )
-
+            for i, player_score_list in enumerate(self.player_score_list_list, 1)
+        ]
         player_scores_str = '\n'.join(player_score_str_list)
         player_to_move_id, _ = helpers.get_current_player_data(
             self.move_number,
@@ -366,20 +350,19 @@ class ScrabbleGame(object):
         if (len(self.tile_bag) < config.PLAYER_RACK_SIZE or
                 len(letter_list) > config.PLAYER_RACK_SIZE):
             return False
+        _, player_rack = helpers.get_current_player_data(
+            self.move_number,
+            self.player_rack_list
+        )
+
+        player_letter_list = [tile.letter for tile in player_rack]
+
+        if helpers.move_is_sublist(letter_list, player_letter_list):
+            self._perform_bag_exchange(letter_list, player_rack)
+            self.move_number += 1
+            return True
         else:
-            _, player_rack = helpers.get_current_player_data(
-                self.move_number,
-                self.player_rack_list
-            )
-
-            player_letter_list = [tile.letter for tile in player_rack]
-
-            if helpers.move_is_sublist(letter_list, player_letter_list):
-                self._perform_bag_exchange(letter_list, player_rack)
-                self.move_number += 1
-                return True
-            else:
-                return False
+            return False
 
     def place_word(self, word, start_location, is_vertical_move,
                    allow_challenge=True):
@@ -397,12 +380,9 @@ class ScrabbleGame(object):
             self.player_rack_list
         )
 
-        is_legal_move = helpers.move_is_legal(self.board,
-                                              self.move_number,
-                                              letter_location_set,
-                                              player_rack)
-
-        if is_legal_move:
+        if helpers.move_is_legal(
+            self.board, self.move_number, letter_location_set, player_rack
+        ):
             if allow_challenge and helpers.move_successfully_challenged():
                 letter_location_set = set()
 
@@ -453,10 +433,7 @@ class ScrabbleGame(object):
         )
 
         print(
-            'Game Over! Player {} wins with a score of {}'.format(
-                winning_player_id,
-                winning_player_score
-            )
+            f'Game Over! Player {winning_player_id} wins with a score of {winning_player_score}'
         )
 
     def get_best_move(self):
@@ -466,10 +443,10 @@ class ScrabbleGame(object):
 
         word_list = []
         for i in range(1, config.PLAYER_RACK_SIZE + 1):
-            for this_list in itertools.permutations(player_letter_list, i):
-                this_word = ''.join(this_list)
-                word_list.append(this_word)
-
+            word_list.extend(
+                ''.join(this_list)
+                for this_list in itertools.permutations(player_letter_list, i)
+            )
         input_arguments_list = [
             (self, location, word_list)
             for location in sorted(self.board.board_square_dict)
@@ -496,9 +473,7 @@ class ScrabbleGame(object):
 
     def _draw_random_tile(self):
         random_index = random.randrange(0, len(self.tile_bag))
-        selected_tile = self.tile_bag.pop(random_index)
-
-        return selected_tile
+        return self.tile_bag.pop(random_index)
 
     def _refill_player_rack(self, player_rack):
         while len(player_rack) < config.PLAYER_RACK_SIZE:

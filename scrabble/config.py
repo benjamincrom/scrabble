@@ -4,8 +4,8 @@ config.py -- contains all constants needed by scrabble module
 
 import json
 import os
-
 import pathlib
+
 BOARD_NUM_COLUMNS = 15
 BOARD_NUM_ROWS = 15
 PLAYER_RACK_SIZE = 7

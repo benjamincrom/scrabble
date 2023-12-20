@@ -14,21 +14,24 @@ def get_all_possible_moves_set(new_game, reference_game):
 
     search_set = set()
     for reference_tile, reference_location in reference_tile_location_set:
-        flag = True
-        for game_tile, game_location in game_tile_location_set:
-            if (game_tile.letter == reference_tile.letter and
-                    game_location == reference_location):
-                flag = False
-
+        flag = not any(
+            (
+                game_tile.letter == reference_tile.letter
+                and game_location == reference_location
+            )
+            for game_tile, game_location in game_tile_location_set
+        )
         if flag:
             search_set.add((reference_tile, reference_location))
 
     return get_combinations(search_set)
 
 def get_all_board_tiles(game):
-    return set((square_tuple[1].tile, square_tuple[0])  # tile then location
-               for square_tuple in game.board.board_square_dict.items()
-               if square_tuple[1].tile)
+    return {
+        (square_tuple[1].tile, square_tuple[0])
+        for square_tuple in game.board.board_square_dict.items()
+        if square_tuple[1].tile
+    }
 
 def get_combinations(input_iterable):
     combination_set = set()
@@ -88,17 +91,14 @@ def get_move_word(word_location_set, move_location_set, game):
     parens_flag = False
 
     for location in word_location_list:
-        tile = game.board[location]
-        if tile:
-            if location not in move_location_set:
-                if not parens_flag:
-                    move_word += '('
-                    parens_flag = True
-            else:
+        if tile := game.board[location]:
+            if location in move_location_set:
                 if parens_flag:
                     move_word += ')'
                     parens_flag = False
-
+            elif not parens_flag:
+                move_word += '('
+                parens_flag = True
             move_word += tile.letter
 
     if parens_flag:
@@ -120,13 +120,9 @@ def score_playing_out(player_rack_list, empty_rack_id):
     return final_move_score_list
 
 def score_move(letter_location_set, board):
-    move_location_set = set(location for _, location in letter_location_set)
+    move_location_set = {location for _, location in letter_location_set}
     word_set = get_word_set(board, move_location_set)
-    total_score = get_word_set_total_score(board,
-                                           word_set,
-                                           len(move_location_set))
-
-    return total_score
+    return get_word_set_total_score(board, word_set, len(move_location_set))
 
 def decrement_letter(character):
     return chr(config.LETTER_CODE_DICT[character] - 1)
@@ -167,7 +163,7 @@ def get_word_letter_location_set(word, start_location, is_vertical_move):
 
 def move_is_legal(board, move_number, letter_location_set, player_rack=None):
     letter_list = [letter for letter, _ in letter_location_set]
-    location_set = set(location for _, location in letter_location_set)
+    location_set = {location for _, location in letter_location_set}
 
     return_bool = (
         move_is_rack_size_or_less(location_set) and
@@ -200,18 +196,13 @@ def move_touches_tile(move_number, board, location_set):
 def move_is_sublist(letter_list_1, letter_list_2):
     letter_counter_1 = collections.Counter(letter_list_1)
     letter_counter_2 = collections.Counter(letter_list_2)
-    for letter, cardinality in letter_counter_1.items():
-        if cardinality > letter_counter_2[letter]:
-            return False
-
-    return True
+    return all(
+        cardinality <= letter_counter_2[letter]
+        for letter, cardinality in letter_counter_1.items()
+    )
 
 def move_does_not_cover_tiles(board, location_set):
-    for location in location_set:
-        if board[location]:
-            return False
-
-    return True
+    return not any(board[location] for location in location_set)
 
 def all_move_tiles_connected(board, location_set):
     column_list = [column for column, _ in location_set]
@@ -240,8 +231,8 @@ def all_move_tiles_connected(board, location_set):
     return True
 
 def move_does_not_misalign_tiles(location_set):
-    column_set = set(column for column, _ in location_set)
-    row_set = set(row for _, row in location_set)
+    column_set = {column for column, _ in location_set}
+    row_set = {row for _, row in location_set}
 
     return len(column_set) == 1 or len(row_set) == 1
 
@@ -252,11 +243,9 @@ def move_is_rack_size_or_less(location_set):
     return len(location_set) <= config.PLAYER_RACK_SIZE
 
 def move_is_not_out_of_bounds(location_set):
-    for location in location_set:
-        if location_is_out_of_bounds(location):
-            return False
-
-    return True
+    return not any(
+        location_is_out_of_bounds(location) for location in location_set
+    )
 
 def move_successfully_challenged():
     response = input('Challenge successful (Y/N)')
@@ -278,39 +267,45 @@ def location_is_out_of_bounds(location):
 
 def location_touches_tile(board, location):
     adjacent_location_set = get_adjacent_location_set(location)
-    for adjacent_location in adjacent_location_set:
-        if board[adjacent_location]:
-            return True
-
-    return False
+    return any(
+        board[adjacent_location] for adjacent_location in adjacent_location_set
+    )
 
 def get_rack_tile_index(player_rack, move_letter):
-    for i, rack_tile in enumerate(player_rack):
-        if rack_tile.letter == move_letter:
-            return i
-
-    return None
+    return next(
+        (
+            i
+            for i, rack_tile in enumerate(player_rack)
+            if rack_tile.letter == move_letter
+        ),
+        None,
+    )
 
 def get_next_location_function(use_positive_seek, use_vertical_words):
     if use_vertical_words and use_positive_seek:
         return lambda x: (x[0], x[1] + 1)
-    elif use_vertical_words and not use_positive_seek:
+    elif use_vertical_words:
         return lambda x: (x[0], x[1] - 1)
-    elif not use_vertical_words and use_positive_seek:
+    elif use_positive_seek:
         return lambda x: (increment_letter(x[0]), x[1])
-    elif not use_vertical_words and not use_positive_seek:
+    else:
         return lambda x: (decrement_letter(x[0]), x[1])
 
 def get_adjacent_location_set(location):
     column, row = location
 
-    adjacent_location_set = set([(increment_letter(column), row),
-                                 (decrement_letter(column), row),
-                                 (column, row + 1),
-                                 (column, row - 1)])
+    adjacent_location_set = {
+        (increment_letter(column), row),
+        (decrement_letter(column), row),
+        (column, row + 1),
+        (column, row - 1),
+    }
     # Board boundary check
-    bad_location_set = set(location for location in adjacent_location_set
-                           if location_is_out_of_bounds(location))
+    bad_location_set = {
+        location
+        for location in adjacent_location_set
+        if location_is_out_of_bounds(location)
+    }
 
     return adjacent_location_set - bad_location_set
 
@@ -337,11 +332,11 @@ def get_word_location_set(board, initial_location, use_vertical_words):
         return frozenset()
 
 def get_word_set(board, move_location_set):
-    return set(
+    return {
         get_word_location_set(board, location, vertical_bool)
-        for vertical_bool in [True, False]  # Search for vertical words created
-        for location in move_location_set   # then for horizontal words
-    )
+        for vertical_bool in [True, False]
+        for location in move_location_set
+    }
 
 def get_word_set_total_score(board, word_set, num_move_locations):
     total_score = 0
@@ -350,13 +345,11 @@ def get_word_set_total_score(board, word_set, num_move_locations):
     for word_location_set in word_set:
         word_score = 0
         word_multiplier = 1
-        this_word_str = ''
 
         for location in word_location_set:
             square = board.board_square_dict[location]
             word_multiplier *= square.word_multiplier
             word_score += square.tile.point_value * square.letter_multiplier
-            this_word_str += square.tile.letter
 
         word_score *= word_multiplier
         total_score += word_score

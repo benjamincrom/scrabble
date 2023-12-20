@@ -1,8 +1,10 @@
 """
 config.py -- contains all constants needed by scrabble module
 """
+
 import json
 import os
+import pathlib
 
 BOARD_NUM_COLUMNS = 15
 BOARD_NUM_ROWS = 15
@@ -148,9 +150,7 @@ LETTER_DISTRIBUTION_DICT = {
 CONTAINING_FOLDER = os.path.dirname(__file__)
 FULL_DICTIONARY_PATH = os.path.join(CONTAINING_FOLDER, DICTIONARY_FILENAME)
 
-with open(FULL_DICTIONARY_PATH) as filehandle:
-    FULL_DICTIONARY_STR = filehandle.read()
-
+FULL_DICTIONARY_STR = pathlib.Path(FULL_DICTIONARY_PATH).read_text()
 ENGLISH_DICTIONARY_SET = set(json.loads(FULL_DICTIONARY_STR))
 
 LOWER_COLUMN_INT_BOUND = ord(LOWEST_COLUMN_CHARACTER)

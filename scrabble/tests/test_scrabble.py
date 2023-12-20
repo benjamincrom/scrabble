@@ -361,7 +361,7 @@ def test_conclude_game():
 
     assert game.player_score_list_list == [[26, -12], [113, 31], [-19]]
     assert game.move_number == 2
-    assert len(game.tile_bag) == 0
+    assert not game.tile_bag
     assert str(game.board) == ('  abcdefghijklmno\n'
                                '1 _______________\n'
                                '2 _______________\n'
